@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Request, RequestOptionsArgs, Response, RequestOptions, ConnectionBackend, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+
+declare let jQuery: any;
 @Injectable()
 export class HttpService extends Http {
   status = {
@@ -54,10 +56,9 @@ export class HttpService extends Http {
     }
     // options.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     // options.headers.append('Content-Type', 'application/json;charset=utf-8');
+    let token = jQuery.cookie('token');
     options.headers.append('Content-Type', 'text/plain;charset=UTF-8');
-    // options.headers.set('token', '4069bd5632b0726a0489fdfcece47c8e');
- 
-    console.log(options)
+    options.headers.set('token', token);
     return options;
   }
   intercept(observable: Observable<Response>): Observable<Response> {
