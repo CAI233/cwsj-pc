@@ -14,16 +14,11 @@ import { AppService } from './app.service';
 export class AppComponent {
   //路由列表
   menuList: Array<{ title: string, module: string, power: string, select: boolean }> = [];
+  activeMenu: any;
   // 2.构造函数实例化router对象
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, private service: AppService) {
-    this.router.navigate(['/home']);
-    let param = {
-      user_name: 'caitianxu',
-      user_pwd: '477466'
-    }
-    this.service.post('/admin/login',param).then(success => {
-      console.log(success)
-    })
+    //检测当前是否登录
+    this.service.init();
     //路由事件
     this.router.events.filter(event => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
@@ -37,14 +32,18 @@ export class AppComponent {
         //路由data的标题
         let title = event['title'];
         this.menuList.forEach(p => p.select = false);
-        var menu = { title: title, module: event["module"], power: event["power"], select: true };
+        var menu = { title: title, module: event['module'], power: event['power'], select: true };
         this.titleService.setTitle(title);
         let exitMenu = this.menuList.find(info => info.title == title);
+        this.activeMenu = menu;
+        if(menu.module != 'login' && (!this.service.token || this.service.token == '')){
+          this.router.navigate(['/login']);
+          this.menuList = [];
+        }
         if (exitMenu) {//如果存在不添加，当前表示选中
           this.menuList.forEach(p => p.select = p.title == title);
           return;
         }
-        console.log(menu)
         this.menuList.push(menu);
       });
   }

@@ -1,0 +1,97 @@
+body,html{-webkit-font-smoothing:antialiased;height:100%;width:100%;color:#333;margin:0;padding:0;font-size:12px;min-width:800px;overflow: hidden;}
+body,button,html{font-family:"Lantinghei SC","Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif}
+*{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box}
+a{color:inherit;text-decoration:none;cursor: pointer}
+a:focus,a:hover{outline:0;text-decoration:underline}
+h1,h2,h3,h4,h5{margin:0;padding:0;font-weight:400}
+button,input,select,textarea{outline:0;font-size:14px}
+textarea{resize:none}
+body em,body i,body label,body li,body s,body span,body ul{list-style:none;margin:0;padding:0;font-style:normal;font-weight:400}
+a,button{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;outline:0}
+input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
+.main{width: 1000px;margin: 0 auto;}
+
+
+/*layui reset*/
+.layui-input-lg{
+    height: 50px;
+    font-size: 16px;
+    padding: 0 0 0 20px;
+}
+.layui-btn-lg{
+    height: 50px;
+    font-size: 20px;
+}
+/*layui reset*/
+
+
+
+
+
+
+
+.app-root, .ng-main{
+    float: left;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.ng-header{
+    background: #3bb4aa;
+    color: #ffffff;
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.ng-left{
+    width: 200px;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    background: #3d3f43;
+}
+.ng-content{
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    right: 0;
+    bottom: 0;
+    background: #e5eaee;
+}
+/*隐藏菜单*/
+.ng-outTree .ng-left{
+    left: -200px;
+}
+.ng-outTree .ng-content{
+    left: 0;
+}
+
+/*登录*/
+.ng-singOut .ng-header{
+    top: -50px;
+}
+.ng-singOut .ng-left{
+    left: -200px;
+}
+.ng-singOut .ng-content{
+    left: 0;
+    top: 0;
+}
+
+.ng-logo{
+    background: url('../img/logo-small.png') no-repeat center center / 100% auto;
+    float: left;
+    width: 200px;
+    height: 100%;
+}
+
+app-login{
+    float: left;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

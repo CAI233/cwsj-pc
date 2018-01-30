@@ -37,8 +37,6 @@ export class HttpService extends Http {
     return this.intercept(super.get(url, options)).map(res => res.json());
   }
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
-    console.log(body)
-    console.log(options)
     return this.intercept(super.post(url, body, this.getRequestOptionArgs(options))).map(res => res.json());
   }
   put(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
@@ -57,6 +55,9 @@ export class HttpService extends Http {
     // options.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     // options.headers.append('Content-Type', 'application/json;charset=utf-8');
     options.headers.append('Content-Type', 'text/plain;charset=UTF-8');
+    // options.headers.set('token', '4069bd5632b0726a0489fdfcece47c8e');
+ 
+    console.log(options)
     return options;
   }
   intercept(observable: Observable<Response>): Observable<Response> {
@@ -64,4 +65,5 @@ export class HttpService extends Http {
       return Observable.throw(err);
     });
   }
+
 }
