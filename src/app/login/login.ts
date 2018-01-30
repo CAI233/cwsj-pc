@@ -19,20 +19,20 @@ export class LoginPage implements OnInit {
     this.login_type = this.login_type ? 0 : 1;
   }
   //获取页面背景
-  getLoginBg(): string{
+  getLoginBg(n: number): boolean{
     let date = new Date();
     let m = date.getMonth();
-    if(m >=2 && m <= 4){
-      return 'bg0';
+    if(m >=2 && m <= 4 && n == 1){
+      return true;
     }
-    else if(m >=5 && m <= 9){
-      return 'bg1';
+    else if(m >=5 && m <= 9 && n == 2){
+      return true;
     }
-    else if(m >=10 && m <= 11){
-      return 'bg2';
+    else if(m >=10 && m <= 11 && n == 3){
+      return true;
     }
-    else{
-      return 'bg3';
+    else if(n == 4){
+      return true;
     }
   }
 }
