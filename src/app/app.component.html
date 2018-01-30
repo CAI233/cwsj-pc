@@ -1,0 +1,23 @@
+<div class="row">
+        <div class="col-md-4">
+          <ul>
+            <li><a routerLinkActive="active" routerLink="/home">首页</a></li>
+            <li><a routerLinkActive="active" routerLink="/detail">关于我们</a></li>
+          </ul>
+        </div>
+        <div class="col-md-8">
+          <div class="crumbs clearfix">
+            <ul>
+                <ng-container  *ngFor="let menu of menuList">
+                    <ng-container *ngIf="menu.module">
+                        <li [ngClass]="{'select': menu.select}">
+                            <a routerLink="/{{ menu.module }}">{{ menu.title }}</a> 
+                            <span (click)="closeUrl(menu.module,menu.select)" *ngIf="isMain(menu.module)">X</span> 
+                        </li>
+                    </ng-container>
+                </ng-container>
+            </ul>
+          </div>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
