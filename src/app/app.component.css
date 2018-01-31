@@ -1,5 +1,196 @@
-
-
+.ng-left dl{
+    float: left;
+    width: 100%;
+    color: #fff;
+    border-bottom: 1px #303236 solid;
+}
+.ng-left dt {
+    float: left;
+    width: 100%;
+    padding: 10px 15px;
+    line-height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    position: relative;
+}
+.ng-left dd {
+    float: left;
+    width: 100%;
+}
+.ng-left dt i {
+    float: left;
+    font-size: 20px;
+    width: 30px;
+    height: 20px;
+    line-height: 17px;
+}
+.ng-left dt label {
+    position: absolute;
+    right: 0;
+    line-height: 20px;
+    padding: 10px 15px;
+    font-size: 10px;
+    top: 0;
+    cursor: pointer;
+    color: #999;
+    bottom: 0;
+}
+.ng-left ul {
+    float: left;
+    width: 100%;
+    background: #303236;
+    padding: 5px 0;
+}
+.ng-left li {
+    float: left;
+    width: 100%;
+    color: #ccc;
+}
+.ng-left a {
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-indent: 45px;
+    padding: 8px 0;
+    line-height: 16px;
+    font-size: 12px;
+}
+.ng-left a:hover, .ng-left a.active{
+    background: #3967b2;
+    color: #fff;
+    text-decoration: none;
+}
 .select{
     color: #ff0000;
+}
+
+/*头部*/
+.ng-actions{
+    float: right;
+    margin-right: 30px;
+}
+.ng-actions li{
+    float: left;
+    padding: 5px 15px;
+    height: 40px;
+    cursor: pointer;
+    border-right: 1px #335c9e solid;
+}
+.ng-actions li:last-child{
+    border: none;
+}
+.ng-actions li:hover{
+    background: #335c9e;
+}
+.ng-actions li .layui-icon{
+    font-size: 20px;
+    float: left;
+    line-height: 28px;
+}
+.ng-actions li .layui-icon ~ span{
+    margin-left: 5px;
+}
+.ng-actions li span{
+    line-height: 28px;
+}
+.ng-actions li .uh{
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    line-height: 30px;
+    border-radius: 30px;
+    background: #b9cdef;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+    margin-left: 0;
+}
+.ng-actions li a:hover{
+    color: #fff;
+    text-decoration: none;
+}
+.ng-actions li img{
+    float: left;
+    width: 30px;
+    height: 30px;
+}
+
+/*展开收起*/
+.minMaxCon{
+    float: left;
+    padding: 5px 10px;
+    border-right: 1px #23529c solid;
+    border-left: 1px #23529c solid;
+}
+.minMaxCon label{
+    cursor: pointer;
+    width: 30px;
+    text-align: center;
+    line-height: 30px;
+    float: left;
+    opacity: 0.75;
+}
+.minMaxCon label:hover{
+    opacity: 1;
+}
+.org_name_parent{
+    float: left;
+    padding: 5px 15px;
+    line-height: 30px;
+    opacity: 0.7;
+}
+.org_name_parent .layui-icon{
+    font-size: 24px;
+    float: left;
+    margin-right: 7px;
+}
+.org_name_parent span{
+    font-size: 16px;
+}
+/*搜索应用*/
+.header-search{float:left;padding:10px;position:relative}
+.header-search i{position:absolute;line-height:32px;left:20px;color:#99afd1;font-size: 14px;}
+.header-search input{height:30px;padding:5px 10px 5px 30px;line-height:20px;border:none;border-radius:50px;overflow:hidden;width:140px;background:#23529c;color:#fff;font-size:12px}
+.header-search input:-ms-input-placeholder{
+    color: #fff; opacity:0.3;
+}
+
+.header-search input::-webkit-input-placeholder{
+    color: #fff; opacity:0.3;
+}
+.header-search .search-plan{
+    position: absolute;
+    background: #fff;
+    border: 1px #ddd solid;
+    background: #fff;
+    top: 42px;
+    width: calc(100% - 20px);
+    width: -moz-calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: none;
+}
+.header-search .search-plan dd{
+    padding: 5px 15px;
+    color: #333;
+    cursor: pointer;
+}
+.header-search .search-plan dd:hover{
+    background: #335c9e;
+    color: #fff;
+}
+.header-search .search-plan dd a, .header-search .search-plan dd a:hover{
+    text-decoration: none;
+    display: block;
+    line-height: 20px;
+}
+.header-search .search-plan dd a:hover{
+    color: #fff;
+}
+.home{
+    padding-left: 20px;
 }

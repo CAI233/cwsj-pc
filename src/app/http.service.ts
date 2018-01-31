@@ -25,7 +25,8 @@ export class HttpService extends Http {
     "status.416": "HTTP 状态代码 {0}",
     "status.500": "内部服务器错误。",
     "status.501": "未实现。服务器不识别该请求方法，或者服务器没有能力完成请求。",
-    "status.503": "服务不可用。服务器当前不可用(过载或故障)。"
+    "status.503": "服务不可用。服务器当前不可用(过载或故障)。",
+    "status.600": "token失效，请重新登录。"
   };
   constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
     super(backend, defaultOptions);
@@ -48,15 +49,9 @@ export class HttpService extends Http {
     return this.intercept(super.put(url, this.getRequestOptionArgs(options)));
   }
   getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
-    if (options == null) {
-      options = new RequestOptions();
-    }
-    if (options.headers == null) {
-      options.headers = new Headers();
-    }
-    // options.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    // options.headers.append('Content-Type', 'application/json;charset=utf-8');
-    let token = jQuery.cookie('token');
+    options = options == null ? new RequestOptions() : options;
+    options.headers = options.headers == null ? new Headers() : options.headers;
+    let token = localStorage.getItem('token');
     options.headers.append('Content-Type', 'text/plain;charset=UTF-8');
     options.headers.set('token', token);
     return options;

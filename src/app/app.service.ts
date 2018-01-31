@@ -8,7 +8,8 @@ export class AppService {
     ctxPath: string; //服务器地址
     token: string; //用户登录标识
     loginUserInfo: any; //用户登录信息
-    constructor(private http: Http, private router: Router) {
+    loginUserMenus: any; //用户菜单
+    constructor(private http: Http, public router: Router) {
         this.ctxPath = 'http://192.168.2.43:8994';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
@@ -16,52 +17,71 @@ export class AppService {
     }
     //系统初始化
     init(callback?: any) {
-        let token = jQuery.cookie('token');
-        let userInfo = jQuery.cookie('userInfo');
-        if (token && userInfo && token != '' && userInfo != '') {
+        let token = localStorage.getItem('token');
+        token = token ? token : jQuery.cookie('token');
+        let userInfo = localStorage.getItem('userInfo');
+        let menus = localStorage.getItem('userMenus');
+        if (token && userInfo && token != '' && userInfo != '' && menus && menus != '') {
             this.token = token;
             this.loginUserInfo = JSON.parse(userInfo);
-        }
-        if (callback) {
-            callback(userInfo);
-        }
-        let param = {
-            // user_name: '18696199399',
-            user_name: 'caitianxu',
-            user_pwd: '477466'
-        }
-        this.post('/admin/login', param).then(success => {
-            if(success.code == 0){
-                this.token = success.data.token;
-                this.loginUserInfo = success.data;
-                jQuery.cookie('token', success.data.token);
-                jQuery.cookie('userInfo', JSON.stringify(success.data));
-
-                this.post('/admin/sysResource/json/getMenus').then(res => {
-                    console.log(res)
-                })
+            this.loginUserMenus = JSON.parse(menus);
+            if (callback) {
+                callback();
             }
-        })
+        }
+        else if (token && token != '') {
+            localStorage.setItem('token', token);
+            this.post('/admin/login', {
+                token: token
+            }).then(success => {
+                this.loginTo(success, callback);
+            })
+        }
+    }
+    //用户成功登录
+    loginTo(success: any, callback?: any) {
+        if (success.code == 0) {
+            this.token = success.data.token;
+            this.loginUserInfo = success.data;
+            jQuery.cookie('token', success.data.token);
+            localStorage.setItem('userInfo', JSON.stringify(success.data));
+            localStorage.setItem('token', success.data.token);
+            this.post('/admin/sysResource/json/getMenus').then(res => {
+                if (res.code == 0) {
+                    localStorage.setItem('userMenus', JSON.stringify(res.data));
+                    this.loginUserMenus = res.data;
+                }
+                if (callback) {
+                    callback();
+                }
+            })
+        }
+        else {
+            if (callback) {
+                callback();
+            }
+        }
     }
     //注销
-    sessionOut(){
+    sessionOut() {
         this.token = null;
         this.loginUserInfo = null;
+        this.loginUserMenus = null;
         jQuery.cookie('token', '');
-        jQuery.cookie('userInfo', '');
-        this.router.navigate['/login'];
+        localStorage.clear();
+        this.router.navigate['/login']
     }
     //post请求
     post(url: string, body?: any): Promise<any> {
-        body = body ? body : {token: this.token};
+        body = body ? body : { token: this.token };
         url = url.indexOf('http://') == -1 || url.indexOf('https://') == -1 ? this.ctxPath + url : url;
         let pos = this.http.post(url, body).toPromise();
         //异常就 设置为没有网络
         pos.catch(error => {
-            layer.msg('接口异常!-'+ url);
+            layer.msg('接口异常!-' + url);
         })
         pos.then(res => {
-            if(res['code'] == 600){
+            if (res['code'] == 600) {
                 this.sessionOut();
             }
         })

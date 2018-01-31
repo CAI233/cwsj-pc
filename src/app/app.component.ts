@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import { AppService } from './app.service';
 
+declare let jQuery: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,11 +15,26 @@ import { AppService } from './app.service';
 export class AppComponent {
   //路由列表
   menuList: Array<{ title: string, module: string, power: string, select: boolean }> = [];
-  activeMenu: any;
+  activeMenu: any;//当前页面
+  showLeftMenu: boolean = true; //显示左侧菜单
   // 2.构造函数实例化router对象
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, private service: AppService) {
     //检测当前是否登录
-    this.service.init();
+    this.service.init(() => {
+      console.log(this.service.loginUserInfo)
+      console.log(this.service.loginUserMenus)
+      if (this.service.loginUserMenus && this.service.loginUserMenus.length > 0 && !window.location.hash) {
+        this.router.navigate(['/home']);
+      }
+      else if (window.location.hash.indexOf('#/home') == -1) {
+        this.menuList.push({
+          module: "home",
+          power: "SHOW",
+          select: false,
+          title: "首页"
+        })
+      }
+    });
     //路由事件
     this.router.events.filter(event => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
@@ -36,7 +52,7 @@ export class AppComponent {
         this.titleService.setTitle(title);
         let exitMenu = this.menuList.find(info => info.title == title);
         this.activeMenu = menu;
-        if(menu.module != 'login' && (!this.service.token || this.service.token == '')){
+        if (menu.module != 'login' && (!this.service.token || this.service.token == '')) {
           this.router.navigate(['/login']);
           this.menuList = [];
         }
@@ -73,9 +89,32 @@ export class AppComponent {
     //显示当前路由信息
     this.router.navigate(['/' + menu.module]);
   }
-
-  toDetail() {
-    //3.路由跳转，Router：负责在执行时路由的对象，可以通过调用navigate（）和navigateByUrl()方法导航到另一个路由
-    this.router.navigate(['/detail']);
+  //处理一级菜单
+  openTwoMenu(two: any) {
+    this.service.loginUserMenus[0].children.forEach(item => {
+      if (item.res_id == two.res_id) {
+        item.select = !item.select;
+      }
+      else {
+        item.select = false;
+      }
+    })
   }
+  ngAfterViewInit() {
+    //搜索应用
+    // jQuery('.header-search input').focus(function () {
+    //   jQuery(this).animate({
+    //     width: 250
+    //   }, 'fast');
+    //   jQuery('.header-search .search-plan').show();
+    // }).blur(function () {
+    //   jQuery(this).animate({
+    //     width: 140
+    //   }, 'fast');
+    //   jQuery('.header-search .search-plan').hide();
+    // }).keyup(function (event) {
+
+    // })
+  }
+
 }

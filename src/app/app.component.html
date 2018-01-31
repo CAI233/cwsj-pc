@@ -1,34 +1,82 @@
-<div class="ng-main" [ngClass]="{'ng-singOut': !activeMenu || activeMenu.module == 'login'}">
+<div class="ng-main" [ngClass]="{'ng-singOut': !activeMenu || activeMenu.module == 'login', 'ng-outTree': !showLeftMenu}">
   <div class="ng-header">
     <div class="ng-logo"></div>
+    <div class="minMaxCon" (click)="showLeftMenu = !showLeftMenu">
+      <label class="layui-icon" *ngIf="showLeftMenu">&#xe65a;</label>
+      <label class="layui-icon" *ngIf="!showLeftMenu">&#xe65b;</label>
+    </div>
+    <div class="org_name_parent" *ngIf="service.loginUserInfo">
+      <label class="layui-icon">&#xe68e;</label>
+      <span>{{service.loginUserInfo.org_name}}</span>
+    </div>
+    <div class="header-search" style="display:none;">
+      <i class="layui-icon">&#xe615;</i>
+      <input type="search" placeholder="搜索应用" name="menuname" autocomplete="off" />
+    </div>
+    <ul class="ng-actions">
+      <!-- <li><label class="layui-icon">&#xe63a;</label><span>意见反馈</span></li>
+      <li><label class="layui-icon">&#xe645;</label><span>通知消息</span></li> -->
+      <li *ngIf="service.loginUserInfo && service.loginUserInfo.user_real_name && !service.loginUserInfo.icon">
+        <span class="uh">{{service.loginUserInfo.user_real_name.substr(0,1)}}</span>
+      </li>
+      <li *ngIf="service.loginUserInfo && service.loginUserInfo.icon">
+        <span class="uh">
+          <img src="{{service.loginUserInfo.icon}}">
+        </span>
+      </li>
+      <li>
+        <label class="layui-icon">&#xe63c;</label>
+        <span>帮助中心</span>
+      </li>
+      <li>
+        <label class="layui-icon">&#xe642;</label>
+        <span>修改秘密</span>
+      </li>
+      <li>
+        <a routerLink="/login">
+          <span>注销</span>
+        </a>
+      </li>
+    </ul>
   </div>
-  <div class="ng-left">
-  
+  <div class="ng-left" *ngIf="service.loginUserMenus">
+    <div *ngFor="let one of service.loginUserMenus">
+      <dl *ngFor="let two of one.children">
+        <dt (click)="openTwoMenu(two)">
+          <i class="layui-icon">&#xe620;</i>{{two.res_name}}
+          <label class="layui-icon" *ngIf="!two.select">&#xe602;</label>
+          <label class="layui-icon" *ngIf="two.select">&#xe61a;</label>
+        </dt>
+        <dd *ngIf="two.select">
+          <ul>
+            <li *ngFor="let three of two.children">
+              <a href="{{three.res_url}}" [ngClass]="{'active':three.res_key == activeMenu.module}">{{three.res_name}}</a>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
   </div>
-  <div class="ng-content">
-    <router-outlet></router-outlet>
+  <div class="ng-content" [ngClass]="{'oneTab':!menuList || menuList.length <= 1}">
+    <div class="ng-main-tab">
+      <div class="layui-tab ng-tab">
+        <ul class="layui-tab-title">
+          <ng-container *ngFor="let menu of menuList">
+            <ng-container *ngIf="menu.module">
+              <li [ngClass]="{'layui-this': menu.select, 'home': menu.module == 'home'}">
+                <a routerLink="/{{ menu.module }}">{{ menu.title }}</a>
+                <i class="layui-icon layui-unselect layui-tab-close" *ngIf="isMain(menu.module)" (click)="closeUrl(menu.module,menu.select)">ဆ</i>
+              </li>
+            </ng-container>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+    <div class="ng-page-main">
+      <div class="ng-main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
   </div>
 </div>
-<!-- <div class="row">
-        <div class="col-md-4">
-          <ul>
-            <li><a routerLinkActive="active" routerLink="/home">首页</a></li>
-            <li><a routerLinkActive="active" routerLink="/detail">关于我们</a></li>
-          </ul>
-        </div>
-        <div class="col-md-8">
-          <div class="crumbs clearfix">
-            <ul>
-                <ng-container  *ngFor="let menu of menuList">
-                    <ng-container *ngIf="menu.module">
-                        <li [ngClass]="{'select': menu.select}">
-                            <a routerLink="/{{ menu.module }}">{{ menu.title }}</a> 
-                            <span (click)="closeUrl(menu.module,menu.select)" *ngIf="isMain(menu.module)">X</span> 
-                        </li>
-                    </ng-container>
-                </ng-container>
-            </ul>
-          </div>
-          <router-outlet></router-outlet>
-        </div>
-      </div> -->
