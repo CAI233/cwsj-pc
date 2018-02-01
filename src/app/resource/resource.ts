@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.css']
+  selector: 'app-resource',
+  templateUrl: './resource.html',
+  styleUrls: ['./resource.css']
 })
-export class DetailComponent implements OnInit {
+export class ResourcePage implements OnInit {
 
   //路由传参
   private id: number;

@@ -56,7 +56,18 @@ export class AppComponent {
           this.router.navigate(['/login']);
           this.menuList = [];
         }
-        if (exitMenu) {//如果存在不添加，当前表示选中
+        //菜单选中
+        if (menu.module && menu.module != 'login' && menu.module != 'home') {
+          this.service.loginUserMenus[0].children.forEach(item => {
+            item.children.forEach(node => {
+              console.log(node.res_key)
+              if (node.res_key == menu.module) {
+                this.openTwoMenu(item, true);
+              }
+            })
+          })
+        }
+        if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
           this.menuList.forEach(p => p.select = p.title == title);
           return;
         }
@@ -90,10 +101,10 @@ export class AppComponent {
     this.router.navigate(['/' + menu.module]);
   }
   //处理一级菜单
-  openTwoMenu(two: any) {
+  openTwoMenu(two: any, rt?: boolean) {
     this.service.loginUserMenus[0].children.forEach(item => {
       if (item.res_id == two.res_id) {
-        item.select = !item.select;
+        item.select = rt ? rt : !item.select;
       }
       else {
         item.select = false;
@@ -101,20 +112,7 @@ export class AppComponent {
     })
   }
   ngAfterViewInit() {
-    //搜索应用
-    // jQuery('.header-search input').focus(function () {
-    //   jQuery(this).animate({
-    //     width: 250
-    //   }, 'fast');
-    //   jQuery('.header-search .search-plan').show();
-    // }).blur(function () {
-    //   jQuery(this).animate({
-    //     width: 140
-    //   }, 'fast');
-    //   jQuery('.header-search .search-plan').hide();
-    // }).keyup(function (event) {
 
-    // })
   }
 
 }

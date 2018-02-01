@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { HomePage } from './home/home';
-import { DetailComponent } from './detail/detail.component';
+import { ResourcePage } from './resource/resource';
 import { LoginPage } from './login/login';
 
 //公共服务
@@ -27,7 +27,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
     AppComponent,
     HomePage,
     LoginPage,
-    DetailComponent
+    ResourcePage
   ],
   imports: [
     BrowserModule,
