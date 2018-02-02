@@ -1,4 +1,8 @@
-
+hr {
+    border: none;
+    border-top:1px #eee solid;
+    background: transparent;
+}
 .page-bg{
     float: left;
     width: 100%;
@@ -57,7 +61,7 @@
 }
 .link-right li a{
     color: #fff;
-    line-height: 30px;
+    line-height: 28px;
     text-align: center;
     display: block;
     width: 100%;
@@ -153,7 +157,7 @@
 }
 .login-tip .poptip{
     padding: 5px 10px;
-    border: 1px solid #3967B2;
+    border: 1px solid #108ee9;
     height: 26px;
     line-height: 16px;
     position: relative;
@@ -178,10 +182,10 @@
 }
 
 .poptip-arrow em, .poptip-arrow span {
-    border-left-color: #3967B2;
+    border-left-color: #108ee9;
 }
 .poptip-arrow em {
-    border-left-color: #3967B2;
+    border-left-color: #108ee9;
     border-width: 6px 0 6px 6px;
     left: 1px;
     top: 0;
@@ -192,7 +196,7 @@
 }
 
 .poptip .poptip-content {
-    color: #3967B2;
+    color: #108ee9;
     font-size: 11px;
     font-weight: 400;
 }
@@ -207,15 +211,15 @@
     float: left;
     width: 100%;
 }
-.row .ss1{
+.ss1{
     float: left;
 }
-.row .ss2{
+.ss2{
     float: right;
 }
 .row a{
     padding: 0 5px;
-    color: #3967B2;
+    color: #108ee9;
 }
 .type2 img{
     display: block;
@@ -231,10 +235,15 @@
 }
 .weixin_code p{
     text-align: center;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 .type2{
     float: left;
     width: 100%;
-    padding: 50px 30px 0 30px;
+    padding: 47px 30px 0 30px;
+}
+.type3{
+    float: left;
+    width: 100%;
+    padding: 0 30px 0 30px;
 }

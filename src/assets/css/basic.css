@@ -8,32 +8,31 @@ a:hover{outline:0;text-decoration:underline}
 h1,h2,h3,h4,h5{margin:0;padding:0;font-weight:400}
 button,input,select,textarea{outline:0;font-size:14px}
 textarea{resize:none}
+img{vertical-align: middle}
 body em,body i,body label,body li,body s,body span,body ul{list-style:none;margin:0;padding:0;font-style:normal;font-weight:400}
 a,button{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;outline:0}
 input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .main{width: 1000px;margin: 0 auto;}
 
 
-input:-ms-input-placeholder{
-    color: #000; opacity:0.3;
+.btn-full{
+    width: 100% !important;
 }
-
-input::-webkit-input-placeholder{
-    color: #000; opacity:0.3;
+.btn-lg{
+    height: 50px !important;
+    font-size: 15px !important;
 }
-
-/*layui reset*/
-.layui-input-lg{
-    height: 50px;
-    font-size: 16px;
-    padding: 0 0 0 20px;
+.input-lg .ant-input{
+    height: 50px !important;
+    font-size: 15px !important;
 }
-.layui-btn-lg{
-    height: 50px;
-    font-size: 20px;
+.input-lg .anticon{
+    font-size: 17px;
+    color: #999;
 }
-/*layui reset*/
-
+.input-lg .ant-input-affix-wrapper .ant-input:not(:first-child){
+    padding-left: 30px;
+}
 
 
 
@@ -149,6 +148,16 @@ app-login{
 .ng-tab{
     margin: 10px 0 0 0;
 }
+/* .layui-input-lg{
+    height: 50px;
+    font-size: 16px;
+    padding: 0 0 0 20px;
+}
+.layui-btn-lg{
+    height: 50px;
+    font-size: 20px;
+}
+
 .ng-tab .layui-tab-title{
     height: 30px;
 }
@@ -182,4 +191,4 @@ app-login{
 }
 .ng-tab .layui-tab-title li a:hover{
     text-decoration: none;
-}
+} */

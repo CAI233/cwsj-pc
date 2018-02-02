@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+
+//消息提示
+import {NzMessageService} from 'ng-zorro-antd';
 declare let jQuery: any;
 declare let layer: any;
 @Injectable()
@@ -9,7 +12,7 @@ export class AppService {
     token: string; //用户登录标识
     loginUserInfo: any; //用户登录信息
     loginUserMenus: any; //用户菜单
-    constructor(private http: Http, public router: Router) {
+    constructor(private http: Http, public router: Router, public message: NzMessageService) {
         this.ctxPath = 'http://192.168.2.43:8994';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';

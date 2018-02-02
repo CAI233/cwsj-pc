@@ -1,8 +1,13 @@
 import { Component, OnInit, transition } from '@angular/core';
 import { retry } from 'rxjs/operator/retry';
 import { AppService } from '../app.service';
+//表单 绑定规则、控件组、响应式表单验证（驱动式表单验证）
+import {
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
-declare let layui: any;
 declare let jQuery: any;
 @Component({
   selector: 'app-login',
@@ -10,50 +15,57 @@ declare let jQuery: any;
   styleUrls: ['./login.css']
 })
 export class LoginPage implements OnInit {
-
+  myForm: FormGroup;
   login_type: number = 0; //登录方式
-  user_name: string; //用户名
-  user_pwd: string; //密码
+  userName: string; //用户名
+  password: string; //密码
   loading: boolean = false; //form提交状态
-  constructor(private service: AppService) { }
+  constructor(private service: AppService, private fb: FormBuilder) { }
 
   ngOnInit() {
     localStorage.clear();
     jQuery.cookie('token', '');
-    this.user_name = jQuery.cookie('USERNAME');
-    this.user_pwd = jQuery.cookie('USERPWD');
+    this.userName = jQuery.cookie('USERNAME');
+    this.password = jQuery.cookie('USERPWD');
+    this.myForm = this.fb.group({
+      userName: [null, [Validators.required]],
+      password: [null, [Validators.required]]
+    });
   }
   //文档初始化
   ngAfterViewInit() {
-    layui.use('form', function () {
-      layui.form.render();
-    });
+
   }
   //登录
-  submit() {
-    this.loading = true;
-    this.service.post('/admin/login', {
-      user_name: this.user_name,
-      user_pwd: this.user_pwd
-    }).then(success => {
-      if (success.code == 0) {
-        jQuery.cookie('USERNAME', this.user_name);
-        jQuery.cookie('USERPWD', this.user_pwd);
-        this.service.loginTo(success, () => {
-          if (this.service.loginUserMenus) {
-            this.service.router.navigate(['/home']);
-          }
-          else {
-            layui.layer.msg('获取权限失败, 请重新再试~');
-            this.loading = false;
-          }
-        })
-      }
-      else {
-        layui.layer.msg(success.message);
-        this.loading = false;
-      }
-    })
+  _submitForm() {
+    for (const i in this.myForm.controls) {
+      this.myForm.controls[i].markAsDirty();
+    }
+    if (this.myForm.valid) {
+      this.loading = true;
+      this.service.post('/admin/login', {
+        user_name: this.userName,
+        user_pwd: this.password
+      }).then(success => {
+        if (success.code == 0) {
+          jQuery.cookie('USERNAME', this.userName);
+          jQuery.cookie('USERPWD', this.password);
+          this.service.loginTo(success, () => {
+            if (this.service.loginUserMenus) {
+              this.service.router.navigate(['/home']);
+            }
+            else {
+              this.service.message.error('获取权限失败, 请重新再试~')
+              this.loading = false;
+            }
+          })
+        }
+        else {
+          this.service.message.error(success.message)
+          this.loading = false;
+        }
+      })
+    }
   }
   //修改登录方式
   update_login_type() {
