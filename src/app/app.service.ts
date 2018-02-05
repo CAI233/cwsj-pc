@@ -3,16 +3,15 @@ import { Http } from '@angular/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 //消息提示
-import {NzMessageService} from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 declare let jQuery: any;
-declare let layer: any;
 @Injectable()
 export class AppService {
     ctxPath: string; //服务器地址
     token: string; //用户登录标识
     loginUserInfo: any; //用户登录信息
     loginUserMenus: any; //用户菜单
-    constructor(private http: Http, public router: Router, public message: NzMessageService) {
+    constructor(private http: Http, public router: Router, public message: NzMessageService, public confirm: NzModalService) {
         this.ctxPath = 'http://192.168.2.43:8994';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
@@ -81,7 +80,7 @@ export class AppService {
         let pos = this.http.post(url, body).toPromise();
         //异常就 设置为没有网络
         pos.catch(error => {
-            layer.msg('接口异常!-' + url);
+            this.message.error('接口异常!-' + url);
         })
         pos.then(res => {
             if (res['code'] == 600) {
@@ -89,6 +88,16 @@ export class AppService {
             }
         })
         return pos;
+    }
+    arrToString(data: any): any {
+        let arr = null;
+        if (data) {
+            data = '';
+            data.forEach(el => {
+                data = data == '' ? el : el + ',' + el;
+            });
+        }
+        return arr;
     }
 
 }

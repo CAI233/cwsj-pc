@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
+
 import { AppService } from './app.service';
 
 declare let jQuery: any;
@@ -16,7 +17,7 @@ export class AppComponent {
   //路由列表
   menuList: Array<{ title: string, module: string, power: string, select: boolean }> = [];
   activeMenu: any;//当前页面
-  showLeftMenu: boolean = true; //显示左侧菜单
+  showLeftMenu: boolean = false; //显示左侧菜单
   // 2.构造函数实例化router对象
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, private service: AppService) {
     //检测当前是否登录
@@ -55,12 +56,15 @@ export class AppComponent {
         if (menu.module != 'login' && (!this.service.token || this.service.token == '')) {
           this.router.navigate(['/login']);
           this.menuList = [];
+          console.log('login')
+        }
+        else if(menu.module == 'login'){
+          this.service.sessionOut();
         }
         //菜单选中
         if (menu.module && menu.module != 'login' && menu.module != 'home') {
           this.service.loginUserMenus[0].children.forEach(item => {
             item.children.forEach(node => {
-              console.log(node.res_key)
               if (node.res_key == menu.module) {
                 this.openTwoMenu(item, true);
               }
@@ -110,6 +114,25 @@ export class AppComponent {
         item.select = false;
       }
     })
+  }
+  //控制菜单缩进
+  isCollapsed = false;
+  toggleCollapsed() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+  //注销
+  loginOut(){
+    this.service.confirm.confirm({
+      title: '系统提示',
+      content: '你确定要注销用户信息并退出系统吗?',
+      okText: '确定',
+      cancelText: '取消',
+      maskClosable: false,
+      onOk: () => {
+        this.service.sessionOut();
+        this.router.navigate(['/login']);
+      }
+    });
   }
   ngAfterViewInit() {
 

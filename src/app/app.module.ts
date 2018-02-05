@@ -13,9 +13,11 @@ import { NgZorroAntdModule, NZ_MESSAGE_CONFIG, NZ_NOTIFICATION_CONFIG } from 'ng
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 //页面
+import { ErrorPage404 } from './404/404';
 import { HomePage } from './home/home';
 import { ResourcePage } from './resource/resource';
 import { LoginPage } from './login/login';
+import { UsersPage } from './users/users';
 //公共服务
 import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
@@ -30,9 +32,8 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
 @NgModule({
   declarations: [
     AppComponent,
-    HomePage,
-    LoginPage,
-    ResourcePage
+    ErrorPage404, HomePage, LoginPage,
+    ResourcePage, UsersPage
   ],
   imports: [
     BrowserModule,
@@ -45,7 +46,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
     NgZorroAntdModule.forRoot()
   ],
   providers: [
-    {provide: NZ_LOCALE, useValue: zhCN },
+    { provide: NZ_LOCALE, useValue: zhCN },
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
     { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } },
     HttpService,

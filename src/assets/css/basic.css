@@ -1,10 +1,10 @@
-html{-webkit-font-smoothing:antialiased;height:100%;width:100%;color:#333;margin:0;padding:0;font-size:12px;overflow: hidden;}
-body,html{-webkit-font-smoothing:antialiased;height:100%;width:100%;color:#333;margin:0;padding:0;font-size:12px;min-width:800px;overflow-y:hidden;overflow-x: auto;}
+html{-webkit-font-smoothing:antialiased;color:#333;margin:0;padding:0;font-size:12px;}
+body,html{-webkit-font-smoothing:antialiased;color:#333;margin:0;padding:0;font-size:12px;min-width:800px;}
 body,button,html{font-family:"Lantinghei SC","Open Sans",Arial,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif}
 *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box}
 a{color:inherit;text-decoration:none;cursor: pointer}
 a:focus{outline:0;}
-a:hover{outline:0;text-decoration:underline}
+a:hover,a:select{outline:0;text-decoration:none}
 h1,h2,h3,h4,h5{margin:0;padding:0;font-weight:400}
 button,input,select,textarea{outline:0;font-size:14px}
 textarea{resize:none}
@@ -14,7 +14,21 @@ a,button{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;out
 input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .main{width: 1000px;margin: 0 auto;}
 
-
+.full{
+    width: 100% !important;
+}
+.full .ant-btn-group{
+    width: calc(100% - 35px);
+    width: -moz-calc(100% - 35px);
+    width: -webkit-calc(100% - 35px);
+}
+.full button{
+    width: 100%;
+    text-align: left;
+}
+.full button i{
+    float: right;
+}
 .btn-full{
     width: 100% !important;
 }
@@ -34,161 +48,65 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
     padding-left: 30px;
 }
 
-
-
-
-
-
-.app-root, .ng-main{
-    float: left;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-.ng-header{
-    background: #3967B2;
-    color: #ffffff;
-    height: 40px;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    box-shadow: 2px 1px 2px #ccc;
-    z-index: 2;
+/*布局*/
+.ng-main{
+    min-height: 100vh;
 }
 .ng-left{
-    width: 200px;
-    top: 40px;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    background: #3d3f43;
-    z-index: 3;
-    transition: all 0.3s;
-    box-shadow: 0 6px 6px rgba(0,0,0,0.8);
+    background: #001529 !important;
+    box-shadow: 2px 0 6px rgba(0,21,41,.35);
 }
-.ng-content{
-    position: absolute;
-    top: 40px;
-    left: 200px;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    transition: all 0.3s;
-    background: #e5e8ea;
+.ng-left .ant-menu-dark, .ng-left .ant-menu-dark .ant-menu-sub{
+    background: #001529;
 }
-/*隐藏菜单*/
-.ng-outTree .ng-left{
-    left: -200px;
+.ng-left .ant-menu-dark .ant-menu-inline.ant-menu-sub{
+    background: #000c17;
 }
-.ng-outTree .ng-content{
-    left: 0;
+.ng-left span{
+    font-size: 14px;
 }
-
-/*登录*/
-.ng-singOut .ng-header{
-    top: -40px;
+:root .ant-menu-submenu-inline > .ant-menu-submenu-title:after{
+    font-size: 15px !important;
 }
-.ng-singOut .ng-left{
-    left: -200px;
-    transition:  none !important;
+.ng-main-content .ant-layout-header{
+    padding: 0 12px 0 0;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    position: relative;
 }
-.ng-singOut .ng-content{
-    left: 0;
-    top: 0;
-    transition: none !important;
+.main-page-layout .ant-layout-header{
+    background: transparent !important;
+    box-shadow: none !important;
+    height: 34px;
+    line-height: 24px;
+    margin-top: -5px;
 }
-.ng-singOut .ng-main-tab, .oneTab .ng-main-tab{
-    display: none;
+.main-page-layout{
+    min-height: calc(100vh - 64px);
+    min-height: -moz-calc(100vh - 64px);
+    min-height: -webkit-calc(100vh - 64px);
+    padding:15px;
 }
-.ng-singOut .ng-page-main{
-    padding: 0;
-    height: 100%;
+.main-page-layout > .ant-layout-content{
+    background: #fff;
 }
-.oneTab .ng-page-main{
-    height: 100%;
+.main-page-layout.singOut{
+    min-height: 100vh !important;
+    padding: 0 !important;
 }
-.ng-logo{
-    background: url('../img/logo-small.png') no-repeat center center / 75% auto;
-    float: left;
-    width: 200px;
-    height: 100%;
+.main-page-content{
+    padding: 10px 20px;
 }
-
-app-login{
-    float: left;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-
-.ng-main-tab{
-    background: #eee;
-    height: 40px;
-    padding: 0 15px;
-    overflow: hidden;
-}
-.ng-page-main{
-    float: left;
-    width: 100%;
-    height: calc(100% - 40px);
-    height: -moz-calc(100% - 40px);
-    height: -webkit-calc(100% - 40px);
-    padding: 15px;
-    background: #f9f9f9;
-}
-.ng-page-main .ng-main-content{
-    float: left;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
-.ng-tab{
-    margin: 10px 0 0 0;
-}
-/* .layui-input-lg{
-    height: 50px;
-    font-size: 16px;
-    padding: 0 0 0 20px;
-}
-.layui-btn-lg{
-    height: 50px;
-    font-size: 20px;
-}
-
-.ng-tab .layui-tab-title{
-    height: 30px;
-}
-.ng-tab .layui-tab-title li{
-    line-height: 30px;
-    font-size: 12px;
-    color: #999;
-}
-.ng-tab .layui-tab-title .layui-this{
-    color: #333;
-    background: #f9f9f9;
-}
-.ng-tab .layui-tab-title .layui-this:after {
-    position: absolute;
-    left: 0;
-    top: 0;
-    content: '';
-    width: 100%;
-    height: 31px;
-    border-width: 1px;
-    border-style: solid;
-    border-bottom-color: #fff;
-    border-radius: 2px 2px 0 0;
-    box-sizing: border-box;
-    pointer-events: none;
-    border-color: #d5d5d5;
-}
-
-.ng-tab .layui-tab-title li a{
+.row-actions{
     float: left;
 }
-.ng-tab .layui-tab-title li a:hover{
-    text-decoration: none;
-} */
+.row-questions{
+    float: right;
+}
+.row-questions button, .row-actions button{
+    min-width: 85px;
+}
+.tableListSearch .ant-form-item-label{
+    text-align: left;
+}
