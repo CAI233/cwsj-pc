@@ -5,6 +5,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+
 //国际化
 import { NZ_LOCALE, zhCN } from 'ng-zorro-antd';
 //web ui

@@ -18,7 +18,6 @@
                     <!--列-->
                     <div nz-col [nzSpan]="6">
                         <div nz-form-label nz-col [nzSpan]="5">
-                            <!--nz-form-item-required-->
                             <label>模糊查询</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="17">
@@ -88,8 +87,16 @@
                 </div>
             </form>
 
-            <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
-                [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageSizeChange)="reload(true)">
+            <nz-table #nzTable 
+                nzShowSizeChanger 
+                [nzShowTotal]="true" 
+                [nzAjaxData]="tableData" 
+                [nzLoading]="_loading" 
+                [nzPageSize]="param.pageSize"
+                [nzPageIndex]="param.pageNum" 
+                [nzTotal]="param.total" 
+                (nzPageIndexChangeClick)="reload($event)"
+                (nzPageSizeChange)="reload(true)">
                 <thead nz-thead>
                     <tr>
                         <th nz-th nzCheckbox>
@@ -151,10 +158,7 @@
                                 <a href="#">删除</a>
                                 <span nz-table-divider></span>
                                 <nz-dropdown>
-                                    <a class="ant-dropdown-link" nz-dropdown>
-                                        更多操作
-                                        <i class="anticon anticon-down"></i>
-                                    </a>
+                                    <a class="ant-dropdown-link" nz-dropdown>更多操作<i class="anticon anticon-down"></i></a>
                                     <ul nz-menu>
                                         <li nz-menu-item>
                                             <a target="_blank" rel="noopener noreferrer" href="">1st menu item</a>
@@ -238,7 +242,6 @@
                     <label nz-form-item-required>机构/部门</label>
                 </div>
                 <div nz-form-control nzHasFeedback>
-                    <!-- <nz-input  [(ngModel)]="formBean.dept_name" [nzPlaceHolder]="'请选择机构/部门'"></nz-input> -->
                     <nz-cascader 
                          name="dept" 
                          [nzPlaceHolder]="'请选择机构/部门'" 

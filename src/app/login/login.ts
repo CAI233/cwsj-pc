@@ -1,11 +1,7 @@
 import { Component, OnInit, transition } from '@angular/core';
 import { AppService } from '../app.service';
 //表单 绑定规则、控件组、响应式表单验证（驱动式表单验证）
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import {  FormBuilder,  FormGroup,  Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',

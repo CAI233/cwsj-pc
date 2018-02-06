@@ -60,7 +60,6 @@ export class AppComponent {
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {
-           
             this.service.loginUserMenus[0].children.forEach(item => {
               item.children.forEach(node => {
                 if (node.res_key == menu.module) {

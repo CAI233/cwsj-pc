@@ -66,23 +66,21 @@
             <div class="type1" *ngIf="login_type != 1">
               <form nz-form [formGroup]="myForm" class="login-form" (ngSubmit)="_submitForm()">
                 <div nz-form-item>
-                  <div class="input-lg" nz-form-control>
+                  <div class="input-lg" nz-form-control nzHasFeedback>
                     <nz-input formControlName="userName" [(ngModel)]="userName" [nzPlaceHolder]="'请输入帐号/手机/邮箱'" [nzSize]="'large'">
                       <ng-template #prefix>
                         <i class="anticon anticon-user"></i>
                       </ng-template>
                     </nz-input>
-                    <div nz-form-explain *ngIf="myForm.controls.userName.dirty&&myForm.controls.userName.hasError('required')">请填写你的登录账号!</div>
                   </div>
                 </div>
                 <div nz-form-item>
-                  <div class="input-lg" nz-form-control>
+                  <div class="input-lg" nz-form-control nzHasFeedback>
                     <nz-input formControlName="password" [(ngModel)]="password" [nzType]="'password'" [nzPlaceHolder]="'请输入密码'" [nzSize]="'large'">
                       <ng-template #prefix>
                         <i class="anticon anticon-lock"></i>
                       </ng-template>
                     </nz-input>
-                    <div nz-form-explain *ngIf="myForm.controls.password.dirty&&myForm.controls.password.hasError('required')">请填写账号密码!</div>
                   </div>
                 </div>
                 <div nz-form-item>

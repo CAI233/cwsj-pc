@@ -17,7 +17,7 @@ export class AppService {
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute, 
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
-        this.ctxPath = 'http://192.168.2.43:8994';
+        this.ctxPath = 'http://192.168.2.43:8992';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
         // this.ctxPath = 'http://192.168.2.43:8989/wk';
@@ -73,15 +73,18 @@ export class AppService {
         this.loginUserInfo = null;
         this.loginUserMenus = null;
         localStorage.clear();
-        this.router.navigate['/login']
+        this.router.navigate['/login'];
+        // alert('to login')
     }
     //post请求
     post(url: string, body?: any): Promise<any> {
+        console.log(url)
         body = body ? body : { token: this.token };
         url = url.indexOf('http://') == -1 || url.indexOf('https://') == -1 ? this.ctxPath + url : url;
         let pos = this.http.post(url, body).toPromise();
         //异常就 设置为没有网络
         pos.catch(error => {
+            console.log(error)
             this.message.error('接口异常!-' + url);
         })
         pos.then(res => {

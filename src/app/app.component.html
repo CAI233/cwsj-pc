@@ -8,11 +8,14 @@
       </a>
     </div>
     <ul nz-menu [nzMode]="'inline'" nzTheme='dark' [nzInlineCollapsed]="isCollapsed" *ngIf="service.loginUserMenus">
-      <ng-container *ngFor="let one of service.loginUserMenus[0].children">
+      <ng-container *ngFor="let one of service.loginUserMenus">
         <ng-container *ngIf="!one.children || one.children.length == 0">
           <li nz-menu-item>
             <a href="{{one.res_url}}">
-              <span>{{one.res_name}}</span>
+              <span title>
+                <i class="anticon anticon-appstore"></i>
+                <span>{{one.res_name}}</span>
+              </span>
             </a>
           </li>
         </ng-container>
@@ -24,9 +27,23 @@
             </span>
             <ul>
               <ng-container *ngFor="let two of one.children">
-                <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
-                  <a href="{{two.res_url}}">{{two.res_name}}</a>
-                </li>
+                <ng-container *ngIf="!two.children || two.children.length == 0">
+                  <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
+                    <a href="{{two.res_url}}">{{two.res_name}}</a>
+                  </li>
+                </ng-container>
+                <ng-container *ngIf="two.children && two.children.length > 0">
+                  <li nz-submenu [nzOpen]="one.select">
+                    <span title>{{two.res_name}}</span>
+                    <ul>
+                      <ng-container *ngFor="let three of two.children">
+                        <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == three.res_key">
+                          <a href="{{three.res_url}}">{{three.res_name}}</a>
+                        </li>
+                      </ng-container>
+                    </ul>
+                  </li>
+                </ng-container>
               </ng-container>
             </ul>
           </li>

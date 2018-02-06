@@ -92,9 +92,6 @@ export class UsersPage implements OnInit {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
-
-
-    return false;
     if (this.myForm.valid) {
       this.service.post('/admin/user/save', this.formBean).then(success => {
           if(success.code == 0){
@@ -192,13 +189,16 @@ export class UsersPage implements OnInit {
     this.reload();
   }
   //查询列表数据
-  reload(reset = false) {
-    if (reset) {
+  reload(reset? : any) {
+    if (reset == true) {
       this.param.pageNum = 1;
       this.param.searchText = this.paramCol.searchText;
       this.param.date = this.paramCol.date;
       this.param.state = this.paramCol.state;
       this.param.dept_id = this.paramCol.dept_id ? this.paramCol.dept_id.toString() : null;
+    }
+    else if(reset){
+      this.param.pageNum = reset;
     }
     this._loading = true;
     this.service.post('/admin/user/listAll', this.param).then(success => {
