@@ -3,7 +3,6 @@ import { Http, Request, RequestOptionsArgs, Response, RequestOptions, Connection
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 
-declare let jQuery: any;
 @Injectable()
 export class HttpService extends Http {
   status = {

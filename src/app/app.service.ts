@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-
+//表单 绑定规则、控件组、响应式表单验证（驱动式表单验证）
+import {  FormBuilder,  FormGroup,  Validators, FormControl } from '@angular/forms';
 //消息提示
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-declare let jQuery: any;
 @Injectable()
 export class AppService {
     ctxPath: string; //服务器地址
     token: string; //用户登录标识
     loginUserInfo: any; //用户登录信息
     loginUserMenus: any; //用户菜单
-    constructor(private http: Http, public router: Router, public message: NzMessageService, public confirm: NzModalService) {
+    public validators: any = Validators;
+    public formGroup: any = FormGroup;
+    public formControl: any = FormControl;
+    constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute, 
+        public message: NzMessageService, public confirm: NzModalService,
+        public fb: FormBuilder) {
         this.ctxPath = 'http://192.168.2.43:8994';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
@@ -20,7 +25,6 @@ export class AppService {
     //系统初始化
     init(callback?: any) {
         let token = localStorage.getItem('token');
-        token = token ? token : jQuery.cookie('token');
         let userInfo = localStorage.getItem('userInfo');
         let menus = localStorage.getItem('userMenus');
         if (token && userInfo && token != '' && userInfo != '' && menus && menus != '') {
@@ -45,7 +49,6 @@ export class AppService {
         if (success.code == 0) {
             this.token = success.data.token;
             this.loginUserInfo = success.data;
-            jQuery.cookie('token', success.data.token);
             localStorage.setItem('userInfo', JSON.stringify(success.data));
             localStorage.setItem('token', success.data.token);
             this.post('/admin/sysResource/json/getMenus').then(res => {
@@ -69,7 +72,6 @@ export class AppService {
         this.token = null;
         this.loginUserInfo = null;
         this.loginUserMenus = null;
-        jQuery.cookie('token', '');
         localStorage.clear();
         this.router.navigate['/login']
     }

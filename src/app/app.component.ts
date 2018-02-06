@@ -7,7 +7,6 @@ import 'rxjs/add/operator/mergeMap';
 
 import { AppService } from './app.service';
 
-declare let jQuery: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,8 +21,6 @@ export class AppComponent {
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, private service: AppService) {
     //检测当前是否登录
     this.service.init(() => {
-      console.log(this.service.loginUserInfo)
-      console.log(this.service.loginUserMenus)
       if (this.service.loginUserMenus && this.service.loginUserMenus.length > 0 && !window.location.hash) {
         this.router.navigate(['/home']);
       }
@@ -56,26 +53,29 @@ export class AppComponent {
         if (menu.module != 'login' && (!this.service.token || this.service.token == '')) {
           this.router.navigate(['/login']);
           this.menuList = [];
-          console.log('login')
         }
-        else if(menu.module == 'login'){
+        else if (menu.module == 'login') {
           this.service.sessionOut();
         }
-        // //菜单选中
-        // if (menu.module && menu.module != 'login' && menu.module != 'home') {
-        //   this.service.loginUserMenus[0].children.forEach(item => {
-        //     item.children.forEach(node => {
-        //       if (node.res_key == menu.module) {
-        //         this.openTwoMenu(item, true);
-        //       }
-        //     })
-        //   })
-        // }
-        // if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
-        //   this.menuList.forEach(p => p.select = p.title == title);
-        //   return;
-        // }
-        // this.menuList.push(menu);
+        else {
+          //菜单选中
+          if (menu.module && menu.module != 'login' && menu.module != 'home') {
+           
+            this.service.loginUserMenus[0].children.forEach(item => {
+              item.children.forEach(node => {
+                if (node.res_key == menu.module) {
+                  this.openTwoMenu(item, true);
+                }
+              })
+            })
+          }
+          if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
+            this.menuList.forEach(p => p.select = p.title == title);
+            return;
+          }
+          this.menuList.push(menu);
+        }
+
       });
   }
   //是否需要显示X
@@ -121,7 +121,7 @@ export class AppComponent {
     this.isCollapsed = !this.isCollapsed;
   }
   //注销
-  loginOut(){
+  loginOut() {
     this.service.confirm.confirm({
       title: '系统提示',
       content: '你确定要注销用户信息并退出系统吗?',

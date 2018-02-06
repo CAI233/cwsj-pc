@@ -7,7 +7,6 @@ import {
   Validators
 } from '@angular/forms';
 
-declare let jQuery: any;
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
@@ -23,9 +22,6 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     localStorage.clear();
-    jQuery.cookie('token', '');
-    this.userName = jQuery.cookie('USERNAME');
-    this.password = jQuery.cookie('USERPWD');
     this.myForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]]
@@ -47,8 +43,6 @@ export class LoginPage implements OnInit {
         user_pwd: this.password
       }).then(success => {
         if (success.code == 0) {
-          jQuery.cookie('USERNAME', this.userName);
-          jQuery.cookie('USERPWD', this.password);
           this.service.loginTo(success, () => {
             if (this.service.loginUserMenus) {
               this.service.router.navigate(['/home']);

@@ -13,7 +13,9 @@ body em,body i,body label,body li,body s,body span,body ul{list-style:none;margi
 a,button{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;outline:0}
 input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .main{width: 1000px;margin: 0 auto;}
-
+.center{
+    text-align: center !important;
+}
 .full{
     width: 100% !important;
 }
@@ -46,6 +48,9 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 }
 .input-lg .ant-input-affix-wrapper .ant-input:not(:first-child){
     padding-left: 30px;
+}
+.ant-row.notErrMsg{
+    margin-bottom: 10px !important;
 }
 
 /*布局*/
@@ -110,3 +115,26 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .tableListSearch .ant-form-item-label{
     text-align: left;
 }
+
+/*files*/
+:host ::ng-deep .avatar-uploader,
+  :host ::ng-deep .avatar-uploader-trigger,
+  :host ::ng-deep .avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+  }
+
+  :host ::ng-deep .avatar-uploader {
+    display: block;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  :host ::ng-deep .avatar-uploader-trigger {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 28px;
+    color: #999;
+  }

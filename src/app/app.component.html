@@ -17,14 +17,14 @@
           </li>
         </ng-container>
         <ng-container *ngIf="one.children && one.children.length > 0">
-          <li nz-submenu>
+          <li nz-submenu [nzOpen]="one.select">
             <span title>
               <i class="anticon anticon-appstore"></i>
               <span>{{one.res_name}}</span>
             </span>
             <ul>
               <ng-container *ngFor="let two of one.children">
-                <li nz-menu-item>
+                <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
                   <a href="{{two.res_url}}">{{two.res_name}}</a>
                 </li>
               </ng-container>
