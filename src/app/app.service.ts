@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import {  FormBuilder,  FormGroup,  Validators, FormControl } from '@angular/forms';
 //消息提示
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+declare let window: any;
 @Injectable()
 export class AppService {
     ctxPath: string; //服务器地址
@@ -73,8 +74,9 @@ export class AppService {
         this.loginUserInfo = null;
         this.loginUserMenus = null;
         localStorage.clear();
-        this.router.navigate['/login'];
-        // alert('to login')
+        if(window.location.hash.indexOf('login') == -1)
+            window.location.reload();
+        // this.router.navigate['/login'];
     }
     //post请求
     post(url: string, body?: any): Promise<any> {
@@ -84,7 +86,6 @@ export class AppService {
         let pos = this.http.post(url, body).toPromise();
         //异常就 设置为没有网络
         pos.catch(error => {
-            console.log(error)
             this.message.error('接口异常!-' + url);
         })
         pos.then(res => {
