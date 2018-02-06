@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-// 引入ActivatedRoute
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd  } from '@angular/router';
 import { AppService } from '../app.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-
 @Component({
   selector: 'app-users',
   templateUrl: './users.html',
@@ -38,7 +36,7 @@ export class UsersPage implements OnInit {
   };
   _loading: boolean = true;
   // 实例化一个对象
-  constructor(public routerInfo: ActivatedRoute, private service: AppService) { }
+  constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
 
   ngOnInit() {
     // snapshot:路由快照信息
@@ -81,6 +79,8 @@ export class UsersPage implements OnInit {
     this.param.date = null;
     this.param.dept_id = null;
     this.param.state = null;
+    this.router.navigate['#/login'];
+    console.log('gg')
   }
   //重新查询
   reload(reset = false) {

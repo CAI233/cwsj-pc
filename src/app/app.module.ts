@@ -18,6 +18,7 @@ import { HomePage } from './home/home';
 import { ResourcePage } from './resource/resource';
 import { LoginPage } from './login/login';
 import { UsersPage } from './users/users';
+import { RolePage } from './role/role';
 //公共服务
 import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
@@ -33,7 +34,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
   declarations: [
     AppComponent,
     ErrorPage404, HomePage, LoginPage,
-    ResourcePage, UsersPage
+    ResourcePage, UsersPage, RolePage
   ],
   imports: [
     BrowserModule,
@@ -56,6 +57,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
       deps: [XHRBackend, RequestOptions]
     },
     AppService,
+    //hash url
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]

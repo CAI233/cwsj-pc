@@ -61,21 +61,21 @@ export class AppComponent {
         else if(menu.module == 'login'){
           this.service.sessionOut();
         }
-        //菜单选中
-        if (menu.module && menu.module != 'login' && menu.module != 'home') {
-          this.service.loginUserMenus[0].children.forEach(item => {
-            item.children.forEach(node => {
-              if (node.res_key == menu.module) {
-                this.openTwoMenu(item, true);
-              }
-            })
-          })
-        }
-        if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
-          this.menuList.forEach(p => p.select = p.title == title);
-          return;
-        }
-        this.menuList.push(menu);
+        // //菜单选中
+        // if (menu.module && menu.module != 'login' && menu.module != 'home') {
+        //   this.service.loginUserMenus[0].children.forEach(item => {
+        //     item.children.forEach(node => {
+        //       if (node.res_key == menu.module) {
+        //         this.openTwoMenu(item, true);
+        //       }
+        //     })
+        //   })
+        // }
+        // if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
+        //   this.menuList.forEach(p => p.select = p.title == title);
+        //   return;
+        // }
+        // this.menuList.push(menu);
       });
   }
   //是否需要显示X
