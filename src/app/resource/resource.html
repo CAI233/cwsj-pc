@@ -1,4 +1,109 @@
-<p>
- 这是一个详情内容
-</p>
-<p>这里是从app.component.html接收到参数，id为{{id}}</p>
+<nz-layout class="main-page-layout">
+    <nz-header class="main-page-header">
+        <nz-breadcrumb>
+            <nz-breadcrumb-item>
+                <a href="#/home">首页</a>
+            </nz-breadcrumb-item>
+            <nz-breadcrumb-item>
+                菜单管理
+            </nz-breadcrumb-item>
+        </nz-breadcrumb>
+    </nz-header>
+    <nz-content class="main-page-content">
+        <nz-table #nzTable [nzDataSource]="tableData" [nzIsPagination]="false" [nzLoading]="_loading">
+            <thead nz-thead>
+                <tr>
+                    <th nz-th><span>资源名称</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>id</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>标识</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>地址</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>图标</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>父级</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>类型</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>状态</span></th>
+                    <th nz-th [nzWidth]="'10%'"><span>操作</span></th>
+                </tr>
+            </thead>
+            <tbody nz-tbody>
+                <ng-template ngFor let-data [ngForOf]="nzTable.data">
+                    <ng-template ngFor let-item [ngForOf]="expandDataCache[data.res_id]">
+                        <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)">
+                            <td nz-td>
+                                <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                                <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.res_id],item,$event)" [nzShowExpand]="!!item.children"></nz-row-expand-icon>
+                                <span *ngIf="editRow.res_id != item.res_id">{{item.res_name}}</span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                    <nz-input [nzType]="'text'" name="res_name" [(ngModel)]="editRow.res_name"></nz-input>
+                                </span>
+                            </td>
+                            <td nz-td>{{item.res_id}}</td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">{{item.res_key}}</span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                    <nz-input [nzType]="'text'" name="res_key" [(ngModel)]="editRow.res_key"></nz-input>
+                                </span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">{{item.res_url}}</span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                    <nz-input [nzType]="'text'" name="res_url" [(ngModel)]="editRow.res_url"></nz-input>
+                                </span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">{{item.res_icon}}</span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                    <nz-input [nzType]="'text'" name="res_icon" [(ngModel)]="editRow.res_icon"></nz-input>
+                                </span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">{{item.pid}}</span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                        <nz-input [nzType]="'text'" name="pid" [(ngModel)]="editRow.pid"></nz-input>
+                                    <!-- <nz-cascader
+                                        nzChangeOnSelect
+                                        [nzValueProperty]="'res_id'"
+                                        [nzLabelProperty]="'res_name'"
+                                        [nzOptions]="tableData"
+                                        [(ngModel)]="item.pid">
+                                    </nz-cascader> -->
+                                </span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">
+                                    <span *ngIf="item.res_type == 1">菜单</span>
+                                    <span *ngIf="item.res_type == 2">按钮</span>
+                                </span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                    <nz-select style="width: 100%;" [(ngModel)]="editRow.res_type" nzAllowClear>
+                                        <nz-option
+                                            *ngFor="let option of options"
+                                            [nzLabel]="option.label"
+                                            [nzValue]="option.value">
+                                        </nz-option>
+                                    </nz-select>
+                                </span>
+                            </td>
+                            <td nz-td>
+                                <nz-switch [ngModel]="item.enabled == 1" [nzSize]="'small'" (click)="enabledUser(data)"></nz-switch>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="editRow.res_id != item.res_id">
+                                    <a href="javascript:void(0)" (click)="_editRow(item)">修改</a>
+                                    <span nz-table-divider></span>
+                                    <nz-popconfirm [nzTitle]="'确定要删除这个任务吗？'" (nzOnConfirm)="_delete(item)" [nzPlacement]="'left'">
+                                            <a nz-popconfirm href="javascript:void(0)">删除</a>
+                                    </nz-popconfirm>
+                                </span>
+                                <span *ngIf="editRow.res_id == item.res_id">
+                                        <a href="javascript:void(0)" (click)="_saveRow()">保存</a>
+                                        <span nz-table-divider></span>
+                                        <a href="javascript:void(0)" (click)="_cancel()">取消</a>
+                                    </span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </ng-template>
+            </tbody>
+        </nz-table>
+    </nz-content>
+</nz-layout>

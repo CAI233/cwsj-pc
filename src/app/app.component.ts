@@ -128,8 +128,8 @@ export class AppComponent {
       cancelText: '取消',
       maskClosable: false,
       onOk: () => {
-        this.service.sessionOut();
         this.router.navigate(['/login']);
+        this.service.sessionOut();
       }
     });
   }

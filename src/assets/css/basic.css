@@ -147,3 +147,6 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .ant-table-thead > tr > th{
     color: #999;
 }
+table nz-input{
+    width: auto;
+}

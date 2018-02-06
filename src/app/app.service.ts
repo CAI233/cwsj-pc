@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 //表单 绑定规则、控件组、响应式表单验证（驱动式表单验证）
-import {  FormBuilder,  FormGroup,  Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 //消息提示
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { setTimeout } from 'timers';
 declare let window: any;
 @Injectable()
 export class AppService {
@@ -15,7 +16,7 @@ export class AppService {
     public validators: any = Validators;
     public formGroup: any = FormGroup;
     public formControl: any = FormControl;
-    constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute, 
+    constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
         this.ctxPath = 'http://192.168.2.43:8992';
@@ -74,8 +75,10 @@ export class AppService {
         this.loginUserInfo = null;
         this.loginUserMenus = null;
         localStorage.clear();
-        if(window.location.hash.indexOf('login') == -1)
-            window.location.reload();
+        setTimeout(() => {
+            if (window.location.hash.indexOf('login') == -1)
+                window.location.reload();
+        }, 500)
         // this.router.navigate['/login'];
     }
     //post请求
