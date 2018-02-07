@@ -178,7 +178,7 @@ export class UsersPage implements OnInit {
   //排序
   sort(name, value) {
     this.param.sortName = name;
-    this.param.sortValue = value;
+    this.param.sortValue = value == 'descend' ? 'desc' : 'asc';
     Object.keys(this.sortMap).forEach(key => {
       if (key !== name) {
         this.sortMap[key] = null;
