@@ -21,13 +21,13 @@
                     <th nz-th [nzWidth]="'10%'"><span>父级</span></th>
                     <th nz-th [nzWidth]="'10%'"><span>类型</span></th>
                     <th nz-th [nzWidth]="'10%'"><span>状态</span></th>
-                    <th nz-th [nzWidth]="'10%'"><span>操作</span></th>
+                    <th nz-th [nzWidth]="'200'"><span>操作</span></th>
                 </tr>
             </thead>
             <tbody nz-tbody>
-                <ng-template ngFor let-data [ngForOf]="nzTable.data">
+                <ng-template ngFor let-data [ngForOf]="nzTable.data" >
                     <ng-template ngFor let-item [ngForOf]="expandDataCache[data.res_id]">
-                        <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)">
+                        <tr nz-tbody-tr *ngIf="(item.parent && item.parent.expand) || !(item.parent)">
                             <td nz-td>
                                 <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
                                 <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.res_id],item,$event)" [nzShowExpand]="!!item.children"></nz-row-expand-icon>
@@ -74,7 +74,7 @@
                                     <span *ngIf="item.res_type == 2">按钮</span>
                                 </span>
                                 <span *ngIf="editRow.res_id == item.res_id">
-                                    <nz-select style="width: 100%;" [(ngModel)]="editRow.res_type" nzAllowClear>
+                                    <nz-select style="width: 100%;" [(ngModel)]="editRow.res_type" nzAllowClear [nzPlaceHolder]="'请选择类型'">
                                         <nz-option
                                             *ngFor="let option of options"
                                             [nzLabel]="option.label"
@@ -84,21 +84,35 @@
                                 </span>
                             </td>
                             <td nz-td>
-                                <nz-switch [ngModel]="item.enabled == 1" [nzSize]="'small'" (click)="enabledUser(data)"></nz-switch>
+                                <nz-switch [ngModel]="item.enabled == 1" [nzSize]="'small'" (click)="_enabled(item)"></nz-switch>
                             </td>
                             <td nz-td>
                                 <span *ngIf="editRow.res_id != item.res_id">
-                                    <a href="javascript:void(0)" (click)="_editRow(item)">修改</a>
+                                    <a  (click)="_editRow(item)">修改</a>
                                     <span nz-table-divider></span>
                                     <nz-popconfirm [nzTitle]="'确定要删除这个任务吗？'" (nzOnConfirm)="_delete(item)" [nzPlacement]="'left'">
-                                            <a nz-popconfirm href="javascript:void(0)">删除</a>
+                                        <a nz-popconfirm >删除</a>
                                     </nz-popconfirm>
+                                    <span nz-table-divider></span>
+                                    <nz-dropdown>
+                                        <a class="ant-dropdown-link" nz-dropdown>更多操作
+                                            <i class="anticon anticon-down"></i>
+                                        </a>
+                                        <ul nz-menu>
+                                            <li nz-menu-item>
+                                                <a (click)="_addAfter(item.parent, item)">新增同级</a>
+                                            </li>
+                                            <li nz-menu-item>
+                                                <a (click)="_addChildren(item)">新增子级</a>
+                                            </li>
+                                        </ul>
+                                    </nz-dropdown>
                                 </span>
                                 <span *ngIf="editRow.res_id == item.res_id">
-                                        <a href="javascript:void(0)" (click)="_saveRow()">保存</a>
-                                        <span nz-table-divider></span>
-                                        <a href="javascript:void(0)" (click)="_cancel()">取消</a>
-                                    </span>
+                                    <a  (click)="_saveRow()">保存</a>
+                                    <span nz-table-divider></span>
+                                    <a  (click)="_cancel()">取消</a>
+                                </span>
                             </td>
                         </tr>
                     </ng-template>

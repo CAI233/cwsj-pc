@@ -5,7 +5,6 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 //消息提示
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { setTimeout } from 'timers';
 declare let window: any;
 @Injectable()
 export class AppService {
@@ -83,7 +82,6 @@ export class AppService {
     }
     //post请求
     post(url: string, body?: any): Promise<any> {
-        console.log(url)
         body = body ? body : { token: this.token };
         url = url.indexOf('http://') == -1 || url.indexOf('https://') == -1 ? this.ctxPath + url : url;
         let pos = this.http.post(url, body).toPromise();

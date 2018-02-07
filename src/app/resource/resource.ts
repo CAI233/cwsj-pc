@@ -9,6 +9,7 @@ export class ResourcePage implements OnInit {
 
   private tableData: any = [];
   private editRow: any = {};
+  private actionRow: any = {};
   // 实例化一个对象
   constructor(private service: AppService) { }
 
@@ -21,14 +22,19 @@ export class ResourcePage implements OnInit {
       org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
     }).then(success => {
       this.tableData = success.data;
-      this.tableData.forEach(item => {
-        this.expandDataCache[ item.res_id ] = this.convertTreeToList(item);
-      });
+      this._expanData();
       this._loading = false;
-      console.log(success)
     })
   }
   expandDataCache = {};
+  expandDataCacheCol = {};
+  _expanData(){
+    this.expandDataCacheCol = this.expandDataCache;
+    this.expandDataCache = {};
+    this.tableData.forEach(item => {
+      this.expandDataCache[ item.res_id ] = this.convertTreeToList(item);
+    });
+  }
   collapse(array, data, $event) {
     if ($event === false) {
       if (data.children) {
@@ -49,9 +55,21 @@ export class ResourcePage implements OnInit {
     while (stack.length !== 0) {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
+      const nodeCol = this.expandDataCacheCol[root.res_id];
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[ i ], level: node.level + 1, expand: false, parent: node });
+          let expand = false;
+          if(nodeCol){
+            let col = null;
+            nodeCol.forEach(mm => {
+              if(mm.res_id == node.children[ i ].res_id)
+                col = mm;
+            })
+            if(col){
+              expand = col.expand;
+            }
+          }
+          stack.push({ ...node.children[ i ], level: node.level + 1, expand: expand, parent: node });
         }
       }
     }
@@ -74,6 +92,7 @@ export class ResourcePage implements OnInit {
   //取消编辑
   _cancel(data){
     this.editRow = {};
+    this.load();
   }
   _loading: boolean = false;
   //保存
@@ -87,7 +106,6 @@ export class ResourcePage implements OnInit {
     }
     this._loading = true;
     this.service.post('/admin/sysResource/json/update_sysResource',this.editRow).then(success => {
-      console.log(success)
       if(success.code == 0){
         this.editRow = {};
         this.load();
@@ -99,13 +117,100 @@ export class ResourcePage implements OnInit {
   }
   //删除
   _delete(data){
-    console.log(data)
     this.service.post('/admin/sysResource/json/delete_sysResource',{
       mark: 'del',
       res_ids: [data.res_id]
     }).then( success => {
       this.load();
     })
+  }
+  //启用/停用
+  _enabled(data){
+    // data.enabled = data.enabled == 1 ? 2: 1;
+    this.service.post('/admin/sysResource/json/update_enabled',data).then(success => {
+      this.load();
+    })
+  }
+  //新增同级
+  _addAfter(data : any, item : any){
+    this.actionRow = item;
+    if(data){
+      this.editRow = {
+        enabled: 1,
+        order_weight: new Date().getTime(),
+        org_id: data.org_id,
+        pid: data.res_id,
+        parent_name: data.res_name,
+        res_name: null,
+        res_type: 1,
+        res_type_name: '菜单',
+        res_id: 0
+      }
+      data.children.push({
+        enabled: 1,
+        order_weight: new Date().getTime(),
+        org_id: data.org_id,
+        pid: data.res_id,
+        parent_name: data.res_name,
+        res_name: null,
+        res_type: 1,
+        res_type_name: '菜单',
+        res_id: 0
+      });
+    }
+    else{
+      this.editRow = {
+        enabled: 1,
+        order_weight: new Date().getTime(),
+        org_id: item.org_id,
+        pid: 0,
+        parent_name: null,
+        res_name: null,
+        res_type: 1,
+        res_type_name: '菜单',
+        res_id: 0
+      }
+      this.tableData.push({
+        enabled: 1,
+        order_weight: new Date().getTime(),
+        org_id: item.org_id,
+        pid: 0,
+        parent_name: null,
+        res_name: null,
+        res_type: 1,
+        res_type_name: '菜单',
+        res_id: 0
+      });
+    }
+    this._expanData();
+  }
+  //新增子级
+  _addChildren(data){
+    data.expand = true;
+    this.actionRow = data;
+    this.editRow = {
+      enabled: 1,
+      order_weight: new Date().getTime(),
+      org_id: data.org_id,
+      pid: data.res_id,
+      parent_name: data.res_name,
+      res_name: null,
+      res_type: 1,
+      res_type_name: '菜单',
+      res_id: 0
+    }
+    data.children.push({
+      enabled: 1,
+      order_weight: new Date().getTime(),
+      org_id: data.org_id,
+      pid: data.res_id,
+      parent_name: data.res_name,
+      res_name: null,
+      res_type: 1,
+      res_type_name: '菜单',
+      res_id: 0
+    });
+    this._expanData();
   }
   options: any = [{
     label: '菜单',

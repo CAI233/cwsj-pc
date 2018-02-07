@@ -150,3 +150,6 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 table nz-input{
     width: auto;
 }
+.ant-switch:after{
+    transition: none !important;
+}

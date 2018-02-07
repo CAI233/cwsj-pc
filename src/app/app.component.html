@@ -13,7 +13,7 @@
           <li nz-menu-item>
             <a href="{{one.res_url}}">
               <span title>
-                <i class="anticon anticon-appstore"></i>
+                <i class="anticon anticon-{{one.res_icon}}"></i>
                 <span>{{one.res_name}}</span>
               </span>
             </a>
@@ -22,7 +22,7 @@
         <ng-container *ngIf="one.children && one.children.length > 0">
           <li nz-submenu [nzOpen]="one.select">
             <span title>
-              <i class="anticon anticon-appstore"></i>
+              <i class="anticon anticon-{{one.res_icon}}"></i>
               <span>{{one.res_name}}</span>
             </span>
             <ul>
