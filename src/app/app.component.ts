@@ -55,7 +55,10 @@ export class AppComponent {
           this.menuList = [];
         }
         else if (menu.module == 'login') {
-          this.service.sessionOut();
+          this.service.token = null;
+          this.service.loginUserInfo = null;
+          this.service.loginUserMenus = null;
+          localStorage.clear();
         }
         else {
           //菜单选中
@@ -128,13 +131,23 @@ export class AppComponent {
       cancelText: '取消',
       maskClosable: false,
       onOk: () => {
-        this.router.navigate(['/login']);
-        this.service.sessionOut();
+        this.sessionOut();
       }
     });
   }
   ngAfterViewInit() {
 
   }
-
+  ngDoCheck() {
+    if (!this.service.token && !this.service.loginUserInfo && this.activeMenu && this.activeMenu.module && this.activeMenu.module != 'login') {
+      this.sessionOut();
+    }
+  }
+  sessionOut() {
+    this.service.token = null;
+    this.service.loginUserInfo = null;
+    this.service.loginUserMenus = null;
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 }

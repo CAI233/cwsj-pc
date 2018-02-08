@@ -121,7 +121,12 @@ export class ResourcePage implements OnInit {
       mark: 'del',
       res_ids: [data.res_id]
     }).then( success => {
-      this.load();
+      if(success.code == 0){
+        this.load();
+      }
+      else{
+        this.service.message.error(success.message);
+      }
     })
   }
   //启用/停用
