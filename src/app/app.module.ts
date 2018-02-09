@@ -21,6 +21,7 @@ import { LoginPage } from './login/login';
 import { UsersPage } from './users/users';
 import { RolePage } from './role/role';
 import { OrgPage } from './org/org';
+import { OutfitPage } from './outfit/outfit';
 //公共服务
 import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
@@ -36,7 +37,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
   declarations: [
     AppComponent,
     ErrorPage404, HomePage, LoginPage,
-    ResourcePage, UsersPage, RolePage, OrgPage
+    ResourcePage, UsersPage, RolePage, OrgPage, OutfitPage
   ],
   imports: [
     BrowserModule,

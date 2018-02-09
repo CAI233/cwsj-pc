@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
     }
     if (this.myForm.valid) {
       this.loading = true;
-      this.service.post('/admin/login', {
+      this.service.post('/api/system/login', {
         user_name: this.userName,
         user_pwd: this.password
       }).then(success => {

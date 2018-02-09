@@ -148,6 +148,7 @@ export class AppComponent {
     this.service.loginUserInfo = null;
     this.service.loginUserMenus = null;
     localStorage.clear();
+    this.service.post('/api/system/logout');
     this.router.navigate(['/login']);
   }
 }

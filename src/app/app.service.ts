@@ -18,7 +18,7 @@ export class AppService {
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
-        this.ctxPath = 'http://192.168.2.43:8994';
+        this.ctxPath = 'http://192.168.2.43:8992';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
         // this.ctxPath = 'http://192.168.2.43:8989/wk';
@@ -38,7 +38,7 @@ export class AppService {
         }
         else if (token && token != '') {
             localStorage.setItem('token', token);
-            this.post('/admin/login', {
+            this.post('/api/system/login', {
                 token: token
             }).then(success => {
                 this.loginTo(success, callback);
