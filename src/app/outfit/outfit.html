@@ -31,22 +31,22 @@
                 <span>删除</span>
               </button>
             </nz-popconfirm>
-            
+
           </div>
           <div class="row-questions">
-            <nz-input [nzType]="'search'" [nzPlaceHolder]="'角色名称'" name="searchText" [(ngModel)]="paramCol.searchText" style="width: 200px;"
+            <nz-input [nzType]="'search'" [nzPlaceHolder]="'机构名称'" name="searchText" [(ngModel)]="paramCol.searchText" style="width: 200px;"
               (nzOnSearch)="reload(true)"></nz-input>
           </div>
         </div>
       </form>
-      <nz-table #nzTable 
-        nzShowSizeChanger 
-        [nzShowTotal]="true" 
-        [nzAjaxData]="tableData" 
-        [nzLoading]="_loading" 
+      <nz-table #nzTable
+        nzShowSizeChanger
+        [nzShowTotal]="true"
+        [nzAjaxData]="tableData"
+        [nzLoading]="_loading"
         [nzPageSize]="param.pageSize"
-        [nzPageIndex]="param.pageNum" 
-        [nzTotal]="param.total" 
+        [nzPageIndex]="param.pageNum"
+        [nzTotal]="param.total"
         (nzPageSizeChange)="reload(true)">
         <thead nz-thead>
           <tr>
@@ -55,8 +55,8 @@
               </label>
             </th>
             <th nz-th [nzWidth]="'15%'">
-              <span>角色名称</span>
-              <nz-table-sort [(nzValue)]="sortMap.role_name" (nzValueChange)="sort('role_name', $event)"></nz-table-sort>
+              <span>机构名称</span>
+              <nz-table-sort [(nzValue)]="sortMap.org_name" (nzValueChange)="sort('org_name', $event)"></nz-table-sort>
             </th>
             <th nz-th>
               <span>备注</span>
@@ -68,7 +68,7 @@
             <td nz-td nzCheckbox>
               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
             </td>
-            <td nz-td>{{data.role_name}}</td>
+            <td nz-td>{{data.org_name}}</td>
             <td nz-td *ngIf="data.remark">{{data.remark}}</td>
             <td nz-td *ngIf="!data.remark">--</td>
           </tr>
@@ -79,23 +79,23 @@
 </nz-layout>
 
 
-<nz-modal 
-    [nzMaskClosable]="false" 
-    [nzWrapClassName]="'vertical-center-modal'" 
-    [nzContent]="modalContent" 
+<nz-modal
+    [nzMaskClosable]="false"
+    [nzWrapClassName]="'vertical-center-modal'"
+    [nzContent]="modalContent"
     [nzVisible]="formBean.isVisibleMiddle"
-    [nzTitle]="formBean.formTitle" 
-    (nzOnCancel)="handleCancelMiddle($event)" 
+    [nzTitle]="formBean.formTitle"
+    (nzOnCancel)="handleCancelMiddle($event)"
     (nzOnOk)="handleOkMiddle($event)">
     <ng-template #modalContent>
 
         <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
             <div nz-form-item nz-row class="notErrMsg">
                 <div nz-form-label>
-                    <label nz-form-item-required>角色名称</label>
+                    <label nz-form-item-required>机构名称</label>
                 </div>
                 <div nz-form-control>
-                    <nz-input formControlName="role_name" [nzType]="'text'" [(ngModel)]="formBean.role_name" [nzPlaceHolder]="'请填写角色名称'"></nz-input>
+                    <nz-input formControlName="org_name" [nzType]="'text'" [(ngModel)]="formBean.org_name" [nzPlaceHolder]="'请填写机构名称'"></nz-input>
                 </div>
             </div>
             <div nz-form-item nz-row class="notErrMsg">

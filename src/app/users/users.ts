@@ -32,7 +32,7 @@ export class UsersPage implements OnInit {
   constructor(private service: AppService) { }
 
   ngOnInit() {
-    this.service.post('/admin/organization/getTree', {
+    this.service.post('/api/system/department/getList', {
       dept_id: null,
       org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null,
       pageSize: 1000,
