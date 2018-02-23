@@ -18,7 +18,7 @@ export class ResourcePage implements OnInit {
   }
   load(){
     this._loading = true;
-    this.service.post('/admin/sysResource/json/list',{
+    this.service.post('/api/system/resource/list',{
       org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
     }).then(success => {
       this.tableData = success.data;
@@ -105,7 +105,7 @@ export class ResourcePage implements OnInit {
       this.editRow.res_id = null;
     }
     this._loading = true;
-    this.service.post('/admin/sysResource/json/update_sysResource',this.editRow).then(success => {
+    this.service.post('/api/system/resource/update',this.editRow).then(success => {
       if(success.code == 0){
         this.editRow = {};
         this.load();
@@ -117,7 +117,7 @@ export class ResourcePage implements OnInit {
   }
   //删除
   _delete(data){
-    this.service.post('/admin/sysResource/json/delete_sysResource',{
+    this.service.post('/api/system/resource/delete',{
       mark: 'del',
       res_ids: [data.res_id]
     }).then( success => {
@@ -132,7 +132,7 @@ export class ResourcePage implements OnInit {
   //启用/停用
   _enabled(data){
     // data.enabled = data.enabled == 1 ? 2: 1;
-    this.service.post('/admin/sysResource/json/update_enabled',data).then(success => {
+    this.service.post('/api/system/resource/update/enabled',data).then(success => {
       this.load();
     })
   }

@@ -81,7 +81,7 @@ export class RolePage implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('/admin/role/save', this.formBean).then(success => {
+      this.service.post('/api/system/role/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.myForm.reset();
@@ -115,7 +115,7 @@ export class RolePage implements OnInit {
     else {
       let ids = [];
       this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.role_id) })
-      this.service.post('/admin/role/delete', {
+      this.service.post('/api/system/role/delete', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
@@ -134,7 +134,7 @@ export class RolePage implements OnInit {
       this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
-    this.service.post('/admin/role/listAll', this.param).then(success => {
+    this.service.post('/api/system/role/list', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;
