@@ -144,11 +144,11 @@ export class AppComponent {
     }
   }
   sessionOut() {
+    this.service.post('/api/system/logout');
     this.service.token = null;
     this.service.loginUserInfo = null;
     this.service.loginUserMenus = null;
     localStorage.clear();
-    this.service.post('/api/system/logout');
     this.router.navigate(['/login']);
   }
 }
