@@ -25,7 +25,7 @@ export class OutfitPage implements OnInit {
     searchText: null
   }
   sortMap = {
-    role_name: null,
+    org_name: null,
   };
   _loading: boolean = true;
   // 实例化一个对象
@@ -33,16 +33,16 @@ export class OutfitPage implements OnInit {
   //表单
   myForm: any;
   formBean: any = {
-    formTitle: '新增角色',
+    formTitle: '新增机构',
     isVisibleMiddle: false,
-    role_id: null,
-    role_name: null,
+    org_id: null,
+    org_name: null,
     remark: null
   };
   ngOnInit() {
     this.reload();
     this.myForm = this.service.fb.group({
-      role_name: [null, [this.service.validators.required]],
+      org_name: [null, [this.service.validators.required]],
       remark: [false]
     })
   }
@@ -56,14 +56,14 @@ export class OutfitPage implements OnInit {
       if (this.formBean.dept_id) {
         this.formBean.dept_id = parseInt(this.formBean.dept_id);
       }
-      if (this.formBean.role_id) {
-        this.formBean.role_id = parseInt(this.formBean.role_id);
+      if (this.formBean.org_id) {
+        this.formBean.org_id = parseInt(this.formBean.org_id);
       }
       console.log(this.formBean)
-      this.formBean.formTitle = "修改角色";
+      this.formBean.formTitle = "修改机构";
     }
     else {
-      this.formBean.formTitle = "新增角色";
+      this.formBean.formTitle = "新增机构";
     }
     this.formBean.isVisibleMiddle = true;
   };
@@ -82,7 +82,7 @@ export class OutfitPage implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('/admin/role/save', this.formBean).then(success => {
+      this.service.post('/api/system/organization/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.myForm.reset();
@@ -104,7 +104,7 @@ export class OutfitPage implements OnInit {
       for (let i in bean[0]) {
         this.formBean[i] = bean[0][i];
       }
-      this.formBean.formTitle = '修改角色';
+      this.formBean.formTitle = '修改机构';
       this.formBean.isVisibleMiddle = true;
     }
   }
@@ -115,8 +115,8 @@ export class OutfitPage implements OnInit {
     }
     else {
       let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.role_id) })
-      this.service.post('/admin/role/delete', {
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.org_id) })
+      this.service.post('/api/system/organization/delete', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
