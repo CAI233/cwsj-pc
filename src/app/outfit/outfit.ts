@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../app.service';
+// import { divisions } from '../divisions-of-China/divisions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-outfit',
@@ -18,6 +19,9 @@ export class OutfitPage implements OnInit {
     pageSize: 10,
     pageNum: 1
   };
+  _nzChange(e){
+    console.log(e)
+  }
   paramCol: any = {
     dept_id: null,
     state: null,
@@ -28,21 +32,32 @@ export class OutfitPage implements OnInit {
     org_name: null,
   };
   _loading: boolean = true;
+  _address: any = [{
+    code: 1,
+    name: '武汉',
+    children:[{
+      code: 2,
+      name: '阿斯顿的',
+      isLeaf: true
+    }]
+  }]//divisions._divisions;
   // 实例化一个对象
   constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
   //表单
-  myForm: any;
+  myForm: FormGroup;
   formBean: any = {
     formTitle: '新增机构',
     isVisibleMiddle: false,
     org_id: null,
     org_name: null,
+    org_code: null,
     remark: null
   };
   ngOnInit() {
     this.reload();
     this.myForm = this.service.fb.group({
       org_name: [null, [this.service.validators.required]],
+      org_code: [null, [this.service.validators.required]],
       remark: [false]
     })
   }
@@ -169,8 +184,8 @@ export class OutfitPage implements OnInit {
   }
   //排序
   sort(name, value) {
-    this.param.sortName = name;
-    this.param.sortValue = value;
+    this.param.sort_name = name;
+    this.param.sort_rule = value;
     Object.keys(this.sortMap).forEach(key => {
       if (key !== name) {
         this.sortMap[key] = null;
@@ -181,24 +196,18 @@ export class OutfitPage implements OnInit {
     this.reload();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   //状态
   _enabled(data){
     data.enabled = data.enabled == 1 ? 2 : 1;
-    this.service.post('/api/system/organization/save', data).then(success => {
+    this.service.post('/api/system/organization/setEnabled', {
+      org_ids: [data.org_id],
+      enabled: data.enabled
+    }).then(success => {
       this.reload();
     })
   }
+
+
+
+
 }

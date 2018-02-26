@@ -119,12 +119,10 @@ export class AppComponent {
       one.select = false;
       one.children.forEach(two =>{
         if(two.res_id == item.res_id){
-          console.log(2)
           one.select = rt ? rt : !one.select;
         }
         else{
           two.select = false;
-          console.log(3)
           two.children.forEach(element => {
             if(element.res_id == item.res_id){
               one.select = true;
@@ -162,11 +160,11 @@ export class AppComponent {
     }
   }
   sessionOut() {
-    this.service.post('/api/system/logout');
     this.service.token = null;
     this.service.loginUserInfo = null;
     this.service.loginUserMenus = null;
     localStorage.clear();
+    this.service.post('/api/system/logout');
     this.router.navigate(['/login']);
   }
 }

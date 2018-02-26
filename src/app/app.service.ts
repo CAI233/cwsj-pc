@@ -91,15 +91,17 @@ export class AppService {
         })
         return pos;
     }
-    arrToString(data: any): any {
-        let arr = null;
-        if (data) {
-            data = '';
-            data.forEach(el => {
-                data = data == '' ? el : el + ',' + el;
-            });
-        }
-        return arr;
+    //isLeaf转换
+    _toisLeaf(root) {
+        root.forEach(element => {
+            if (element.children && element.children.length > 0) {
+                element.isLeaf = false;
+                this._toisLeaf(element.children);
+            }
+            else {
+                element.isLeaf = true;
+            }
+        });
     }
 
 }

@@ -25,8 +25,10 @@ export class OrgPage implements OnInit {
         dept_name: this.service.loginUserInfo.org_name,
         children: success.data
       }];
+      this.service._toisLeaf(this.tableData);
       this._expanData();
       this._loading = false;
+      console.log(this.tableData)
     })
   }
   expandDataCache = {};
@@ -51,7 +53,6 @@ export class OrgPage implements OnInit {
       }
     }
   }
-
   convertTreeToList(root) {
     const stack = [], array = [], hashMap = {};
     stack.push({ ...root, level: 0, expand: true });
@@ -59,6 +60,9 @@ export class OrgPage implements OnInit {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
       const nodeCol = this.expandDataCacheCol[root.dept_id];
+      if(node.children && node.children.length == 0){
+        node.children = null;
+      }
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           let expand = false;
@@ -178,7 +182,8 @@ export class OrgPage implements OnInit {
         dept_name: parent.dept_name
       }],
       dept_name: '请填写',
-      disabled: true
+      disabled: true,
+      isLeaf: true
     }
     parent.children(this.editRow)
     this._expanData();
@@ -199,7 +204,8 @@ export class OrgPage implements OnInit {
         dept_name: parent.dept_name
       }],
       dept_name: '请填写',
-      disabled: true
+      disabled: true,
+      isLeaf: true
     }
     parent.children.push(this.editRow);
     this._expanData();
