@@ -63,10 +63,17 @@ export class AppComponent {
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {
-            this.service.loginUserMenus[0].children.forEach(item => {
-              item.children.forEach(node => {
-                if (node.res_key == menu.module) {
-                  this.openTwoMenu(item, true);
+            this.service.loginUserMenus.forEach(one => {
+              one.children.forEach(two =>{
+                if(two.res_key == menu.module){
+                  this.openTwoMenu(two, true);
+                }
+                else{
+                  two.children.forEach(element => {
+                    if(element.res_key == menu.module){
+                      this.openTwoMenu(element, true);
+                    }
+                  });
                 }
               })
             })
@@ -107,14 +114,25 @@ export class AppComponent {
     this.router.navigate(['/' + menu.module]);
   }
   //处理一级菜单
-  openTwoMenu(two: any, rt?: boolean) {
-    this.service.loginUserMenus[0].children.forEach(item => {
-      if (item.res_id == two.res_id) {
-        item.select = rt ? rt : !item.select;
-      }
-      else {
-        item.select = false;
-      }
+  openTwoMenu(item: any, rt?: boolean) {
+    this.service.loginUserMenus.forEach(one => {
+      one.select = false;
+      one.children.forEach(two =>{
+        if(two.res_id == item.res_id){
+          console.log(2)
+          one.select = rt ? rt : !one.select;
+        }
+        else{
+          two.select = false;
+          console.log(3)
+          two.children.forEach(element => {
+            if(element.res_id == item.res_id){
+              one.select = true;
+              two.select = true;
+            }
+          });
+        }
+      })
     })
   }
   //控制菜单缩进

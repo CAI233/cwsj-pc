@@ -54,13 +54,12 @@
               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
               </label>
             </th>
-            <th nz-th [nzWidth]="'15%'">
-              <span>角色名称</span>
-              <nz-table-sort [(nzValue)]="sortMap.role_name" (nzValueChange)="sort('role_name', $event)"></nz-table-sort>
-            </th>
-            <th nz-th>
-              <span>备注</span>
-            </th>
+            <th nz-th><span>机构编码</span></th>
+            <th nz-th><span>机构名称</span></th>
+            <th nz-th><span>地址</span></th>
+            <th nz-th><span>联系人</span></th>
+            <th nz-th><span>联系方式</span></th>
+            <th nz-th><span>状态</span></th>
           </tr>
         </thead>
         <tbody nz-tbody>
@@ -68,9 +67,14 @@
             <td nz-td nzCheckbox>
               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
             </td>
-            <td nz-td>{{data.role_name}}</td>
-            <td nz-td *ngIf="data.remark">{{data.remark}}</td>
-            <td nz-td *ngIf="!data.remark">--</td>
+            <td nz-td>{{data.org_code}}</td>
+            <td nz-td>{{data.org_name}}</td>
+            <td nz-td>{{data.province}}{{data.city}}{{data.area}}</td>
+            <td nz-td>{{data.link_man}}</td>
+            <td nz-td>{{data.link_mobile}}</td>
+            <td nz-td>
+              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="_enabled(data)"></nz-switch>
+            </td>
           </tr>
         </tbody>
       </nz-table>

@@ -12,6 +12,7 @@ export class OutfitPage implements OnInit {
   _indeterminate = false;
   tableData: any = []; //数据列表
   param: any = {
+    org_id: null,
     searchText: null,
     total: 0,
     pageSize: 10,
@@ -134,7 +135,7 @@ export class OutfitPage implements OnInit {
       this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
-    this.service.post('/admin/role/listAll', this.param).then(success => {
+    this.service.post('/api/system/organization/getList', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;
@@ -178,5 +179,26 @@ export class OutfitPage implements OnInit {
       }
     });
     this.reload();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //状态
+  _enabled(data){
+    data.enabled = data.enabled == 1 ? 2 : 1;
+    this.service.post('/api/system/organization/save', data).then(success => {
+      this.reload();
+    })
   }
 }

@@ -8,8 +8,8 @@ import { AppService } from '../app.service';
 export class OrgPage implements OnInit {
 
   private tableData: any = [];
+  private tableDataTree: any = [];
   private editRow: any = {};
-  private actionRow: any = {};
   // 实例化一个对象
   constructor(private service: AppService) { }
 
@@ -18,10 +18,13 @@ export class OrgPage implements OnInit {
   }
   load(){
     this._loading = true;
-    this.service.post('/admin/organization/getTree',{
-      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
-    }).then(success => {
-      this.tableData = success.data;
+    this.service.post('/api/system/department/getList',{}).then(success => {
+      this.tableData = [{
+        org_id: this.service.loginUserInfo.org_id,
+        dept_id: 0,
+        dept_name: this.service.loginUserInfo.org_name,
+        children: success.data
+      }];
       this._expanData();
       this._loading = false;
     })
@@ -32,14 +35,14 @@ export class OrgPage implements OnInit {
     this.expandDataCacheCol = this.expandDataCache;
     this.expandDataCache = {};
     this.tableData.forEach(item => {
-      this.expandDataCache[ item.res_id ] = this.convertTreeToList(item);
+      this.expandDataCache[ item.dept_id ] = this.convertTreeToList(item);
     });
   }
   collapse(array, data, $event) {
     if ($event === false) {
       if (data.children) {
         data.children.forEach(d => {
-          const target = array.find(a => a.res_id === d.res_id);
+          const target = array.find(a => a.dept_id === d.dept_id);
           target.expand = false;
           this.collapse(array, target, false);
         });
@@ -55,14 +58,14 @@ export class OrgPage implements OnInit {
     while (stack.length !== 0) {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
-      const nodeCol = this.expandDataCacheCol[root.res_id];
+      const nodeCol = this.expandDataCacheCol[root.dept_id];
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           let expand = false;
           if(nodeCol){
             let col = null;
             nodeCol.forEach(mm => {
-              if(mm.res_id == node.children[ i ].res_id)
+              if(mm.dept_id == node.children[ i ].dept_id)
                 col = mm;
             })
             if(col){
@@ -71,14 +74,30 @@ export class OrgPage implements OnInit {
           }
           stack.push({ ...node.children[ i ], level: node.level + 1, expand: expand, parent: node });
         }
+        //父级tree节点创建
+        if(node.parent){
+          node.pname = [];
+          if(node.parent.pname){
+            node.parent.pname.forEach(element => {
+              node.pname.push({
+                dept_id: element.dept_id,
+                dept_name: element.dept_name
+              });
+            });
+          }
+          node.pname.push({
+            dept_id: node.parent.dept_id,
+            dept_name: node.parent.dept_name
+          });
+        }
       }
     }
     return array;
   }
 
   visitNode(node, hashMap, array) {
-    if (!hashMap[ node.res_id ]) {
-      hashMap[ node.res_id ] = true;
+    if (!hashMap[ node.dept_id ]) {
+      hashMap[ node.dept_id ] = true;
       array.push(node);
     }
   }
@@ -88,6 +107,7 @@ export class OrgPage implements OnInit {
     for(let i in data){
       this.editRow[i] = data[i];
     }
+    data.disabled = true;
   }
   //取消编辑
   _cancel(data){
@@ -97,20 +117,32 @@ export class OrgPage implements OnInit {
   _loading: boolean = false;
   //保存
   _saveRow(){
-    if(!this.editRow.res_name){
+    if(!this.editRow.dept_name){
       this.service.message.error('请填写资源名称');
       return false;
     }
-    if(this.editRow.res_id == 0){
-      this.editRow.res_id = null;
+    if(!this.editRow.pname){
+      this.service.message.error('请选择父级');
+      return false;
+    }
+    else{
+      let pid = this.editRow.pname[this.editRow.pname.length - 1];
+      if(typeof(pid) == 'object'){
+        pid = pid.dept_id;
+      }
+      this.editRow.dept_pid = pid == 0 ? null : pid;
     }
     this._loading = true;
-    this.service.post('/admin/sysResource/json/update_sysResource',this.editRow).then(success => {
+    console.log(this.editRow)
+    this.editRow.parent = null;
+    this.editRow.children = null;
+    this.service.post('/api/system/department/save', this.editRow).then(success => {
       if(success.code == 0){
         this.editRow = {};
         this.load();
       }
       else{
+        this._loading = false;
         this.service.message.error(success.message);
       }
     })
@@ -119,7 +151,7 @@ export class OrgPage implements OnInit {
   _delete(data){
     this.service.post('/admin/sysResource/json/delete_sysResource',{
       mark: 'del',
-      res_ids: [data.res_id]
+      dept_ids: [data.dept_id]
     }).then( success => {
       this.load();
     })
@@ -132,91 +164,44 @@ export class OrgPage implements OnInit {
     })
   }
   //新增同级
-  _addAfter(data : any, item : any){
-    this.actionRow = item;
-    if(data){
-      this.editRow = {
-        enabled: 1,
-        order_weight: new Date().getTime(),
-        org_id: data.org_id,
-        pid: data.res_id,
-        parent_name: data.res_name,
-        res_name: null,
-        res_type: 1,
-        res_type_name: '菜单',
-        res_id: 0
-      }
-      data.children.push({
-        enabled: 1,
-        order_weight: new Date().getTime(),
-        org_id: data.org_id,
-        pid: data.res_id,
-        parent_name: data.res_name,
-        res_name: null,
-        res_type: 1,
-        res_type_name: '菜单',
-        res_id: 0
-      });
+  _addAfter(parent : any){
+    this.editRow = {
+      enabled: 1,
+      remark: null,
+      address: null,
+      dept_code: null,
+      dept_path: null,
+      dept_id: null,
+      org_id: parent.org_id,
+      dept_pid: [{
+        dept_id: parent.dept_id,
+        dept_name: parent.dept_name
+      }],
+      dept_name: '请填写',
+      disabled: true
     }
-    else{
-      this.editRow = {
-        enabled: 1,
-        order_weight: new Date().getTime(),
-        org_id: item.org_id,
-        pid: 0,
-        parent_name: null,
-        res_name: null,
-        res_type: 1,
-        res_type_name: '菜单',
-        res_id: 0
-      }
-      this.tableData.push({
-        enabled: 1,
-        order_weight: new Date().getTime(),
-        org_id: item.org_id,
-        pid: 0,
-        parent_name: null,
-        res_name: null,
-        res_type: 1,
-        res_type_name: '菜单',
-        res_id: 0
-      });
-    }
+    parent.children(this.editRow)
     this._expanData();
   }
   //新增子级
-  _addChildren(data){
-    data.expand = true;
-    this.actionRow = data;
+  _addChildren(parent){
+    parent.expand = true;
     this.editRow = {
       enabled: 1,
-      order_weight: new Date().getTime(),
-      org_id: data.org_id,
-      pid: data.res_id,
-      parent_name: data.res_name,
-      res_name: null,
-      res_type: 1,
-      res_type_name: '菜单',
-      res_id: 0
+      remark: null,
+      address: null,
+      dept_code: null,
+      dept_path: null,
+      dept_id: null,
+      org_id: parent.org_id,
+      dept_pid: [{
+        dept_id: parent.dept_id,
+        dept_name: parent.dept_name
+      }],
+      dept_name: '请填写',
+      disabled: true
     }
-    data.children.push({
-      enabled: 1,
-      order_weight: new Date().getTime(),
-      org_id: data.org_id,
-      pid: data.res_id,
-      parent_name: data.res_name,
-      res_name: null,
-      res_type: 1,
-      res_type_name: '菜单',
-      res_id: 0
-    });
+    parent.children.push(this.editRow);
     this._expanData();
   }
-  options: any = [{
-    label: '菜单',
-    value: 1
-  },{
-    label: '按钮',
-    value: 2
-  }]
 }

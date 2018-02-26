@@ -33,7 +33,7 @@
                   </li>
                 </ng-container>
                 <ng-container *ngIf="two.children && two.children.length > 0">
-                  <li nz-submenu [nzOpen]="one.select">
+                  <li nz-submenu [nzOpen]="two.select">
                     <span title>{{two.res_name}}</span>
                     <ul>
                       <ng-container *ngFor="let three of two.children">

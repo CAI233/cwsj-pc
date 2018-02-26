@@ -13,8 +13,8 @@ export class UsersPage implements OnInit {
     state: null,
     date: null,
     searchText: null,
-    sortName: null,
-    sortValue: null,
+    sort_name: null,
+    sort_rule: null,
     total: 0,
     pageSize: 10,
     pageNum: 1
@@ -177,8 +177,8 @@ export class UsersPage implements OnInit {
   }
   //排序
   sort(name, value) {
-    this.param.sortName = name;
-    this.param.sortValue = value == 'descend' ? 'desc' : 'asc';
+    this.param.sort_name = name;
+    this.param.sort_rule = value == 'descend' ? 'desc' : 'asc';
     Object.keys(this.sortMap).forEach(key => {
       if (key !== name) {
         this.sortMap[key] = null;
