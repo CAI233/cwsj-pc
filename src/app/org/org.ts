@@ -60,9 +60,6 @@ export class OrgPage implements OnInit {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
       const nodeCol = this.expandDataCacheCol[root.dept_id];
-      if(node.children && node.children.length == 0){
-        node.children = null;
-      }
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           let expand = false;
@@ -95,6 +92,10 @@ export class OrgPage implements OnInit {
           });
         }
       }
+      // if(node.children && node.children.length == 0){
+      //   node.children = null;
+      // }
+
     }
     return array;
   }

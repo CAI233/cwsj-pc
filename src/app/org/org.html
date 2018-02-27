@@ -28,7 +28,7 @@
                         <tr nz-tbody-tr *ngIf="(item.parent && item.parent.expand) || !(item.parent)">
                             <td nz-td>
                                 <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
-                                <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.dept_id],item,$event)" [nzShowExpand]="!!item.children"></nz-row-expand-icon>
+                                <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.dept_id],item,$event)" [nzShowExpand]="!!item.children && item.children.length > 0"></nz-row-expand-icon>
                                 <span *ngIf="editRow.dept_id != item.dept_id">{{item.dept_name}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-input [nzType]="'text'" name="dept_name" [(ngModel)]="editRow.dept_name"></nz-input>
