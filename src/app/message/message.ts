@@ -81,17 +81,17 @@ export class MessagePage implements OnInit {
   //重新查询
   reload(event?) {
     this.param.pageNum = 1;
-    if(event)this.param.pageSize = event;
+    if (event) this.param.pageSize = event;
     this.param.searchText = this.paramCol.searchText;
     this.load();
   }
   //页码改变
-  pageChange(event){
+  pageChange(event) {
     this.param.pageNum = event;
     this.load();
   }
   //设置模块搜索
-  set_mod_id(md){
+  set_mod_id(md) {
     this.param.mod_id = this.param.mod_id == md.mod_id ? null : md.mod_id;
     this.reload();
   }
@@ -110,13 +110,13 @@ export class MessagePage implements OnInit {
   myForm: any;
   //修改模块
   _editModel(data) {
-    for(let i in data){
+    for (let i in data) {
       this.editModelBean[i] = data[i];
     }
     this.editModelBean.isVisibleMiddle = true;
   }
   //新增模块
-  _addModel(){
+  _addModel() {
     this.editModelBean = {
       module_name: null,
       module_short_name: null,
@@ -137,11 +137,11 @@ export class MessagePage implements OnInit {
     })
   }
   //取消
-  handleCancelMiddle(){
+  handleCancelMiddle() {
     this.editModelBean.isVisibleMiddle = false;
   }
   //确定
-  handleOkMiddle(){
+  handleOkMiddle() {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
@@ -159,9 +159,9 @@ export class MessagePage implements OnInit {
     }
   }
   //消息加载
-  load(){
+  load() {
     this._loading = true;
-    this.service.post('/api/system/msg/list',this.param).then(success => {
+    this.service.post('/api/system/msg/list', this.param).then(success => {
       this._loading = false;
       this.tableData = success.data.rows;
       this.param.total = success.data.total;
@@ -169,7 +169,7 @@ export class MessagePage implements OnInit {
   }
   edieMessage = {};
   //新增消息
-  _addMessage(){
+  _addMessage() {
     this.edieMessage = {
       msg_id: null,
       mod_id: null,
@@ -179,70 +179,69 @@ export class MessagePage implements OnInit {
     this.tableData.unshift(this.edieMessage);
   }
   //消息编辑取消
-  _cancel(data){
-    if(!data.msg_id){
+  _cancel(data) {
+    if (!data.msg_id) {
       this.tableData.splice(this.tableData.indexOf(data), 1);
     }
     this.edieMessage = {};
   }
   //编辑
-  showModalMiddle(data){
-    for(let i in data){
+  showModalMiddle(data) {
+    for (let i in data) {
       this.edieMessage[i] = data[i];
     }
     this.modeList.forEach(element => {
-      if(element.mod_id == data.mod_id)
-      data.selectedOption = element;
+      if (element.mod_id == data.mod_id)
+        data.selectedOption = element;
     });
   }
   //保存消息
-  _saveRow(data){
-    if(!data.selectedOption){
+  _saveRow(data) {
+    if (!data.selectedOption) {
       this.service.message.warning('请选择模块');
       return false;
     }
-    else{
+    else {
       data.mod_id = data.selectedOption.mod_id;
     }
-    if(!data.code){
+    if (!data.code) {
       this.service.message.warning('请填写编号');
       return false;
     }
-    if(!data.message){
+    if (!data.message) {
       this.service.message.warning('请填写消息内容');
       return false;
     }
     this.service.post('/api/system/msg/save', data).then(success => {
-      if(success.code == 0){
+      if (success.code == 0) {
         this.edieMessage = {};
         this.service.message.success(success.message);
         this.load();
       }
-      else{
+      else {
         this.service.message.error(success.message);
       }
     })
   }
   //删除数据
-  delRows(){
-    let ids = [];
-    this.tableData.forEach(element => {
-      if(element.checked) ids.push(element.msg_id);
-    });
-    if(ids.length == 0){
-      this.service.message.warning('请选择你要删除的数据!');
-      return  false;
+  delRows() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要删除的数据内容!');
     }
-    this.service.post('/api/system/msg/del',{
-      ids: ids
-    }).then(success => {
-      if(success.code == 0){
-        this.service.message.success(success.message);
-        this.load();
-      }
-      else{
-        this.service.message.error(success.message);
-      }
-    })
+    else {
+      let ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.msg_id) })
+      this.service.post('/api/system/msg/del', {
+        ids: ids
+      }).then(success => {
+        if (success.code == 0) {
+          this.service.message.success(success.message);
+          this.load();
+        }
+        else {
+          this.service.message.error(success.message);
+        }
+      })
+    }
   }
 }

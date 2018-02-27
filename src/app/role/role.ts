@@ -58,7 +58,6 @@ export class RolePage implements OnInit {
       if (this.formBean.role_id) {
         this.formBean.role_id = parseInt(this.formBean.role_id);
       }
-      console.log(this.formBean)
       this.formBean.formTitle = "修改角色";
     }
     else {
@@ -85,7 +84,7 @@ export class RolePage implements OnInit {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.myForm.reset();
-          this.reload();
+          this.load();
         }
         else {
           this.service.message.error(success.message);
@@ -116,10 +115,10 @@ export class RolePage implements OnInit {
       let ids = [];
       this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.role_id) })
       this.service.post('/api/system/role/delete', {
-        ids: ids, mark: 'del'
+        role_ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
-          this.reload();
+          this.load();
         }
         else {
           this.service.message.error(success.message);
@@ -127,12 +126,18 @@ export class RolePage implements OnInit {
       })
     }
   }
+  _uppageNum(data){
+    this.param.pageNum = data;
+    this.load();
+  }
   //重新查询
-  reload(reset = false) {
-    if (reset) {
-      this.param.pageNum = 1;
-      this.param.searchText = this.paramCol.searchText;
-    }
+  reload(event?) {
+    this.param.pageNum = 1;
+    if (event) this.param.pageSize = event;
+    this.param.searchText = this.paramCol.searchText;
+    this.load();
+  }
+  load(){
     this._loading = true;
     this.service.post('/api/system/role/list', this.param).then(success => {
       this._loading = false;
