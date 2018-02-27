@@ -13,6 +13,8 @@ export class RolePage implements OnInit {
   tableData: any = []; //数据列表
   param: any = {
     searchText: null,
+    sort_name: null,
+    sort_rule: null,
     total: 0,
     pageSize: 10,
     pageNum: 1
@@ -173,8 +175,14 @@ export class RolePage implements OnInit {
   }
   //排序
   sort(name, value) {
-    this.param.sortName = name;
-    this.param.sortValue = value;
+    if(value){
+      this.param.sort_name = name;
+      this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
+    }
+    else{
+      this.param.sort_name = null;
+      this.param.sort_rule = null;
+    }
     Object.keys(this.sortMap).forEach(key => {
       if (key !== name) {
         this.sortMap[key] = null;
