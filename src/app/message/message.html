@@ -16,7 +16,7 @@
           模块列表
         </ng-template>
         <ng-template #extra>
-          <a>新增</a>
+          <a (click)="_addModel()">新增</a>
         </ng-template>
         <ng-template #body>
           <ng-container *ngFor="let item of modeList">

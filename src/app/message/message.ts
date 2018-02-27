@@ -115,6 +115,14 @@ export class MessagePage implements OnInit {
     }
     this.editModelBean.isVisibleMiddle = true;
   }
+  //新增模块
+  _addModel(){
+    this.editModelBean = {
+      module_name: null,
+      module_short_name: null,
+      isVisibleMiddle: true
+    };
+  }
   //删除模块
   _delModel(item) {
     this.service.post('/api/system/module/del', {
