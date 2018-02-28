@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../app.service';
-// import { divisions } from '../divisions-of-China/divisions';
+import { divisions } from '../divisions-of-China/divisions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-outfit',
@@ -19,7 +19,7 @@ export class OutfitPage implements OnInit {
     pageSize: 10,
     pageNum: 1
   };
-  _nzChange(e){
+  _nzChange(e) {
     console.log(e)
   }
   paramCol: any = {
@@ -35,7 +35,7 @@ export class OutfitPage implements OnInit {
   _address: any = [{
     code: 1,
     name: '武汉',
-    children:[{
+    children: [{
       code: 2,
       name: '阿斯顿的',
       isLeaf: true
@@ -53,6 +53,7 @@ export class OutfitPage implements OnInit {
     org_code: null,
     remark: null
   };
+  iii = 0;
   ngOnInit() {
     this.reload();
     this.myForm = this.service.fb.group({
@@ -60,6 +61,48 @@ export class OutfitPage implements OnInit {
       org_code: [null, [this.service.validators.required]],
       remark: [false]
     })
+  }
+  _start(){
+    divisions._divisions.forEach(node => {
+      this.service.post('/api/system/region/save', {
+        code: node.code,
+        region_pid: 0,
+        region_name: node.name
+      }).then(success => {
+        if (success.code == 0) {
+          console.log(node)
+          console.log(++this.iii)
+          node['id'] = success.data.id;
+          this.addcity(node);
+        }
+        else {
+          console.log(node.name + '/失败')
+        }
+      })
+    })
+  }
+  addcity(parent) {
+    if (parent.children) {
+      parent.children.forEach(node => {
+          setTimeout(()=>{
+            this.service.post('/api/system/region/save', {
+              code: node.code,
+              region_pid: parent.code,
+              region_name: node.name
+            }).then(success => {
+              if (success.code == 0) {
+                console.log(node)
+                console.log(++this.iii)
+                node['id'] = success.data.id;
+                this.addcity(node);
+              }
+              else {
+                console.log(node.name + '/失败')
+              }
+            })
+          },this.iii * 1000)
+      });
+    }
   }
   //打开
   showModalMiddle(bean) {
@@ -184,11 +227,11 @@ export class OutfitPage implements OnInit {
   }
   //排序
   sort(name, value) {
-    if(value){
+    if (value) {
       this.param.sort_name = name;
       this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
     }
-    else{
+    else {
       this.param.sort_name = null;
       this.param.sort_rule = null;
     }
@@ -203,7 +246,7 @@ export class OutfitPage implements OnInit {
   }
 
   //状态
-  _enabled(data){
+  _enabled(data) {
     data.enabled = data.enabled == 1 ? 2 : 1;
     this.service.post('/api/system/organization/setEnabled', {
       org_ids: [data.org_id],
