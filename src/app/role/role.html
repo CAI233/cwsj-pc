@@ -14,19 +14,18 @@
       <!--表单-->
       <form nz-form>
         <!--行-->
-
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="showModalMiddle()">
+            <button nz-button nzType="primary" (click)="showModalMiddle()" type="button">
               <i class="anticon anticon-plus"></i>
               <span>新增</span>
             </button>
-            <button nz-button nzType="primary" (click)="editModalMiddle()">
+            <button nz-button nzType="primary" (click)="editModalMiddle()" type="button">
               <i class="anticon anticon-edit"></i>
               <span>修改</span>
             </button>
             <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
-              <button nz-popconfirm nz-button nzType="danger">
+              <button nz-popconfirm nz-button nzType="danger" type="button">
                 <i class="anticon anticon-delete"></i>
                 <span>删除</span>
               </button>
@@ -35,7 +34,7 @@
           </div>
           <div class="row-questions">
             <nz-input [nzType]="'search'" [nzPlaceHolder]="'角色名称'" name="searchText" [(ngModel)]="paramCol.searchText" style="width: 200px;"
-              (nzOnSearch)="reload(true)"></nz-input>
+              (nzOnSearch)="reload()"></nz-input>
           </div>
         </div>
       </form>
@@ -47,7 +46,8 @@
         [nzPageSize]="param.pageSize"
         [nzPageIndex]="param.pageNum" 
         [nzTotal]="param.total" 
-        (nzPageSizeChange)="reload(true)">
+        (nzPageIndexChangeClick)="_uppageNum($event)"
+        (nzPageSizeChange)="reload($event)">
         <thead nz-thead>
           <tr>
             <th nz-th nzCheckbox>
@@ -57,6 +57,9 @@
             <th nz-th [nzWidth]="'15%'">
               <span>角色名称</span>
               <nz-table-sort [(nzValue)]="sortMap.role_name" (nzValueChange)="sort('role_name', $event)"></nz-table-sort>
+            </th>
+            <th nz-th [nzWidth]="'15%'">
+              <span>是否管理角色</span>
             </th>
             <th nz-th>
               <span>备注</span>
@@ -69,6 +72,7 @@
               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
             </td>
             <td nz-td>{{data.role_name}}</td>
+            <td nz-td>{{data.role_type == 1 ? '是' : '否'}}</td>
             <td nz-td *ngIf="data.remark">{{data.remark}}</td>
             <td nz-td *ngIf="!data.remark">--</td>
           </tr>
