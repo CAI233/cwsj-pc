@@ -55,9 +55,6 @@ export class OutfitPage implements OnInit {
     pageSize: 10,
     pageNum: 1
   };
-  _nzChange(e) {
-    console.log(e)
-  }
   paramCol: any = {
     dept_id: null,
     state: null,
@@ -87,6 +84,12 @@ export class OutfitPage implements OnInit {
     this.myForm = this.service.fb.group({
       org_name: [null, [this.service.validators.required]],
       org_code: [null, [this.service.validators.required]],
+      streetParent: [null, [this.service.validators.required]],
+      office_address: [null, [this.service.validators.required]],
+      link_man: [null, [this.service.validators.required]],
+      link_mobile: [null, [this.service.validators.required]],
+      auth_date_begin: [null, [this.service.validators.required]],
+      auth_date_end: [null, [this.service.validators.required]],
       remark: [false]
     })
   }
@@ -141,6 +144,23 @@ export class OutfitPage implements OnInit {
   handleOkMiddle($event) {
     this._submitForm();
   }
+  //地址组织处理
+  changeStreeParent(event){
+    if(event.length == 4){
+      console.log(event)
+      this.formBean.province = event[0].region_name;
+      this.formBean.province_code = event[0].code;
+
+      this.formBean.city = event[1].region_name;
+      this.formBean.city_code = event[1].code;
+
+      this.formBean.area = event[2].region_name;
+      this.formBean.area_code = event[2].code;
+
+      this.formBean.street = event[3].region_name;
+      this.formBean.street_code = event[3].code;
+    }
+  }
   //提交
   _submitForm() {
     for (const i in this.myForm.controls) {
@@ -165,10 +185,25 @@ export class OutfitPage implements OnInit {
       this.service.message.warning('请选择修改数据，并且同时只能修改一条!');
     }
     else {
-      let bean = this.tableData.filter(value => value.checked);
-      for (let i in bean[0]) {
-        this.formBean[i] = bean[0][i];
+      let bean = this.tableData.filter(value => value.checked)[0];
+      for (let i in bean) {
+        this.formBean[i] = bean[i];
       }
+      //地理组织
+      this.formBean.streetParent = [{
+        code: bean.province_code,
+        region_name: bean.province
+      },{
+        code: bean.city_code,
+        region_name: bean.city
+      },{
+        code: bean.area_code,
+        region_name: bean.area
+      },{
+        code: bean.street_code,
+        region_name: bean.street
+      }];
+      console.log(this.formBean)
       this.formBean.formTitle = '修改机构';
       this.formBean.isVisibleMiddle = true;
     }
