@@ -64,17 +64,17 @@ export class LoginPage implements OnInit {
   getLoginBg(n: number): boolean {
     let date = new Date();
     let m = date.getMonth();
-    if (m >= 2 && m <= 4 && n == 1) {
-      return true;
+    if(n == 1){
+      return m == 2 || m == 3 || m == 4;
     }
-    else if (m >= 5 && m <= 9 && n == 2) {
-      return true;
+    else if(n == 2){
+      return m == 5 || m == 6 || m == 7 || m == 8 || m == 9;
     }
-    else if (m >= 10 && m <= 11 && n == 3) {
-      return true;
+    else if(n == 3){
+      return m == 10 || m == 11;
     }
-    else if (n == 4) {
-      return true;
+    else{
+      return m == 12 || m == 1;
     }
   }
 }

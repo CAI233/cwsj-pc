@@ -36,3 +36,6 @@ span.uhead{
 .notErrMsg >div:first-child *[nz-form-control]{
     margin-right: 10px;
 }
+.ditForm .ant-col-12:first-child{
+    padding-right: 15px;
+}

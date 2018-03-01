@@ -24,31 +24,20 @@ export class UsersPage implements OnInit {
     date: null,
     searchText: null
   }
-  deptList: any = []; //部门
   userState: any = []; //用户状态
   roleList: any = []; //角色
   // 实例化一个对象
   constructor(private service: AppService) { }
 
   ngOnInit() {
-    this.service.post('/api/system/department/getList', {
-      dept_id: null,
-      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null,
-      pageSize: 1000,
-      searchText: null
-    }).then(success => {
-      this.service._toisLeaf(this.deptList = success.data)
-    })
+    //获取角色
     this.service.post('/api/system/role/list', {
       pageNum: 1,
       pageSize: 1000,
-      dept_id: null,
-      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null,
-      searchText: null
+      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null
     }).then(success => {
       this.roleList = success.data.rows;
     })
-
     this.userState = [{
       id: 1,
       name: '启用'
@@ -62,21 +51,26 @@ export class UsersPage implements OnInit {
       user_name: [null, [this.service.validators.required]],
       user_pwd: [null, [this.service.validators.required]],
       user_real_name: [null, [this.service.validators.required]],
-      dept_id: [null, [this.service.validators.required]],
-      role_id: [null, [this.service.validators.required]],
-      sex: [null, [this.service.validators.required]],
-      birth: [null, [this.service.validators.required]],
-      email: [null, [this.service.validators.email]],
-      phone: [null, [this.service.validators.required]],
-      address: [null, [this.service.validators.required]],
+      role_id: [false],
+      dept_idss: [null, [this.service.validators.required]],
       icon: [false],
-      office_email: [false],
-      office_location: [false],
       user_id: [false],
-      telephone: [false],
+      email: [false],
+      phone: [false]
     });
   }
-
+  //加载部门
+  loadDept(e: {option: any, index: number, resolve: Function, reject: Function}): void {
+    if (e.index === -1) {
+      this.service.post('/api/system/department/getList',{
+        code: null
+      }).then(success => {
+        this.service._toisLeaf(success.data);
+        e.resolve(success.data);
+      })
+      return;
+    }
+  }
 
   /**************************表单部分*************************/
   myForm: any;
@@ -84,18 +78,12 @@ export class UsersPage implements OnInit {
     user_name: null,
     user_pwd: null,
     user_real_name: null,
-    dept_id: null,
-    role_id: null,
-    email: null,
-    phone: null,
+    dept_idss: null,
+    role_idss: null,
     icon: null,
     user_id: null,
-    sex: null,
-    birth: null,
-    office_email: null,
-    telephone: null,
-    office_location: null,
-    address: null,
+    email: null,
+    phone: null
   };
   //表单提交
   _submitForm() {
@@ -104,7 +92,7 @@ export class UsersPage implements OnInit {
     }
     if (this.myForm.valid) {
       this.formBean.dept_ids_array = [];
-      this.formBean.depts.forEach(element => {
+      this.formBean.dept_idss.forEach(element => {
         if (typeof (element) == 'object') {
           this.formBean.dept_ids_array.push(element.dept_id);
         }
@@ -112,16 +100,22 @@ export class UsersPage implements OnInit {
           this.formBean.dept_ids_array.push(element);
         }
       });
-      this.formBean.role_ids_array = this.formBean.role_id;
-      this.formBean.role_names = '';
-      this.roleList.forEach(item => {
-        this.formBean.role_ids_array.forEach((v) => {
-          if (item.role_id == v) {
-            this.formBean.role_names = this.formBean.role_names ? this.formBean.role_names + ',' + item.role_name : item.role_name
-          }
-        })
-      })
-      this.service.post('/api/system/user/save', this.formBean).then(success => {
+      this.formBean.role_names = [];
+      this.formBean.role_ids_array = [];
+      this.formBean.role_idss.forEach(element => {
+        if (typeof (element) == 'object') {
+          this.formBean.role_ids_array.push(element.role_id);
+          this.formBean.role_names.push(element.role_name);
+        }
+        else {
+          this.formBean.role_ids_array.push(element);
+          this.roleList.forEach(el => {
+            if (element == el.role_id) this.formBean.role_names.push(el.role_name);
+          })
+        }
+      });     
+      this.formBean.role_names = this.formBean.role_names.toString();
+      this.service.post('/api/system/user/save',this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
           this.myForm.reset();
@@ -145,7 +139,7 @@ export class UsersPage implements OnInit {
   getChildren(data) {
     data.forEach(item => {
       if (this.formBean.dept_ids_array && this.formBean.dept_ids_array.length != 0 && this.formBean.dept_ids_array.includes(item.dept_id)) {
-        this.formBean.depts.push({ dept_id: item.dept_id, dept_name: item.dept_name });
+        this.formBean.dept_id.push({ dept_id: item.dept_id, dept_name: item.dept_name });
       }
       if (item.children && item.children.length != 0) {
         this.getChildren(item.children)
@@ -155,24 +149,34 @@ export class UsersPage implements OnInit {
   //打开
   showModalMiddle(bean) {
     if (bean) {
+      console.log(bean)
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
       //部门
       if (this.formBean.dept_ids_array) {
-        this.formBean.depts = [];
-        this.getChildren(this.deptList)
+        this.formBean.dept_idss = bean.dept_ids_array;
+        //this.getChildren(this.deptList)
       }
       //角色
       if (this.formBean.role_ids_array) {
-        this.formBean.role_id = this.formBean.role_ids_array;
+        this.formBean.role_idss = this.formBean.role_ids_array;
+        // this.formBean.role_ids_array.forEach(element => {
+        //   this.roleList.forEach(option => {
+        //     if(element==option.role_id)
+        //       this.formBean.role_idss.push(option);
+        //   });
+        // });
+        
       }
-      this.formBean.user_pwd = '******';
+      this.formBean.user_pwd = "123456";
       this.formTitle = "修改用户";
     }
     else {
       this.formTitle = "新增用户";
+      this.formBean.org_id = this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null;
     }
+    console.log(this.formBean)
     this.isVisibleMiddle = true;
   };
   //删除
