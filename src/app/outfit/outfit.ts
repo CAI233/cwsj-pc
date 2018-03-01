@@ -2,6 +2,43 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+
+const provinces = [{
+  value: 'zhejiang',
+  label: 'Zhejiang'
+}, {
+  value: 'jiangsu',
+  label: 'Jiangsu'
+}];
+
+const cities = {
+  zhejiang: [{
+    value: 'hangzhou',
+    label: 'Hangzhou',
+  }, {
+    value: 'ningbo',
+    label: 'Ningbo',
+    isLeaf: true
+  }],
+  jiangsu: [{
+    value: 'nanjing',
+    label: 'Nanjing'
+  }]
+};
+
+const scenicspots = {
+  hangzhou: [{
+    value: 'xihu',
+    label: 'West Lake',
+    isLeaf: true
+  }],
+  nanjing: [{
+    value: 'zhonghuamen',
+    label: 'Zhong Hua Men',
+    isLeaf: true
+  }]
+};
 @Component({
   selector: 'app-outfit',
   templateUrl: './outfit.html',
@@ -31,15 +68,8 @@ export class OutfitPage implements OnInit {
     org_name: null,
   };
   _loading: boolean = true;
-  _address: any = [{
-    code: 1,
-    name: '武汉',
-    children: [{
-      code: 2,
-      name: '阿斯顿的',
-      isLeaf: true
-    }]
-  }]//divisions._divisions;
+  //省 市 区 街 
+  _address: any;
   // 实例化一个对象
   constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
   //表单
@@ -60,7 +90,27 @@ export class OutfitPage implements OnInit {
       remark: [false]
     })
   }
-
+  
+  loadData(e: {option: any, index: number, resolve: Function, reject: Function}): void {
+    if (e.index === -1) {
+      this.service.post('/api/system/region/list/tree',{
+        code: null
+      }).then(success => {
+        e.resolve(success.data);
+      })
+      return;
+    }
+    const option = e.option;
+    option.loading = true;
+    this.service.post('/api/system/region/list/tree',{
+      code: option.code
+    }).then(success => {
+      option.loading = false;
+      if(e.index == 2)
+        success.data.forEach(element => element.isLeaf = true);
+      e.resolve(success.data);
+    })
+  }
   //打开
   showModalMiddle(bean) {
     if (bean) {

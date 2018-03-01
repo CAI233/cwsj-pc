@@ -17,7 +17,7 @@
 
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="_start()">
+            <button nz-button nzType="primary" (click)="showModalMiddle()">
               <i class="anticon anticon-plus"></i>
               <span>新增</span>
             </button>
@@ -127,8 +127,8 @@
                         <nz-cascader
                         [nzPlaceHolder]="'请选择'"
                         [nzValueProperty]="'code'"
-                        [nzLabelProperty]="'name'"
-                        [nzOptions]="_address"
+                        [nzLabelProperty]="'region_name'"
+                        (nzLoad)="loadData($event)"
                         (nzSelectionChange)="_nzChange($event)"
                         ></nz-cascader>
                     </div>
