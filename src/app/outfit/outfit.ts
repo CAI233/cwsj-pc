@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../app.service';
-import { divisions } from '../divisions-of-China/divisions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-outfit',
@@ -53,7 +52,6 @@ export class OutfitPage implements OnInit {
     org_code: null,
     remark: null
   };
-  iii = 0;
   ngOnInit() {
     this.reload();
     this.myForm = this.service.fb.group({
@@ -62,48 +60,7 @@ export class OutfitPage implements OnInit {
       remark: [false]
     })
   }
-  _start(){
-    divisions._divisions.forEach(node => {
-      this.service.post('/api/system/region/save', {
-        code: node.code,
-        region_pid: 0,
-        region_name: node.name
-      }).then(success => {
-        if (success.code == 0) {
-          console.log(node)
-          console.log(++this.iii)
-          node['id'] = success.data.id;
-          this.addcity(node);
-        }
-        else {
-          console.log(node.name + '/失败')
-        }
-      })
-    })
-  }
-  addcity(parent) {
-    if (parent.children) {
-      parent.children.forEach(node => {
-          setTimeout(()=>{
-            this.service.post('/api/system/region/save', {
-              code: node.code,
-              region_pid: parent.code,
-              region_name: node.name
-            }).then(success => {
-              if (success.code == 0) {
-                console.log(node)
-                console.log(++this.iii)
-                node['id'] = success.data.id;
-                this.addcity(node);
-              }
-              else {
-                console.log(node.name + '/失败')
-              }
-            })
-          },this.iii * 1000)
-      });
-    }
-  }
+
   //打开
   showModalMiddle(bean) {
     if (bean) {
