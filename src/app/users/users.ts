@@ -9,8 +9,7 @@ import { retry } from 'rxjs/operators/retry';
 export class UsersPage implements OnInit {
   param: any = {
     dept_id: null,
-    state: null,
-    date: null,
+    enabled: null,
     searchText: null,
     sort_name: null,
     sort_rule: null,
@@ -20,8 +19,7 @@ export class UsersPage implements OnInit {
   };
   paramCol: any = {
     dept_id: null,
-    state: null,
-    date: null,
+    enabled: null,
     searchText: null
   }
   userState: any = []; //用户状态
@@ -51,7 +49,7 @@ export class UsersPage implements OnInit {
       user_name: [null, [this.service.validators.required]],
       user_pwd: [null, [this.service.validators.required]],
       user_real_name: [null, [this.service.validators.required]],
-      role_id: [false],
+      role_id: [null, [this.service.validators.required]],
       dept_idss: [null, [this.service.validators.required]],
       icon: [false],
       user_id: [false],
@@ -60,9 +58,9 @@ export class UsersPage implements OnInit {
     });
   }
   //加载部门
-  loadDept(e: {option: any, index: number, resolve: Function, reject: Function}): void {
+  loadDept(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
-      this.service.post('/api/system/department/getList',{
+      this.service.post('/api/system/department/getList', {
         code: null
       }).then(success => {
         this.service._toisLeaf(success.data);
@@ -113,9 +111,9 @@ export class UsersPage implements OnInit {
             if (element == el.role_id) this.formBean.role_names.push(el.role_name);
           })
         }
-      });     
+      });
       this.formBean.role_names = this.formBean.role_names.toString();
-      this.service.post('/api/system/user/save',this.formBean).then(success => {
+      this.service.post('/api/system/user/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
           this.myForm.reset();
@@ -136,38 +134,22 @@ export class UsersPage implements OnInit {
   //表单
   isVisibleMiddle: boolean = false;
   formTitle: string;
-  getChildren(data) {
-    data.forEach(item => {
-      if (this.formBean.dept_ids_array && this.formBean.dept_ids_array.length != 0 && this.formBean.dept_ids_array.includes(item.dept_id)) {
-        this.formBean.dept_id.push({ dept_id: item.dept_id, dept_name: item.dept_name });
-      }
-      if (item.children && item.children.length != 0) {
-        this.getChildren(item.children)
-      }
-    })
-  }
   //打开
   showModalMiddle(bean) {
     if (bean) {
-      console.log(bean)
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
       //部门
       if (this.formBean.dept_ids_array) {
-        this.formBean.dept_idss = bean.dept_ids_array;
-        //this.getChildren(this.deptList)
+        this.formBean.dept_idss = [];
+        this.formBean.dept_ids_array.forEach((element, index) => {
+          this.formBean.dept_idss.push({ dept_id: element, dept_name: this.formBean.dept_names.split(',')[index] })
+        });
       }
       //角色
       if (this.formBean.role_ids_array) {
         this.formBean.role_idss = this.formBean.role_ids_array;
-        // this.formBean.role_ids_array.forEach(element => {
-        //   this.roleList.forEach(option => {
-        //     if(element==option.role_id)
-        //       this.formBean.role_idss.push(option);
-        //   });
-        // });
-        
       }
       this.formBean.user_pwd = "123456";
       this.formTitle = "修改用户";
@@ -176,7 +158,6 @@ export class UsersPage implements OnInit {
       this.formTitle = "新增用户";
       this.formBean.org_id = this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null;
     }
-    console.log(this.formBean)
     this.isVisibleMiddle = true;
   };
   //删除
@@ -233,11 +214,11 @@ export class UsersPage implements OnInit {
   }
   //排序
   sort(name, value) {
-    if(value){
+    if (value) {
       this.param.sort_name = name;
       this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
     }
-    else{
+    else {
       this.param.sort_name = null;
       this.param.sort_rule = null;
     }
@@ -255,9 +236,8 @@ export class UsersPage implements OnInit {
     if (reset == true) {
       this.param.pageNum = 1;
       this.param.searchText = this.paramCol.searchText;
-      this.param.date = this.paramCol.date;
-      this.param.state = this.paramCol.state;
-      this.param.dept_id = this.paramCol.dept_id ? this.paramCol.dept_id.toString() : null;
+      this.param.enabled = this.paramCol.enabled;
+      this.param.dept_id = this.paramCol.dept_id && this.paramCol.dept_id.length != 0 ? this.paramCol.dept_id[this.paramCol.dept_id.length - 1].toString() : null;
     }
     else if (reset) {
       this.param.pageNum = reset;
@@ -292,9 +272,8 @@ export class UsersPage implements OnInit {
   //清空form
   resetForm() {
     this.paramCol.searchText = null;
-    this.paramCol.date = null;
-    this.paramCol.dept_id = null;
-    this.paramCol.state = null;
+    this.paramCol.dept_id = [];
+    this.paramCol.enabled = null;
   }
   //启用、停用
   enabledUser(data) {

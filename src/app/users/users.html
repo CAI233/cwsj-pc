@@ -29,7 +29,7 @@
                             <label>用户状态</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="17">
-                            <nz-select name="selectedOption" [(ngModel)]="paramCol.state" [nzPlaceHolder]="'请选择'" nzAllowClear>
+                            <nz-select name="selectedOption" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
                                 <nz-option *ngFor="let option of userState" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
                             </nz-select>
                         </div>
@@ -48,14 +48,6 @@
                             nzChangeOnSelect="true"
                             [(ngModel)]="paramCol.dept_id">
                         </nz-cascader> 
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="6">
-                        <div nz-form-label nz-col [nzSpan]="5">
-                            <label>出生日期</label>
-                        </div>
-                        <div nz-form-control nz-col [nzSpan]="19">
-                            <nz-datepicker class="full" name="date" [nzPlaceHolder]="'请选择日期'" [(ngModel)]="paramCol.date" [nzPlaceHolder]="'Select date'"></nz-datepicker>
                         </div>
                     </div>
                 </div>
@@ -140,9 +132,9 @@
                         </td>
                         <td nz-td>{{data.user_name}}</td>
                         <td nz-td>{{data.user_real_name}}</td>
-                        <td nz-td *ngIf="data.dept_name">{{data.dept_name}}</td>
-                        <td nz-td *ngIf="!data.dept_name">--</td>
-                        <td nz-td>{{data.role_name}}</td>
+                        <td nz-td *ngIf="data.dept_names">{{data.dept_names}}</td>
+                        <td nz-td *ngIf="!data.dept_names">--</td>
+                        <td nz-td>{{data.role_names}}</td>
                         <td nz-td *ngIf="data.phone">{{data.phone}}</td>
                         <td nz-td *ngIf="!data.phone">--</td>
                         <td nz-td>
@@ -155,23 +147,6 @@
                                 <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.user_id)" [nzPlacement]="'left'">
                                         <a nz-popconfirm >删除</a>
                                     </nz-popconfirm>
-                                <span nz-table-divider></span>
-                                <nz-dropdown>
-                                    <a class="ant-dropdown-link" nz-dropdown>更多操作
-                                        <i class="anticon anticon-down"></i>
-                                    </a>
-                                    <ul nz-menu>
-                                        <li nz-menu-item>
-                                            <a target="_blank" rel="noopener noreferrer" href="">1st menu item</a>
-                                        </li>
-                                        <li nz-menu-item>
-                                            <a target="_blank" rel="noopener noreferrer" href="">2nd menu item</a>
-                                        </li>
-                                        <li nz-menu-item>
-                                            <a target="_blank" rel="noopener noreferrer" href="">3rd menu item</a>
-                                        </li>
-                                    </ul>
-                                </nz-dropdown>
                             </span>
                         </td>
                     </tr>
