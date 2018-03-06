@@ -52,7 +52,7 @@ export class AppService {
             this.loginUserInfo = success.data;
             localStorage.setItem('userInfo', JSON.stringify(success.data));
             localStorage.setItem('token', success.data.token);
-            this.post('/api/resource/menus').then(res => {
+            this.post('/api/system/resource/menus').then(res => {
                 if (res.code == 0) {
                     localStorage.setItem('userMenus', JSON.stringify(res.data));
                     this.loginUserMenus = res.data;
