@@ -10,6 +10,8 @@ import { RolePage } from './role/role';
 import { OrgPage } from './org/org';
 import { OutfitPage } from './outfit/outfit';
 import { MessagePage } from './message/message';
+import { AuthorityPage } from './authority/authority';
+import { PayPage } from './pay/pay';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'org', component: OrgPage, data: { title: '组织管理', module: 'org', power: "SHOW" } },
   { path: 'outfit', component: OutfitPage, data: { title: '机构管理', module: 'outfit', power: "SHOW" } },
   { path: 'message', component: MessagePage, data: { title: '消息管理', module: 'message', power: "SHOW" } },
+  { path: 'authority', component: AuthorityPage, data: { title: '权限管理', module: 'authority', power: "SHOW" } },
+  { path: 'pay', component: PayPage, data: { title: '支付管理', module: 'pay', power: "SHOW" } },
 
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/404', pathMatch: 'full' }

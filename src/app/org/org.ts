@@ -154,9 +154,9 @@ export class OrgPage implements OnInit {
   }
   //删除
   _delete(data){
-    this.service.post('/admin/sysResource/json/delete_sysResource',{
+    this.service.post('/api/system/department/delete',{
       mark: 'del',
-      dept_ids: [data.dept_id]
+      ids: [data.dept_id]
     }).then( success => {
       this.load();
     })

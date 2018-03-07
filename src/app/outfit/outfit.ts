@@ -3,42 +3,6 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
-const provinces = [{
-  value: 'zhejiang',
-  label: 'Zhejiang'
-}, {
-  value: 'jiangsu',
-  label: 'Jiangsu'
-}];
-
-const cities = {
-  zhejiang: [{
-    value: 'hangzhou',
-    label: 'Hangzhou',
-  }, {
-    value: 'ningbo',
-    label: 'Ningbo',
-    isLeaf: true
-  }],
-  jiangsu: [{
-    value: 'nanjing',
-    label: 'Nanjing'
-  }]
-};
-
-const scenicspots = {
-  hangzhou: [{
-    value: 'xihu',
-    label: 'West Lake',
-    isLeaf: true
-  }],
-  nanjing: [{
-    value: 'zhonghuamen',
-    label: 'Zhong Hua Men',
-    isLeaf: true
-  }]
-};
 @Component({
   selector: 'app-outfit',
   templateUrl: './outfit.html',

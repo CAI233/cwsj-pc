@@ -23,6 +23,8 @@ import { RolePage } from './role/role';
 import { OrgPage } from './org/org';
 import { OutfitPage } from './outfit/outfit';
 import { MessagePage } from './message/message';
+import { AuthorityPage } from './authority/authority';
+import { PayPage } from './pay/pay';
 //公共服务
 import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
@@ -38,7 +40,7 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
   declarations: [
     AppComponent,
     ErrorPage404, HomePage, LoginPage, 
-    ResourcePage, UsersPage, RolePage, OrgPage, OutfitPage, MessagePage
+    ResourcePage, UsersPage, RolePage, OrgPage, OutfitPage, MessagePage,AuthorityPage,PayPage
   ],
   imports: [
     BrowserModule,
