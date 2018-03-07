@@ -1,35 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouteReuseStrategy } from '@angular/router';
+import { RouterModule } from '@angular/router';
+//hash url
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+//form组建
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+//页面动画
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//http
 import { HttpClientModule } from '@angular/common/http';
-
-//国际化
-import { NZ_LOCALE, zhCN } from 'ng-zorro-antd';
 //web ui
-import { NgZorroAntdModule, NZ_MESSAGE_CONFIG, NZ_NOTIFICATION_CONFIG } from 'ng-zorro-antd';
-//路由
+import { NgZorroAntdModule} from 'ng-zorro-antd';
+//基础组建
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-//页面
-import { ErrorPage404 } from './404/404';
-import { HomePage } from './home/home';
-import { ResourcePage } from './resource/resource';
-import { LoginPage } from './login/login';
-import { UsersPage } from './users/users';
-import { RolePage } from './role/role';
-import { OrgPage } from './org/org';
-import { OutfitPage } from './outfit/outfit';
-import { MessagePage } from './message/message';
-import { AuthorityPage } from './authority/authority';
-import { PayPage } from './pay/pay';
+import { HomeComponent } from './home/home.component';
+import { ErrorComponent } from './error/error.component';
+import { LoginComponent } from './login/login.component';
+//路由
+import { routes } from './app.routing';
 //公共服务
 import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
 import { HttpService } from './http.service';
-//消息提示
 
 export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions) {
   let service = new HttpService(xhrBackend, requestOptions);
@@ -39,12 +31,13 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorPage404, HomePage, LoginPage, 
-    ResourcePage, UsersPage, RolePage, OrgPage, OutfitPage, MessagePage,AuthorityPage,PayPage
+    HomeComponent,
+    ErrorComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    RouterModule.forRoot(routes),
     HttpModule,
     FormsModule,
     ReactiveFormsModule,
@@ -53,16 +46,8 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
     NgZorroAntdModule.forRoot()
   ],
   providers: [
-    { provide: NZ_LOCALE, useValue: zhCN },
-    { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
-    { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } },
-    HttpService,
-    {
-      provide: Http,
-      useFactory: interceptorFactory,
-      deps: [XHRBackend, RequestOptions]
-    },
-    AppService,
+    HttpService, AppService,
+    { provide: Http, useFactory: interceptorFactory, deps: [XHRBackend, RequestOptions]},
     //hash url
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],

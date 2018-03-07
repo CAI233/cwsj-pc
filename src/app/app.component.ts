@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
-
 import { AppService } from './app.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class AppComponent {
   menuList: Array<{ title: string, module: string, power: string, select: boolean }> = [];
   activeMenu: any;//当前页面
   showLeftMenu: boolean = false; //显示左侧菜单
-  // 2.构造函数实例化router对象
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, public service: AppService) {
     //检测当前是否登录
     this.service.init(() => {
@@ -44,12 +42,16 @@ export class AppComponent {
       .mergeMap(route => route.data)
       .subscribe((event) => {
         //路由data的标题
+        if(!event['title']){
+          event = { title: '首页', module: 'home', power: "SHOW" };
+        }
         let title = event['title'];
         this.menuList.forEach(p => p.select = false);
         var menu = { title: title, module: event['module'], power: event['power'], select: true };
         this.titleService.setTitle(title);
         let exitMenu = this.menuList.find(info => info.title == title);
         this.activeMenu = menu;
+        console.log(menu)
         if (menu.module != 'login' && (!this.service.token || this.service.token == '')) {
           this.router.navigate(['/login']);
           this.menuList = [];
@@ -84,7 +86,6 @@ export class AppComponent {
           }
           this.menuList.push(menu);
         }
-
       });
   }
   //是否需要显示X
