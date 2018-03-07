@@ -63,6 +63,7 @@ export class OutfitPage implements OnInit {
   }
   sortMap = {
     org_name: null,
+    org_code: null
   };
   _loading: boolean = true;
   //省 市 区 街 
@@ -115,7 +116,7 @@ export class OutfitPage implements OnInit {
     })
   }
   //打开
-  showModalMiddle(bean) {
+  showModalMiddle(bean?:any) {
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];

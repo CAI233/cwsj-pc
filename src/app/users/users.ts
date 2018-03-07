@@ -135,7 +135,7 @@ export class UsersPage implements OnInit {
   isVisibleMiddle: boolean = false;
   formTitle: string;
   //打开
-  showModalMiddle(bean) {
+  showModalMiddle(bean? :any) {
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];
@@ -188,7 +188,7 @@ export class UsersPage implements OnInit {
   _indeterminate = false; //半选
   tableData: any = []; //数据列表
   sortMap = { //允许排序的字段
-    user_ream_name: null,
+    user_real_name: null,
     user_name: null
   };
   _loading: boolean = true; //loading 状态
@@ -276,7 +276,7 @@ export class UsersPage implements OnInit {
     this.paramCol.enabled = null;
   }
   //启用、停用
-  enabledUser(data) {
+  enabledUser(data?:any) {
     if (data) {
       this._enabled([data.user_id], data.enabled == 1 ? 2 : 1);
     } else {

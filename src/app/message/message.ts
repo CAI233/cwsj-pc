@@ -143,11 +143,11 @@ export class MessagePage implements OnInit {
     })
   }
   //取消
-  handleCancelMiddle() {
+  handleCancelMiddle(e?:any) {
     this.editModelBean.isVisibleMiddle = false;
   }
   //确定
-  handleOkMiddle() {
+  handleOkMiddle(e?:any) {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }

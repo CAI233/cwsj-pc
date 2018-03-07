@@ -18,7 +18,7 @@ export class AppComponent {
   activeMenu: any;//当前页面
   showLeftMenu: boolean = false; //显示左侧菜单
   // 2.构造函数实例化router对象
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, private service: AppService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, public service: AppService) {
     //检测当前是否登录
     this.service.init(() => {
       if (this.service.loginUserMenus && this.service.loginUserMenus.length > 0 && !window.location.hash) {

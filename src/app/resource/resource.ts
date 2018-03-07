@@ -7,8 +7,8 @@ import { AppService } from '../app.service';
 })
 export class ResourcePage implements OnInit {
 
-  private tableData: any = [];
-  private editRow: any = {};
+  tableData: any = [];
+  editRow: any = {};
   // 实例化一个对象
   constructor(private service: AppService) { }
 
