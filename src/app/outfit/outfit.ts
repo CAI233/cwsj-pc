@@ -256,7 +256,7 @@ export class OutfitPage implements OnInit {
   _enabled(data) {
     data.enabled = data.enabled == 1 ? 2 : 1;
     this.service.post('/api/system/organization/setEnabled', {
-      org_ids: [data.org_id],
+      ids: [data.org_id],
       enabled: data.enabled
     }).then(success => {
       this.reload();

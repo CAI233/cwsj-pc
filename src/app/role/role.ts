@@ -117,7 +117,7 @@ export class RolePage implements OnInit {
       let ids = [];
       this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.role_id) })
       this.service.post('/api/system/role/delete', {
-        role_ids: ids, mark: 'del'
+        ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
           this.load();
