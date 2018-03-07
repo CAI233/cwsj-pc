@@ -10,64 +10,75 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PayPage implements OnInit {
   tableData: any = []; //数据列表
-  param: any = {
-    total: 0,
-    pageSize: 10,
-    pageNum: 1
-  };
   _loading: boolean = true;
   // 实例化一个对象
   constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
   //表单
   myForm: FormGroup;
-  formBean: any = {
-    formTitle: '修改配置',
-    isVisibleMiddle: false,
-    org_id: null,
-    org_name: null,
-    org_code: null,
-    remark: null
-  };
+  formBean: any={
+    pay_type_id:null,           //支付方式id(1:支付宝,2:微信)
+    pay_mark:null,              //支付说明
+    base_url:null,              //域名
+    show_url:null,              //支付成功后跳转地址	
+    rsa_private_key:null,       //rsa秘钥
+    app_private_key:null,       //私钥
+    alipay_public_key:null,     //公钥
+    mch_id:null,                //商户id
+    app_key:null,               //key
+  }
+  isVisibleMiddle: boolean = false;
+  formTitle: string;
   ngOnInit() {
     this.reload();
     this.myForm = this.service.fb.group({
-      org_name: [null, [this.service.validators.required]],
-      org_code: [null, [this.service.validators.required]],
-      streetParent: [null, [this.service.validators.required]],
-      office_address: [null, [this.service.validators.required]],
-      link_man: [null, [this.service.validators.required]],
-      link_mobile: [null, [this.service.validators.required]],
-      auth_date_begin: [null, [this.service.validators.required]],
-      auth_date_end: [null, [this.service.validators.required]],
-      remark: [false]
+      pay_mark: false,
+      base_url: false,
+      show_url: false,
+      rsa_private_key: false,
+      app_private_key: false,
+      alipay_public_key: false,
+      mch_id: false,
+      app_key: false,
     })
   }
-  
- 
   //打开
-  showModalMiddle(bean?:any) {
-    if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
-      //部门
-      if (this.formBean.dept_id) {
-        this.formBean.dept_id = parseInt(this.formBean.dept_id);
-      }
-      if (this.formBean.org_id) {
-        this.formBean.org_id = parseInt(this.formBean.org_id);
-      }
-      console.log(this.formBean)
-      this.formBean.formTitle = "修改机构";
+  showModalMiddle(data?:any) {
+    if (data.pay_type_id == 1) {
+      this.formBean.formTitle = "支付宝配置";
+      this.service.post('/api/system/pay/config/alipay').then(success => {
+        this.formBean = success.data;
+      })
+      this.myForm = this.service.fb.group({
+        pay_mark: [null, [this.service.validators.required]],
+        base_url: [null, [this.service.validators.required]],
+        show_url: [null, [this.service.validators.required]],
+        rsa_private_key: [null, [this.service.validators.required]],
+        app_private_key: [null, [this.service.validators.required]],
+        alipay_public_key: [null, [this.service.validators.required]],
+        mch_id: false,
+        app_key: false,
+      })
+    } else if (data.pay_type_id == 2) {
+      this.formBean.formTitle = "微信配置";
+      this.service.post('/api/system/pay/config/weixinPay').then(success => {
+        this.formBean = success.data;
+      })
+      this.myForm = this.service.fb.group({
+        pay_mark: false,
+        base_url: false,
+        show_url: false,
+        rsa_private_key: false,
+        app_private_key: false,
+        alipay_public_key: false,
+        mch_id: [null, [this.service.validators.required]],
+        app_key: [null, [this.service.validators.required]],
+      })
     }
-    else {
-      this.formBean.formTitle = "新增机构";
-    }
-    this.formBean.isVisibleMiddle = true;
+    this.isVisibleMiddle = true;
   };
   //关闭
   handleCancelMiddle($event) {
-    this.formBean.isVisibleMiddle = false;
+    this.isVisibleMiddle = false;
     this.myForm.reset();
   }
   //确定
@@ -81,9 +92,15 @@ export class PayPage implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('/api/system/organization/save', this.formBean).then(success => {
+      let url:string;
+      if(this.formBean.pay_type_id==1){
+        url='/api/system/pay/config/alipay/save';
+      }else if(this.formBean.pay_type_id==2){
+        url='/api/system/pay/config/weixinpay/save';
+      }
+      this.service.post(url, this.formBean).then(success => {
         if (success.code == 0) {
-          this.formBean.isVisibleMiddle = false;
+          this.isVisibleMiddle = false;
           this.myForm.reset();
           this.reload();
         }
@@ -93,54 +110,33 @@ export class PayPage implements OnInit {
       })
     }
   }
-  //修改
-  editModalMiddle() {
-    if (this.tableData.filter(value => value.checked).length != 1) {
-      this.service.message.warning('请选择修改数据，并且同时只能修改一条!');
-    }
-    else {
-      let bean = this.tableData.filter(value => value.checked)[0];
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
-      //地理组织
-      this.formBean.streetParent = [{
-        code: bean.province_code,
-        region_name: bean.province
-      },{
-        code: bean.city_code,
-        region_name: bean.city
-      },{
-        code: bean.area_code,
-        region_name: bean.area
-      },{
-        code: bean.street_code,
-        region_name: bean.street
-      }];
-      console.log(this.formBean)
-      this.formBean.formTitle = '修改机构';
-      this.formBean.isVisibleMiddle = true;
-    }
-  }
-
   //重新查询
-  reload(reset = false) {
-    if (reset) {
-      this.param.pageNum = 1;
-    }
+  reload() {
     this._loading = true;
-    this.service.post('/api/system/organization/getList', this.param).then(success => {
+    this.service.post('/api/system/pay/config/list').then(success => {
       this._loading = false;
       if (success.code == 0) {
-        this.tableData = success.data.rows;
-        this.param.total = success.data.total;
+        this.tableData = success.data;
       }
       else {
         this.tableData = [];
-        this.param.total = 0;
         this.service.message.error(success.message);
       }
     })
   }
 
+  //启用停用
+  enabled(data?: any) {
+    this.service.post('/api/system/pay/config/enabled', {
+      ids: [data.pay_type_id],
+      enabled: data.enabled==1?2:1
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
 }

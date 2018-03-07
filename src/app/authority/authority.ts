@@ -32,9 +32,8 @@ export class AuthorityPage implements OnInit {
       this.getMenuTree()
     })
   }
-
+  //获取菜单tree
   getMenuTree() {
-    //获取菜单tree
     this.service.post('/api/system/resource/list', {
       org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
     }).then(success => {
@@ -77,14 +76,12 @@ export class AuthorityPage implements OnInit {
   }
 
   enabled(data) {
-    this._loading = true;
     this.service.post('/api/system/role/res/rel/enabled', {
       role_res_rel_id: data.role_res_rel_id,
       enabled: data.enabled,
       role_id: this.param.role_id,
       res_id: data.res_id,
     }).then(success => {
-      this._loading = false;
       if (success.code == 0) {
         this.reload();
       }
