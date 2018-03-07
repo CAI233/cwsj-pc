@@ -14,17 +14,14 @@ export class AuthorityPage implements OnInit {
   //角色list
   private roleRow: any = [];
   param: any = {
-    role_id:null,
-    pid:null,
+    role_id: null,
+    pid: null,
     total: 0,
     pageSize: 10,
     pageNum: 1
   };
   constructor(private service: AppService) { }
   ngOnInit() {
-    this.load();
-  }
-  load() {
     // 获取角色列表
     this.service.post('/api/system/role/list', {
       pageNum: 1,
@@ -32,17 +29,15 @@ export class AuthorityPage implements OnInit {
     }).then(success => {
       this.roleRow = success.data.rows;
       this.param.role_id = this.roleRow[0].role_id;
-      console.log(this.param)
-      //得到当前角色的权限列表
-      this._get_menu_tree();
+      this.getMenuTree()
     })
-    // this._loading = true;
   }
-  _get_menu_tree() {
+
+  getMenuTree() {
+    //获取菜单tree
     this.service.post('/api/system/resource/list', {
       org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
     }).then(success => {
-
       this.tableTreeData = [{
         org_id: this.service.loginUserInfo.org_id,
         res_id: 0,
@@ -50,24 +45,56 @@ export class AuthorityPage implements OnInit {
         children: success.data
       }];
       this.service._toisLeaf(this.tableTreeData);
-
-      console.log(this.tableTreeData)
+      this.param.pid = 0;
+      this.reload();
       this._expanData();
-      //   this._loading = false;
     })
   }
 
-  _get_list() {
-    this.param.pid=0;
-    this.service.post('/api/system/resource/list', this.param).then(success => {
-        if(success.code==0){
-         
-        }else{
-
-        }
-        console.log(success);
+  /**************************表格部分*************************/
+  _loading: boolean = false; //loading 状态
+  //获取列表
+  reload(reset?: any) {
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    else if (reset) {
+      this.param.pageNum = reset;
+    }
+    this._loading = true;
+    this.service.post('/api/system/role/res/rel/list', this.param).then(success => {
+      this._loading = false;
+      if (success.code == 0) {
+        this.tableData = success.data.rows;
+        this.param.total = success.data.total;
+      }
+      else {
+        this.tableData = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
     })
   }
+
+  enabled(data) {
+    this._loading = true;
+    this.service.post('/api/system/role/res/rel/enabled', {
+      role_res_rel_id: data.role_res_rel_id,
+      enabled: data.enabled,
+      role_id: this.param.role_id,
+      res_id: data.res_id,
+    }).then(success => {
+      this._loading = false;
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  /**************************表格部分*************************/
+
 
   expandDataCacheCol = {};
   expandDataCache = {};
@@ -147,20 +174,6 @@ export class AuthorityPage implements OnInit {
       hashMap[node.res_id] = true;
       array.push(node);
     }
-  }
-
-
-  _enabled() {
-    console.log(1);
-  }
-
-  //查询
-  reload() {
-
-  }
-  //重置
-  reset() {
-
   }
 
 }
