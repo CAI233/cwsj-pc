@@ -1,0 +1,125 @@
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a href="#/home">首页</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        权限管理
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content" style="padding-top: 20px;">
+    <div class="content-left-li">
+      <nz-card style="width:100%;">
+        <ng-template #title>
+          <div nz-row nz-form-item style="margin-bottom:15px;">
+            <div class="row-actions" style="width:100%">
+              <nz-select style="width:100%;" [(ngModel)]="param.role_id" [nzPlaceHolder]="'请选择一个角色'" nzShowSearch>
+                <nz-option *ngFor="let item of roleRow" [nzLabel]="item.role_name" [nzValue]="item.role_id"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #body>
+          <nz-table #nzTreeTable [nzDataSource]="tableTreeData" [nzIsPagination]="false" [nzSize]="'middle'">
+            <tbody nz-tbody>
+              <ng-template ngFor let-data [ngForOf]="nzTreeTable.data">
+                <ng-template ngFor let-item [ngForOf]="expandDataCache[data.res_id]">
+                  <tr nz-tbody-tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" style="cursor:pointer">
+                    <td nz-td [ngStyle]="{'background-color' : param.pid==item.res_id ? '#daecf9' : ''}" (click)="param.pid=item.res_id;_get_list()">
+                      <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                      <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.res_id],item,$event)" [nzShowExpand]="!!item.children && item.children.length > 0"></nz-row-expand-icon>
+                      {{item.res_name}}
+                    </td>
+                  </tr>
+                </ng-template>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </ng-template>
+      </nz-card>
+    </div>
+    <div class="content-right-con">
+      <div class="tableListSearch">
+        <!--表单-->
+        <form nz-form>
+          <!--行-->
+          <div nz-row nz-form-item>
+            <div class="row-actions">
+              <button nz-button nzType="primary" type="button" (click)="_addMessage()">
+                <span>一键授权</span>
+              </button>
+              <button nz-button nzType="danger" type="button">
+                <span>一键取消</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+        [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="pageChange($event)">
+        <thead nz-thead>
+          <tr>
+            <th nz-th nzCheckbox>
+              <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+              </label>
+            </th>
+            <th nz-th [nzWidth]="'25%'">
+              <span>名称</span>
+            </th>
+            <th nz-th [nzWidth]="'25%'">
+              <span>资源类型</span>
+            </th>
+            <th nz-th [nzWidth]="'25%'">
+              <span>授权时间</span>
+            </th>
+            <th nz-th [nzWidth]="'25%'">
+              <span>操作</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+            <td nz-td nzCheckbox>
+              <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)" *ngIf="data.msg_id"></label>
+            </td>
+            <td nz-td>
+              <span *ngIf="data.msg_id != edieMessage.msg_id">{{data.code}}</span>
+              <span *ngIf="data.msg_id == edieMessage.msg_id">
+                <nz-input [nzType]="'text'" name="code" [(ngModel)]="data.code"></nz-input>
+              </span>
+            </td>
+            <td nz-td>
+              <span *ngIf="data.msg_id != edieMessage.msg_id">{{data.message}}</span>
+              <span *ngIf="data.msg_id == edieMessage.msg_id" style="display:block">
+                <nz-input [nzType]="'text'" name="message" [(ngModel)]="data.message" style="width: 90%"></nz-input>
+              </span>
+            </td>
+            <td nz-td>
+              <span *ngIf="data.msg_id != edieMessage.msg_id">{{data.module_name}}</span>
+              <span *ngIf="data.msg_id == edieMessage.msg_id">
+                <!-- <nz-input [nzType]="'text'" name="module_name" [(ngModel)]="data.module_name"></nz-input> -->
+                <nz-select [(ngModel)]="data.selectedOption" style="width: 80%" [nzPlaceHolder]="'请选择'">
+                  <nz-option *ngFor="let option of modeList" [nzLabel]="option.module_name" [nzValue]="option" [nzDisabled]="option.disabled">
+                  </nz-option>
+                </nz-select>
+              </span>
+            </td>
+            <td nz-td>{{data.update_time}}</td>
+            <td nz-td>
+              <span *ngIf="data.msg_id != edieMessage.msg_id">
+                <a (click)="showModalMiddle(data)">修改</a>
+              </span>
+              <span *ngIf="data.msg_id == edieMessage.msg_id">
+                <a (click)="_saveRow(data)">保存</a>
+                <span nz-table-divider></span>
+                <a (click)="_cancel(data)">取消</a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </nz-content>
+</nz-layout>
