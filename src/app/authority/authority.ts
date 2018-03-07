@@ -8,11 +8,11 @@ import { AppService } from '../app.service';
 })
 export class AuthorityPage implements OnInit {
 
-  private tableTreeData: any = [];
-  private tableData: any = [];
-  private editRow: any = {};
+  tableTreeData: any = [];
+  tableData: any = [];
+  editRow: any = {};
   //角色list
-  private roleRow: any = [];
+  roleRow: any = [];
   param: any = {
     role_id: null,
     pid: null,
