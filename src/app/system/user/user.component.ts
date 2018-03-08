@@ -159,6 +159,7 @@ export class UserComponent implements OnInit {
       this.formTitle = "新增用户";
       this.formBean.org_id = this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null;
     }
+    this.myForm.reset();
     this.isVisibleMiddle = true;
   };
   //删除

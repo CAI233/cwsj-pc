@@ -15,7 +15,8 @@ import { OutfitComponent } from './outfit/outfit.component';
 import { OrgComponent } from './org/org.component';
 import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
-
+import { ActionlogComponent } from './actionlog/actionlog.component';
+import { SyslogComponent } from './syslog/syslog.component';
 
 
 @NgModule({
@@ -35,7 +36,9 @@ import { AuthorityComponent } from './authority/authority.component';
     OrgComponent,
     MessageComponent,
     AuthorityComponent,
-    RoleComponent
+    RoleComponent,
+    ActionlogComponent,
+    SyslogComponent
   ],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },

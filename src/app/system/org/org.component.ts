@@ -125,7 +125,7 @@ export class OrgComponent implements OnInit {
   //保存
   _saveRow(){
     if(!this.editRow.dept_name){
-      this.service.message.error('请填写资源名称');
+      this.service.message.error('请填写组织名称');
       return false;
     }
     if(!this.editRow.pname){
@@ -206,7 +206,7 @@ export class OrgComponent implements OnInit {
         dept_id: parent.dept_id,
         dept_name: parent.dept_name
       }],
-      dept_name: '请填写',
+      dept_name: null,
       disabled: true,
       isLeaf: true
     }
