@@ -30,7 +30,7 @@ export class AuthorityComponent implements OnInit {
       pageSize: 1000
     }).then(success => {
       this.roleRow = success.data.rows;
-      this.param.role_id = this.roleRow[0].role_id;
+      this.param.role_id = this.roleRow[0] && this.roleRow[0].role_id;
       this.getMenuTree()
     })
   }

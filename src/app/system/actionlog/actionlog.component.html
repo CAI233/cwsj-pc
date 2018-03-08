@@ -5,7 +5,7 @@
                 <a href="#/home">首页</a>
             </nz-breadcrumb-item>
             <nz-breadcrumb-item>
-                系统日志
+                操作日志
             </nz-breadcrumb-item>
         </nz-breadcrumb>
     </nz-header>
@@ -21,7 +21,7 @@
                             <label>模糊查询</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="17">
-                            <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'异常原因'" [nzSize]="'default'"></nz-input>
+                            <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'操作用户/操作模块`'" [nzSize]="'default'"></nz-input>
                         </div>
                     </div>
                     <div nz-col [nzSpan]="8">
@@ -32,8 +32,6 @@
                             <nz-rangepicker name="searchTime" [(ngModel)]="paramCol.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
                         </div>
                     </div>
-                </div>
-                <div nz-row nz-form-item>
                     <div class="row-questions">
                         <button nz-button nzType="primary" (click)="reload(true)" [nzLoading]="_loading">
                             <i class="anticon anticon-search"></i>
@@ -50,27 +48,51 @@
                 [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="reload($event)" (nzPageSizeChange)="reload(true)">
                 <thead nz-thead>
                     <tr>
-                        <th nz-th [nzWidth]="'10%'">
-                            <span>异常编码</span>
+                        <th nz-th [nzWidth]="'5%'">
+                            <span>日志编码</span>
                         </th>
-                        <th nz-th [nzWidth]="'80%'">
-                            <span>异常原因</span>
+                        <th nz-th [nzWidth]="'40%'">
+                            <span>日志内容</span>
                         </th>
                         <th nz-th [nzWidth]="'10%'">
-                            <span>创建时间</span>
+                            <span>操作IP地址</span>
+                        </th>
+                        <th nz-th [nzWidth]="'15%'">
+                            <span>操作时间</span>
+                        </th>
+                        <th nz-th [nzWidth]="'10%'">
+                            <span>操作模块</span>
+                        </th>
+                        <th nz-th [nzWidth]="'10%'">
+                            <span>操作用户</span>
+                        </th>
+                        <th nz-th [nzWidth]="'10%'">
+                            <span>操作类型</span>
                         </th>
                     </tr>
                 </thead>
                 <tbody nz-tbody>
                     <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                         <td nz-td>
-                            {{data.sys_log_code}}
+                            {{data.action_log_id}}
                         </td>
                         <td nz-td>
-                            {{data.sys_log_content}}
+                            {{data.action_log_content}}
                         </td>
                         <td nz-td>
-                            {{data.create_time}}
+                            {{data.action_ip}}
+                        </td>
+                        <td nz-td>
+                            {{data.action_time}}
+                        </td>
+                        <td nz-td>
+                            {{data.action_log_module_name}}
+                        </td>
+                        <td nz-td>
+                            {{data.action_user_name}}
+                        </td>
+                        <td nz-td>
+                            {{data.action_type}}
                         </td>
                     </tr>
                 </tbody>

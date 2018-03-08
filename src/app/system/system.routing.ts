@@ -9,6 +9,8 @@ import { OutfitComponent } from './outfit/outfit.component';
 import { OrgComponent } from './org/org.component';
 import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
+import { ActionlogComponent } from './actionlog/actionlog.component';
+import { SyslogComponent } from './syslog/syslog.component';
 export const routes: Routes = [
     { path: '', component: MainComponent, data: { title: '系统管理', module: 'system', power: "SHOW" } },
     { path: 'user', component: UserComponent, data: { title: '用户管理', module: 'user', power: "SHOW" } },
@@ -18,5 +20,7 @@ export const routes: Routes = [
     { path: 'org', component: OrgComponent, data: { title: '组织管理', module: 'org', power: "SHOW" } },
     { path: 'message', component: MessageComponent, data: { title: '消息管理', module: 'message', power: "SHOW" } },
     { path: 'authority', component: AuthorityComponent, data: { title: '权限管理', module: 'authority', power: "SHOW" } },
-    { path: 'role', component: RoleComponent, data: { title: '角色管理', module: 'role', power: "SHOW" } }
+    { path: 'role', component: RoleComponent, data: { title: '角色管理', module: 'role', power: "SHOW" } },
+    { path: 'actionLog', component: ActionlogComponent, data: { title: '操作日志', module: 'actionLog', power: "SHOW" } },
+    { path: 'sysLog', component: SyslogComponent, data: { title: '系统日志', module: 'sysLog', power: "SHOW" } },
 ];
