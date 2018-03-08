@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../../app.service';
 @Component({
   selector: 'app-user',
@@ -6,7 +6,7 @@ import { AppService } from '../../app.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-
+  @ViewChild("dept_idss") dept_idss;
   param: any = {
     dept_id: null,
     enabled: null,
@@ -117,7 +117,7 @@ export class UserComponent implements OnInit {
       this.service.post('/api/system/user/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
-          this.myForm.reset();
+          this.formClear();
           this.reload();
         }
         else {
@@ -176,11 +176,15 @@ export class UserComponent implements OnInit {
   //关闭
   handleCancelMiddle($event) {
     this.isVisibleMiddle = false;
-    this.myForm.reset();
+    this.formClear();
   }
   //确定
   handleOkMiddle($event) {
     this._submitForm();
+  }
+  formClear(){
+    this.myForm.reset();
+    this.dept_idss._lastValue = [];
   }
   /**************************表单部分*************************/
 
@@ -275,6 +279,9 @@ export class UserComponent implements OnInit {
     this.paramCol.searchText = null;
     this.paramCol.dept_id = [];
     this.paramCol.enabled = null;
+  }
+  _console(e){
+    console.log(e)
   }
   //启用、停用
   enabledUser(data?: any) {

@@ -221,13 +221,14 @@
                       <label nz-form-item-required>机构/部门</label>
                   </div>
                   <div nz-form-control nzHasFeedback>
-                      <nz-cascader style="display:inline-block" 
+                      <nz-cascader #dept_idss style="display:inline-block" 
                           nzChangeOnSelect="true"
                           [nzPlaceHolder]="'请选择组织/部门'" 
                           [nzValueProperty]="'dept_id'" 
                           [nzLabelProperty]="'dept_name'" 
                           (nzLoad)="loadDept($event)"
                           [(ngModel)]="formBean.dept_idss"
+                          (nzChange)="_console($event)"
                           formControlName="dept_idss">
                       </nz-cascader>                      
                   </div>
