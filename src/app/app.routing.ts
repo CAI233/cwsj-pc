@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent, data: { title: '登录', module: 'login', power: "SHOW" } },
   { path: '404', component: ErrorComponent, data: { title: '404', module: '404', power: "SHOW" } },
   { path: 'system', loadChildren: './system/system.module#SystemModule' },
+  { path: 'log', loadChildren: './log/log.module#LogModule' },
 
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
