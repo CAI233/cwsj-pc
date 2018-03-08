@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./outfit.component.css']
 })
 export class OutfitComponent implements OnInit {
-
+  @ViewChild("fromAdress") fromAdress;
   _allChecked = false;
   _indeterminate = false;
   tableData: any = []; //数据列表
@@ -104,11 +104,15 @@ export class OutfitComponent implements OnInit {
   //关闭
   handleCancelMiddle($event) {
     this.formBean.isVisibleMiddle = false;
-    this.myForm.reset();
+    this.formClear()
   }
   //确定
   handleOkMiddle($event) {
     this._submitForm();
+  }
+  formClear(){
+    this.myForm.reset();
+    this.fromAdress._lastValue = [];
   }
   //地址组织处理
   changeStreeParent(event){
@@ -136,7 +140,7 @@ export class OutfitComponent implements OnInit {
       this.service.post('/api/system/organization/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
-          this.myForm.reset();
+          this.formClear()
           this.reload();
         }
         else {

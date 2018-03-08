@@ -7,6 +7,7 @@ import { AppService } from '../../app.service';
 })
 export class UserComponent implements OnInit {
   @ViewChild("dept_idss") dept_idss;
+  @ViewChild("searchDeptIds") searchDeptIds;
   param: any = {
     dept_id: null,
     enabled: null,
@@ -279,9 +280,7 @@ export class UserComponent implements OnInit {
     this.paramCol.searchText = null;
     this.paramCol.dept_id = [];
     this.paramCol.enabled = null;
-  }
-  _console(e){
-    console.log(e)
+    this.searchDeptIds._lastValue=[]
   }
   //启用、停用
   enabledUser(data?: any) {
@@ -301,7 +300,6 @@ export class UserComponent implements OnInit {
         this.service.message.warning('请选择你要启用停用的数据!');
         return false;
       }
-      console.log(bool)
       this._enabled(ids, (bool ? 2 : 1));
     }
   }

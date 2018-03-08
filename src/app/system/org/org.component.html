@@ -18,7 +18,6 @@
                   <th nz-th [nzWidth]="'15%'"><span>父级组织</span></th>
                   <th nz-th [nzWidth]="'15%'"><span>办公地点</span></th>
                   <th nz-th [nzWidth]="'15%'"><span>描述</span></th>
-                  <th nz-th [nzWidth]="'10%'"><span>状态</span></th>
                   <th nz-th [nzWidth]="'15%'"><span>操作</span></th>
               </tr>
           </thead>
@@ -67,12 +66,6 @@
                               <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">{{item.remark}}</span>
                               <span *ngIf="editRow.dept_id == item.dept_id">
                                       <nz-input [nzType]="'text'" name="remark" [(ngModel)]="editRow.remark"></nz-input>
-                              </span>
-                          </td>
-                          <td nz-td>
-                              <span *ngIf="item.dept_id == 0">--</span>
-                              <span *ngIf="item.dept_id != 0">
-                                  <nz-switch [ngModel]="item.enabled == 1" [nzSize]="'small'" (click)="_enabled(item)"></nz-switch>
                               </span>
                           </td>
                           <td nz-td>

@@ -163,13 +163,6 @@ export class OrgComponent implements OnInit {
       this.load();
     })
   }
-  //启用/停用
-  _enabled(data){
-    // data.enabled = data.enabled == 1 ? 2: 1;
-    this.service.post('/admin/sysResource/json/update_enabled',data).then(success => {
-      this.load();
-    })
-  }
   //新增同级
   _addAfter(parent : any){
     this.editRow = {

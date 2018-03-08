@@ -10,7 +10,6 @@ import { UserComponent } from './user/user.component';
 import { MainComponent } from './main/main.component';
 import { RoleComponent } from './role/role.component';
 import { ResourceComponent } from './resource/resource.component';
-import { PayComponent } from './pay/pay.component';
 import { OutfitComponent } from './outfit/outfit.component';
 import { OrgComponent } from './org/org.component';
 import { MessageComponent } from './message/message.component';
@@ -30,7 +29,6 @@ import { SyslogComponent } from './syslog/syslog.component';
   declarations: [
     UserComponent,
     MainComponent,
-    PayComponent,
     ResourceComponent,
     OutfitComponent,
     OrgComponent,
