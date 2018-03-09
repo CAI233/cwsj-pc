@@ -18,7 +18,7 @@ export class ResourceComponent implements OnInit {
   }
   orgList: any = [];
   ngOnInit() {
-    //获取角色
+    //获取机构
     this.service.post('/api/system/organization/getList', {
       pageNum: 1,
       pageSize: 1000,
@@ -156,11 +156,12 @@ export class ResourceComponent implements OnInit {
       });
       this.editRow.full_ids_array = pid;
     }
-    console.log(this.editRow)
+
     this._loading = true;
     this.editRow.parent = null;
     this.editRow.children = null;
     this.service.post('/api/system/resource/update', this.editRow).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.editRow = {};
         this.load();
@@ -174,7 +175,8 @@ export class ResourceComponent implements OnInit {
   _delete(data) {
     this.service.post('/api/system/resource/delete', {
       mark: 'del',
-      res_ids: [data.res_id]
+      res_ids: [data.res_id],
+      org_id:this.paramCol.org_id
     }).then(success => {
       if (success.code == 0) {
         this.load();
@@ -184,10 +186,10 @@ export class ResourceComponent implements OnInit {
       }
     })
   }
-  //启用/停用
-  _enabled(data) {
-    this.service.post('/api/system/resource/update/enabled', {
-      enabled: data.enabled,
+  //是否推送
+  _is_forbid(data) {
+    this.service.post('/api/system/resource/update/forbid', {
+      is_forbid: data.is_forbid,
       full_path: data.full_path
     }).then(success => {
       this.load();
@@ -197,6 +199,7 @@ export class ResourceComponent implements OnInit {
   _addAfter(data: any) {
     this.editRow = {
       enabled: 1,
+      is_forbid: 1,
       order_weight: new Date().getTime(),
       org_id: data.org_id,
       pid: data.res_id,
@@ -217,6 +220,7 @@ export class ResourceComponent implements OnInit {
     data.expand = true;
     this.editRow = {
       enabled: 1,
+      is_forbid: 1,
       res_id: null,
       res_name: null,
       res_key: null,
@@ -241,9 +245,14 @@ export class ResourceComponent implements OnInit {
     value: 2
   }]
 
-  //一键推送
-  oneKeyPush() {
-    this.service.post('/api/system/resource/allot_sysResource', { org_id: this.paramCol.org_id }).then(success => {
+  //一键更新
+  oneKeyPush(res_id = 0) {
+    this._loading = true;
+    this.service.post('/api/system/resource/allot_sysResource', {
+      org_id: this.paramCol.org_id,
+      res_id: res_id
+    }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.load();
       } else {

@@ -16,6 +16,7 @@ import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
+import { ThirdComponent } from './third/third.component' ;
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { SyslogComponent } from './syslog/syslog.component';
     AuthorityComponent,
     RoleComponent,
     ActionlogComponent,
-    SyslogComponent
+    SyslogComponent,
+    ThirdComponent
   ],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },

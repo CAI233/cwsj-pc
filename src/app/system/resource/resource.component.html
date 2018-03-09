@@ -27,7 +27,7 @@
                     </div>
                     <div class="row-questions" style="padding: 2px 0;">
                         <button nz-button nzType="primary" (click)="oneKeyPush()">
-                            <span>一键推送</span>
+                            <span>一键更新</span>
                         </button>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                         <th nz-th [nzWidth]="'10%'">
                             <span>类型</span>
                         </th>
-                        <th nz-th [nzWidth]="'10%'">
+                        <th nz-th [nzWidth]="'10%'" *ngIf="service.loginUserInfo.org_id==1 && paramCol.org_id==1">
                             <span>推送</span>
                         </th>
                         <th nz-th [nzWidth]="'20%'">
@@ -113,9 +113,9 @@
                                         </nz-select>
                                     </span>
                                 </td>
-                                <td nz-td>
+                                <td nz-td *ngIf="service.loginUserInfo.org_id==1 && paramCol.org_id==1">
                                     <span *ngIf="item.res_id">
-                                        <nz-switch [ngModel]="item.enabled == 1" [nzSize]="'small'" (click)="_enabled(item)"></nz-switch>
+                                        <nz-switch [ngModel]="item.is_forbid == 2" [nzSize]="'small'" (click)="_is_forbid(item)"></nz-switch>
                                     </span>
                                 </td>
                                 <td nz-td>
@@ -139,6 +139,9 @@
                                                 </li>
                                                 <li nz-menu-item>
                                                     <a (click)="_addChildren(item)">新增子级</a>
+                                                </li>
+                                                <li nz-menu-item>
+                                                    <a (click)="oneKeyPush(item.res_id)">更新</a>
                                                 </li>
                                             </ul>
                                         </nz-dropdown>
