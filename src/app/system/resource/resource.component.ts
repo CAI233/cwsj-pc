@@ -13,17 +13,28 @@ export class ResourceComponent implements OnInit {
   // 实例化一个对象
   constructor(private service: AppService) { }
 
-  
+  paramCol: any = {
+    org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null
+  }
+  orgList: any = [];
   ngOnInit() {
+    //获取角色
+    this.service.post('/api/system/organization/getList', {
+      pageNum: 1,
+      pageSize: 1000,
+      enabled: 1,
+    }).then(success => {
+      this.orgList = success.data.rows;
+    })
     this.load();
   }
   load() {
     this._loading = true;
     this.service.post('/api/system/resource/list', {
-      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : 1
+      org_id: this.paramCol.org_id
     }).then(success => {
       this.tableData = [{
-        org_id: this.service.loginUserInfo.org_id,
+        org_id: this.paramCol.org_id,
         res_id: 0,
         res_name: '根节点',
         children: success.data
@@ -175,7 +186,6 @@ export class ResourceComponent implements OnInit {
   }
   //启用/停用
   _enabled(data) {
-    // data.enabled = data.enabled == 1 ? 2: 1;
     this.service.post('/api/system/resource/update/enabled', {
       enabled: data.enabled,
       full_path: data.full_path
@@ -230,5 +240,16 @@ export class ResourceComponent implements OnInit {
     label: '按钮',
     value: 2
   }]
+
+  //一键推送
+  oneKeyPush() {
+    this.service.post('/api/system/resource/allot_sysResource', { org_id: this.paramCol.org_id }).then(success => {
+      if (success.code == 0) {
+        this.load();
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
 
 }

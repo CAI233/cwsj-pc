@@ -21,22 +21,33 @@ export class UserComponent implements OnInit {
   paramCol: any = {
     dept_id: null,
     enabled: null,
-    searchText: null
+    searchText: null,
+    org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null
   }
   userState: any = []; //用户状态
   roleList: any = []; //角色
+  orgList: any = [];//机构
   // 实例化一个对象
   constructor(private service: AppService) { }
 
   ngOnInit() {
+    //获取机构
+    this.service.post('/api/system/organization/getList', {
+      pageNum: 1,
+      pageSize: 1000,
+      enabled: 1,
+    }).then(success => {
+      this.orgList = success.data.rows;
+    })
     //获取角色
     this.service.post('/api/system/role/list', {
       pageNum: 1,
       pageSize: 1000,
-      org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null
+      org_id: this.paramCol.org_id
     }).then(success => {
       this.roleList = success.data.rows;
     })
+
     this.userState = [{
       id: 1,
       name: '启用'
@@ -49,16 +60,15 @@ export class UserComponent implements OnInit {
     this.myForm = this.service.fb.group({
       user_name: [null, [this.service.validators.required]],
       user_pwd: [null, [this.service.validators.required]],
-      user_real_name: [null, [this.service.validators.required]],
       role_id: [null, [this.service.validators.required]],
       dept_idss: [null, [this.service.validators.required]],
+      user_real_name: false,
       icon: [false],
       user_id: [false],
       email: [false],
       phone: [false]
     });
   }
-
   //加载部门
   loadDept(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
@@ -158,7 +168,7 @@ export class UserComponent implements OnInit {
     }
     else {
       this.formTitle = "新增用户";
-      this.formBean.org_id = this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null;
+      this.formBean.org_id = this.paramCol.org_id
     }
     this.isVisibleMiddle = true;
   };
@@ -183,7 +193,7 @@ export class UserComponent implements OnInit {
   handleOkMiddle($event) {
     this._submitForm();
   }
-  formClear(){
+  formClear() {
     this.myForm.reset();
     this.dept_idss._lastValue = [];
   }
@@ -244,6 +254,7 @@ export class UserComponent implements OnInit {
       this.param.searchText = this.paramCol.searchText;
       this.param.enabled = this.paramCol.enabled;
       this.param.dept_id = this.paramCol.dept_id && this.paramCol.dept_id.length != 0 ? this.paramCol.dept_id[this.paramCol.dept_id.length - 1].toString() : null;
+      this.param.org_id = this.paramCol.org_id;
     }
     else if (reset) {
       this.param.pageNum = reset;
@@ -280,7 +291,7 @@ export class UserComponent implements OnInit {
     this.paramCol.searchText = null;
     this.paramCol.dept_id = [];
     this.paramCol.enabled = null;
-    this.searchDeptIds._lastValue=[]
+    this.searchDeptIds._lastValue = []
   }
   //启用、停用
   enabledUser(data?: any) {
