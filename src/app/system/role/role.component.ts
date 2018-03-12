@@ -18,7 +18,7 @@ export class RoleComponent implements OnInit {
     sort_name: null,
     sort_rule: null,
     total: 0,
-    pageSize: 1,
+    pageSize: 10,
     pageNum: 1
   };
   paramCol: any = {

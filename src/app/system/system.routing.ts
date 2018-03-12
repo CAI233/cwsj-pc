@@ -11,6 +11,7 @@ import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
 import { ThirdComponent } from './third/third.component';
+import { AdvComponent } from './adv/adv.component';
 export const routes: Routes = [
     { path: '', component: MainComponent, data: { title: '系统管理', module: 'system', power: "SHOW" } },
     { path: 'user', component: UserComponent, data: { title: '用户管理', module: 'user', power: "SHOW" } },
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: 'authority', component: AuthorityComponent, data: { title: '权限管理', module: 'authority', power: "SHOW" } },
     { path: 'role', component: RoleComponent, data: { title: '角色管理', module: 'role', power: "SHOW" } },
     { path: 'actionLog', component: ActionlogComponent, data: { title: '操作日志', module: 'actionLog', power: "SHOW" } },
-    { path: 'sysLog', component: ActionlogComponent, data: { title: '系统日志', module: 'sysLog', power: "SHOW" } },
+    { path: 'sysLog', component: SyslogComponent, data: { title: '系统日志', module: 'sysLog', power: "SHOW" } },
     { path: 'third', component: ThirdComponent, data: { title: '设置', module: 'third', power: "SHOW" } },
+    { path: 'adv', component: AdvComponent, data: { title: '广告设置', module: 'adv', power: "SHOW" } },
 ];
