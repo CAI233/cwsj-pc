@@ -246,11 +246,11 @@ export class ResourceComponent implements OnInit {
   }]
 
   //一键更新
-  oneKeyPush(res_id = 0) {
+  oneKeyPush(source_id = 0) {
     this._loading = true;
     this.service.post('/api/system/resource/allot_sysResource', {
       org_id: this.paramCol.org_id,
-      res_id: res_id
+      source_id: source_id
     }).then(success => {
       this._loading = false;
       if (success.code == 0) {
