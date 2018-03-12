@@ -59,21 +59,14 @@
             </div>
             <div class="row-questions">
               <nz-input [nzType]="'search'" [nzPlaceHolder]="'模糊搜索'" name="searchText" [(ngModel)]="paramCol.searchText" style="width: 200px;"
-                (nzOnSearch)="reload()"></nz-input>
+                (nzOnSearch)="reload(true)"></nz-input>
             </div>
           </div>
         </form>
       </div>
-      <nz-table #nzTable 
-        nzShowSizeChanger 
-        [nzShowTotal]="true" 
-        [nzAjaxData]="tableData" 
-        [nzLoading]="_loading" 
-        [nzPageSize]="param.pageSize"
-        [nzPageIndex]="param.pageNum" 
-        [nzTotal]="param.total" 
-        (nzPageIndexChangeClick)="pageChange($event)" 
-        (nzPageSizeChange)="reload($event)">
+      <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+        [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
+        (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;reload($event)">
         <thead nz-thead>
           <tr>
             <th nz-th nzCheckbox>
@@ -122,13 +115,9 @@
               <span *ngIf="data.msg_id == edieMessage.msg_id">
                 <!-- <nz-input [nzType]="'text'" name="module_name" [(ngModel)]="data.module_name"></nz-input> -->
                 <nz-select [(ngModel)]="data.selectedOption" style="width: 80%" [nzPlaceHolder]="'请选择'">
-                    <nz-option
-                      *ngFor="let option of modeList"
-                      [nzLabel]="option.module_name"
-                      [nzValue]="option"
-                      [nzDisabled]="option.disabled">
-                    </nz-option>
-                  </nz-select>
+                  <nz-option *ngFor="let option of modeList" [nzLabel]="option.module_name" [nzValue]="option" [nzDisabled]="option.disabled">
+                  </nz-option>
+                </nz-select>
               </span>
             </td>
             <td nz-td>{{data.update_time}}</td>

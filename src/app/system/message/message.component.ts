@@ -7,7 +7,7 @@ import { AppService } from '../../app.service';
 })
 export class MessageComponent implements OnInit {
 
-  
+
   param: any = {
     mod_id: null,
     searchText: null,
@@ -68,11 +68,11 @@ export class MessageComponent implements OnInit {
   }
   //排序
   sort(name, value) {
-    if(value){
+    if (value) {
       this.param.sort_name = name;
       this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
     }
-    else{
+    else {
       this.param.sort_name = null;
       this.param.sort_rule = null;
     }
@@ -86,17 +86,19 @@ export class MessageComponent implements OnInit {
     this.reload();
   }
   //重新查询
-  reload(event?) {
-    this.param.pageNum = 1;
-    if (event) this.param.pageSize = event;
-    this.param.searchText = this.paramCol.searchText;
-    this.load();
+  reload(reset?: any) {
+    if (reset == true) {
+      this.param.pageNum = 1;
+      this.param.searchText = this.paramCol.searchText;
+    }
+    this._loading = true;
+    this.service.post('/api/system/msg/list', this.param).then(success => {
+      this._loading = false;
+      this.tableData = success.data.rows;
+      this.param.total = success.data.total;
+    })
   }
-  //页码改变
-  pageChange(event) {
-    this.param.pageNum = event;
-    this.load();
-  }
+
   //设置模块搜索
   set_mod_id(md) {
     this.param.mod_id = this.param.mod_id == md.mod_id ? null : md.mod_id;
@@ -144,11 +146,11 @@ export class MessageComponent implements OnInit {
     })
   }
   //取消
-  handleCancelMiddle(e?:any) {
+  handleCancelMiddle(e?: any) {
     this.editModelBean.isVisibleMiddle = false;
   }
   //确定
-  handleOkMiddle(e?:any) {
+  handleOkMiddle(e?: any) {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
@@ -165,15 +167,7 @@ export class MessageComponent implements OnInit {
       })
     }
   }
-  //消息加载
-  load() {
-    this._loading = true;
-    this.service.post('/api/system/msg/list', this.param).then(success => {
-      this._loading = false;
-      this.tableData = success.data.rows;
-      this.param.total = success.data.total;
-    })
-  }
+
   edieMessage = {};
   //新增消息
   _addMessage() {
@@ -223,7 +217,7 @@ export class MessageComponent implements OnInit {
       if (success.code == 0) {
         this.edieMessage = {};
         this.service.message.success(success.message);
-        this.load();
+        this.reload();
       }
       else {
         this.service.message.error(success.message);
@@ -243,7 +237,7 @@ export class MessageComponent implements OnInit {
       }).then(success => {
         if (success.code == 0) {
           this.service.message.success(success.message);
-          this.load();
+          this.reload();
         }
         else {
           this.service.message.error(success.message);

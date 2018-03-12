@@ -56,12 +56,6 @@ export class AuthorityComponent implements OnInit {
   _loading: boolean = false; //loading 状态
   //获取列表
   reload(reset?: any) {
-    if (reset == true) {
-      this.param.pageNum = 1;
-    }
-    else if (reset) {
-      this.param.pageNum = reset;
-    }
     this._loading = true;
     this.service.post('/api/system/role/res/rel/list', this.param).then(success => {
       this._loading = false;

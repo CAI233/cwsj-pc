@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -59,10 +59,10 @@ export class OutfitComponent implements OnInit {
       remark: [false]
     })
   }
-  
-  loadData(e: {option: any, index: number, resolve: Function, reject: Function}): void {
+
+  loadData(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
-      this.service.post('/api/system/region/list/tree',{
+      this.service.post('/api/system/region/list/tree', {
         code: null
       }).then(success => {
         e.resolve(success.data);
@@ -71,17 +71,17 @@ export class OutfitComponent implements OnInit {
     }
     const option = e.option;
     option.loading = true;
-    this.service.post('/api/system/region/list/tree',{
+    this.service.post('/api/system/region/list/tree', {
       code: option.code
     }).then(success => {
       option.loading = false;
-      if(e.index == 2)
+      if (e.index == 2)
         success.data.forEach(element => element.isLeaf = true);
       e.resolve(success.data);
     })
   }
   //打开
-  showModalMiddle(bean?:any) {
+  showModalMiddle(bean?: any) {
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];
@@ -110,13 +110,13 @@ export class OutfitComponent implements OnInit {
   handleOkMiddle($event) {
     this._submitForm();
   }
-  formClear(){
+  formClear() {
     this.myForm.reset();
     this.fromAdress._lastValue = [];
   }
   //地址组织处理
-  changeStreeParent(event){
-    if(event.length == 4){
+  changeStreeParent(event) {
+    if (event.length == 4) {
       console.log(event)
       this.formBean.province = event[0].region_name;
       this.formBean.province_code = event[0].code;
@@ -163,13 +163,13 @@ export class OutfitComponent implements OnInit {
       this.formBean.streetParent = [{
         code: bean.province_code,
         region_name: bean.province
-      },{
+      }, {
         code: bean.city_code,
         region_name: bean.city
-      },{
+      }, {
         code: bean.area_code,
         region_name: bean.area
-      },{
+      }, {
         code: bean.street_code,
         region_name: bean.street
       }];
@@ -199,8 +199,8 @@ export class OutfitComponent implements OnInit {
     }
   }
   //重新查询
-  reload(reset = false) {
-    if (reset) {
+  reload(reset?: any) {
+    if (reset == true) {
       this.param.pageNum = 1;
       this.param.searchText = this.paramCol.searchText;
     }

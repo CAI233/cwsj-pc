@@ -1,0 +1,3 @@
+form .ant-col-12 ~ .ant-col-12{
+    padding-left: 10px;
+}

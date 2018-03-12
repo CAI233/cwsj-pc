@@ -256,9 +256,6 @@ export class UserComponent implements OnInit {
       this.param.dept_id = this.paramCol.dept_id && this.paramCol.dept_id.length != 0 ? this.paramCol.dept_id[this.paramCol.dept_id.length - 1].toString() : null;
       this.param.org_id = this.paramCol.org_id;
     }
-    else if (reset) {
-      this.param.pageNum = reset;
-    }
     this._loading = true;
     this.service.post('/api/system/user/list', this.param).then(success => {
       this._loading = false;
@@ -272,6 +269,7 @@ export class UserComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
+
   }
   /**************************表格部分*************************/
 

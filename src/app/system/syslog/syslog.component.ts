@@ -35,9 +35,6 @@ export class SyslogComponent implements OnInit {
        this.param.begin_time = this.paramCol.searchTime[0];
        this.param.end_time = this.paramCol.searchTime[1];
      }
-     else if (reset) {
-       this.param.pageNum = reset;
-     }
      this._loading = true;
      this.service.post('/api/system/sys_log/list', this.param).then(success => {
        this._loading = false;

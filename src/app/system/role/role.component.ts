@@ -18,7 +18,7 @@ export class RoleComponent implements OnInit {
     sort_name: null,
     sort_rule: null,
     total: 0,
-    pageSize: 10,
+    pageSize: 1,
     pageNum: 1
   };
   paramCol: any = {
@@ -89,7 +89,7 @@ export class RoleComponent implements OnInit {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.myForm.reset();
-          this.load();
+          this.reload();
         }
         else {
           this.service.message.error(success.message);
@@ -123,7 +123,7 @@ export class RoleComponent implements OnInit {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
-          this.load();
+          this.reload();
         }
         else {
           this.service.message.error(success.message);
@@ -131,18 +131,13 @@ export class RoleComponent implements OnInit {
       })
     }
   }
-  _uppageNum(data){
-    this.param.pageNum = data;
-    this.load();
-  }
+
   //重新查询
-  reload(event?) {
-    this.param.pageNum = 1;
-    if (event) this.param.pageSize = event;
-    this.param.searchText = this.paramCol.searchText;
-    this.load();
-  }
-  load(){
+  reload(reset?) {
+    if (reset == true) {
+      this.param.pageNum = 1;
+      this.param.searchText = this.paramCol.searchText;
+    }
     this._loading = true;
     this.service.post('/api/system/role/list', this.param).then(success => {
       this._loading = false;
@@ -157,6 +152,7 @@ export class RoleComponent implements OnInit {
       }
     })
   }
+ 
   //全选
   _checkAll(value) {
     if (value) {

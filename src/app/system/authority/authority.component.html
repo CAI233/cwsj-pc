@@ -42,7 +42,8 @@
     </div>
     <div class="content-right-con">
       <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
-        [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="reload($event)" (nzPageSizeChange)="reload(true)">
+        [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
+        (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;reload($event)">
         <thead nz-thead>
           <tr>
             <th nz-th [nzWidth]="'25%'">
