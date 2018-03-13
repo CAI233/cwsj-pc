@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'pay', component: PayComponent, data: { title: '支付管理', module: 'pay', power: "SHOW" } },
   { path: '404', component: ErrorComponent, data: { title: '404', module: '404', power: "SHOW" } },
   { path: 'system', loadChildren: './system/system.module#SystemModule' },
+  { path: 'adv', loadChildren: './adv/adv.module#AdvModule' },
 
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/404', pathMatch: 'full' }

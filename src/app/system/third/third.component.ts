@@ -31,7 +31,7 @@ export class ThirdComponent implements OnInit {
   param: any = {
     pageSize: 10,
     pageNum: 1,
-    total:0
+    total: 0
   }
   ngOnInit() {
     this.reload();
@@ -47,6 +47,7 @@ export class ThirdComponent implements OnInit {
   }
   //打开
   showModalMiddle(bean?: any) {
+    this.formBean = {};
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];
@@ -75,7 +76,7 @@ export class ThirdComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post("/api/sologinset/getlist", this.formBean).then(success => {
+      this.service.post("/api/system/sologinset/getlist", this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
           this.myForm.reset();
@@ -90,7 +91,7 @@ export class ThirdComponent implements OnInit {
   //重新查询
   reload() {
     this._loading = true;
-    this.service.post('/api/sologinset/getlist', this.param).then(success => {
+    this.service.post('/api/system/sologinset/getlist', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;

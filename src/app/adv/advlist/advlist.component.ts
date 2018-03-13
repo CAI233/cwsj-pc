@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from '../../app.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-role',
-  templateUrl: './role.component.html',
-  styleUrls: ['./role.component.css']
+  selector: 'app-advlist',
+  templateUrl: './advlist.component.html',
+  styleUrls: ['./advlist.component.css']
 })
-export class RoleComponent implements OnInit {
+export class AdvListComponent implements OnInit {
 
   _allChecked = false;
   _indeterminate = false;
@@ -28,28 +26,49 @@ export class RoleComponent implements OnInit {
     searchText: null
   }
   sortMap = {
-    role_name: null,
+    create_time: null,
+    enabled: null,
   };
   _loading: boolean = true;
   // 实例化一个对象
-  constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
+  constructor(private service: AppService) { }
 
   //表单
   myForm: any;
   formBean: any = {
-    formTitle: '新增角色',
-    isVisibleMiddle: false,
     role_id: null,
-    role_name: null,
+    adv_name: null,
+    adv_cat_id:null,
     remark: null
   };
+  //文件上传
+  fileUpload(info): void {
+    console.log(info.file.response);
+    if (info.file.response && info.file.response.code == 0) {
+      this.formBean.adv_img = info.file.response.data[0].url;
+    }
+  }
+  //新闻分类下拉
+  advClassList: any = [];
   ngOnInit() {
+    //获取新闻分类
+    this.service.post('/api/system/advcat/json/advcatlist', { pageNum: 1, pageSize: 1000 }).then(success => {
+      if (success.code == 0) {
+        this.advClassList = success.data.rows;
+      }
+    })
+
     this.reload();
     this.myForm = this.service.fb.group({
-      role_name: [null, [this.service.validators.required]],
-      remark: [false]
+      adv_name: [null, [this.service.validators.required]],
+      adv_cat_id: [null, [this.service.validators.required]],
+      remark: [false],
+      adv_url: [false]
     })
   }
+  //表单
+  isVisibleMiddle: boolean = false;
+  formTitle: string;
   //打开
   showModalMiddle(bean?: any) {
     this.formBean = {};
@@ -57,23 +76,16 @@ export class RoleComponent implements OnInit {
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
-      //部门
-      if (this.formBean.dept_id) {
-        this.formBean.dept_id = parseInt(this.formBean.dept_id);
-      }
-      if (this.formBean.role_id) {
-        this.formBean.role_id = parseInt(this.formBean.role_id);
-      }
-      this.formBean.formTitle = "修改角色";
+      this.formTitle = "修改新闻";
     }
     else {
-      this.formBean.formTitle = "新增角色";
+      this.formTitle = "新增新闻";
     }
-    this.formBean.isVisibleMiddle = true;
+    this.isVisibleMiddle = true;
   };
   //关闭
   handleCancelMiddle($event) {
-    this.formBean.isVisibleMiddle = false;
+    this.isVisibleMiddle = false;
     this.myForm.reset();
   }
   //确定
@@ -82,13 +94,14 @@ export class RoleComponent implements OnInit {
   }
   //提交
   _submitForm() {
+    console.log(this.formBean)
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('/api/system/role/save', this.formBean).then(success => {
+      this.service.post('/api/system/adv/json/updateadv', this.formBean).then(success => {
         if (success.code == 0) {
-          this.formBean.isVisibleMiddle = false;
+          this.isVisibleMiddle = false;
           this.myForm.reset();
           this.reload();
         }
@@ -98,20 +111,6 @@ export class RoleComponent implements OnInit {
       })
     }
   }
-  //修改
-  editModalMiddle() {
-    if (this.tableData.filter(value => value.checked).length != 1) {
-      this.service.message.warning('请选择修改数据，并且同时只能修改一条!');
-    }
-    else {
-      let bean = this.tableData.filter(value => value.checked);
-      for (let i in bean[0]) {
-        this.formBean[i] = bean[0][i];
-      }
-      this.formBean.formTitle = '修改角色';
-      this.formBean.isVisibleMiddle = true;
-    }
-  }
   //删除
   delRows() {
     if (this.tableData.filter(value => value.checked).length < 1) {
@@ -119,9 +118,9 @@ export class RoleComponent implements OnInit {
     }
     else {
       let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.role_id) })
-      this.service.post('/api/system/role/delete', {
-        ids: ids, mark: 'del'
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.adv_id) })
+      this.service.post('/api/system/adv/json/deleteadvs', {
+        adv_ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
           this.reload();
@@ -132,7 +131,18 @@ export class RoleComponent implements OnInit {
       })
     }
   }
-
+  _delete(id){
+    this.service.post('/api/system/adv/json/deleteadvs', {
+      adv_ids: [id], mark: 'del'
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
   //重新查询
   reload(reset?) {
     if (reset == true) {
@@ -140,7 +150,7 @@ export class RoleComponent implements OnInit {
       this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
-    this.service.post('/api/system/role/list', this.param).then(success => {
+    this.service.post('/api/system/adv/json/getadvlist', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;
@@ -191,6 +201,31 @@ export class RoleComponent implements OnInit {
       }
     });
     this.reload();
+  }
+
+  //是否显示
+  _is_show(data) {
+    this.service.post('/api/system/adv/json/updateshow', {
+      adv_id: data.adv_id,
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  //启用停用
+  _enabled(data) {
+    this.service.post('/api/system/adv/json/updateenable', {
+      adv_id: data.adv_id,
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
   }
 
 }

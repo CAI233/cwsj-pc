@@ -17,7 +17,6 @@ import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
 import { ThirdComponent } from './third/third.component' ;
-import { AdvComponent } from './adv/adv.component'
 
 
 @NgModule({
@@ -39,7 +38,6 @@ import { AdvComponent } from './adv/adv.component'
     RoleComponent,
     ActionlogComponent,
     SyslogComponent,
-    AdvComponent,
     ThirdComponent
   ],
   providers: [  //引入NZ

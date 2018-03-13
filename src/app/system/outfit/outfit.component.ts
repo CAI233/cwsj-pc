@@ -82,6 +82,7 @@ export class OutfitComponent implements OnInit {
   }
   //打开
   showModalMiddle(bean?: any) {
+    this.formBean = {};
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];

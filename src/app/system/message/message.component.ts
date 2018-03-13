@@ -188,6 +188,7 @@ export class MessageComponent implements OnInit {
   }
   //编辑
   showModalMiddle(data) {
+    this.edieMessage = [];
     for (let i in data) {
       this.edieMessage[i] = data[i];
     }

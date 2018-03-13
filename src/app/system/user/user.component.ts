@@ -148,6 +148,7 @@ export class UserComponent implements OnInit {
   formTitle: string;
   //打开
   showModalMiddle(bean?: any) {
+    this.formBean = {}
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];
