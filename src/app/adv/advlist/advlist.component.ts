@@ -43,7 +43,6 @@ export class AdvListComponent implements OnInit {
   };
   //文件上传
   fileUpload(info): void {
-    console.log(info.file.response);
     if (info.file.response && info.file.response.code == 0) {
       this.formBean.adv_img = info.file.response.data[0].url;
     }
@@ -94,7 +93,6 @@ export class AdvListComponent implements OnInit {
   }
   //提交
   _submitForm() {
-    console.log(this.formBean)
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
