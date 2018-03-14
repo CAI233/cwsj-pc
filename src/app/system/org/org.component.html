@@ -65,15 +65,13 @@
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_id == 0">--</span>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">{{item.dept_code}}</span>
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.dept_code}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-input [nzType]="'text'" name="dept_code" [(ngModel)]="editRow.dept_code"></nz-input>
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_id == 0">--</span>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">{{item.parent.dept_name}}</span>
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.pname.dept_name}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-cascader nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'dept_id'" [nzLabelProperty]="'dept_name'" [nzOptions]="tableData"
                                         [(ngModel)]="editRow.pname">
@@ -81,24 +79,22 @@
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_id == 0">--</span>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">{{item.address}}</span>
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.address}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-input [nzType]="'text'" name="address" [(ngModel)]="editRow.address"></nz-input>
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_id == 0">--</span>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">{{item.remark}}</span>
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.remark}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-input [nzType]="'text'" name="remark" [(ngModel)]="editRow.remark"></nz-input>
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_id == 0">
+                                <span *ngIf="item.dept_pid == 0">
                                     <a (click)="_addChildren(item)">新增组织</a>
                                 </span>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_id != 0">
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0 ">
                                     <a (click)="_editRow(item)">修改</a>
                                     <span nz-table-divider></span>
                                     <nz-popconfirm [nzTitle]="'确定要删除这个任务吗？'" (nzOnConfirm)="_delete(item)" [nzPlacement]="'left'">
