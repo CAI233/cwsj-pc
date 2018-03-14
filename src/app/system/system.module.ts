@@ -42,8 +42,7 @@ import { EmailconfigComponent } from './emailconfig/emailconfig.component';
     RoleComponent,
     ActionlogComponent,
     SyslogComponent,
-    ThirdComponent
-    SyslogComponent,
+    ThirdComponent,
     PhonemessageComponent,
     EmailtemplateComponent,
     EmailconfigComponent,

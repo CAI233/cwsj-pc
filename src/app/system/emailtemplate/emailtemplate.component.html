@@ -28,7 +28,7 @@
             <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
             </label>
           </th>
-          <th nz-th [nzWidth]="'15%'"><span>模板编码</span></th>
+          <th nz-th [nzWidth]="'15%'"><span>模板编号</span></th>
           <th nz-th [nzWidth]="'50%'"><span>模板内容</span></th>
           <th nz-th [nzWidth]="'15%'"><span>更新时间</span></th>
           <th nz-th><span>操作</span></th>
@@ -41,14 +41,14 @@
             </label>
           </td>
           <td nz-td>
-              <span *ngIf="editRow!=data.user_id" [innerHtml]="data.mail_template_id"></span>
-              <span *ngIf="editRow==data.user_id">
-                <nz-input [(ngModel)]="data.mail_template_id" style="width:100%;"></nz-input>
+              <span *ngIf="editRow!=data.mail_template_id" [innerHtml]="data.template_code"></span>
+              <span *ngIf="editRow==data.mail_template_id">
+                <nz-input [(ngModel)]="data.template_code" style="width:100%;"></nz-input>
               </span>
           </td>
           <td nz-td>
-              <span *ngIf="editRow!=data.user_id" [innerHtml]="data.content"></span>
-              <span *ngIf="editRow==data.user_id">
+              <span *ngIf="editRow!=data.mail_template_id" [innerHtml]="data.content"></span>
+              <span *ngIf="editRow==data.mail_template_id">
                 <nz-input [(ngModel)]="data.content" [nzType]="'textarea'" style="width:100%;" [nzSize]="'large'" [nzRows]="5"></nz-input>
               </span>
               <!-- <span [innerHtml]="data.flag==1 ? '云片' : '阿里'"></span> -->
@@ -57,17 +57,17 @@
               <span >{{data.update_time}}</span>
           </td>
           <td nz-td>
-            <span *ngIf="editRow!=data.user_id">
+            <span *ngIf="editRow!=data.mail_template_id">
               <a (click)="edit(data)">修改</a>
             </span>
-            <span *ngIf="editRow==data.user_id">
+            <span *ngIf="editRow==data.mail_template_id">
               <a (click)="save(data)">保存</a>
               <span nz-table-divider></span>
                 <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="cancel(data)">
                   <a nz-popconfirm>取消</a>
                 </nz-popconfirm>
             </span>
-            <span >
+            <span *ngIf="editRow!=data.mail_template_id">
                 <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 
+
+
 @Component({
   selector: 'app-emailtemplate',
   templateUrl: './emailtemplate.component.html',
@@ -26,9 +28,10 @@ export class EmailtemplateComponent implements OnInit {
   ngOnInit() {
 
 
-
     this.load();
   }
+
+  
 
 
   //加载邮件模板
@@ -41,7 +44,7 @@ export class EmailtemplateComponent implements OnInit {
 
   // 修改操作
   edit(data) {
-    this.editRow = data.user_id;
+    this.editRow = data.mail_template_id;
   }
 
   // 取消操作
@@ -53,7 +56,7 @@ export class EmailtemplateComponent implements OnInit {
 
   save(data){
     console.log(data);
-    if(!data.mail_template_id){
+    if(!data.template_code){
       this.service.message.error('请填写模板编码');
       return false;
     }
