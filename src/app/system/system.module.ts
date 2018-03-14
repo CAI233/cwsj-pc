@@ -17,6 +17,10 @@ import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
 import { ThirdComponent } from './third/third.component' ;
+import { PhonemessageComponent } from './phonemessage/phonemessage.component';
+import { SmsconfigurComponent } from './smsconfigur/smsconfigur.component';
+import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component';
+import { EmailconfigComponent } from './emailconfig/emailconfig.component';
 
 
 @NgModule({
@@ -39,6 +43,11 @@ import { ThirdComponent } from './third/third.component' ;
     ActionlogComponent,
     SyslogComponent,
     ThirdComponent
+    SyslogComponent,
+    PhonemessageComponent,
+    EmailtemplateComponent,
+    EmailconfigComponent,
+    SmsconfigurComponent
   ],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },

@@ -1,0 +1,151 @@
+<nz-layout class="main-page-layout">
+    <nz-header class="main-page-header">
+      <nz-breadcrumb>
+        <nz-breadcrumb-item>
+          <a href="#/home">首页</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          短信配置
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </nz-header>
+    <nz-content class="main-page-content" style="padding-top: 20px;">
+      <form nz-form>
+        <!--行-->
+        <div nz-row nz-form-item>
+          <div class="row-actions">
+            <button nz-button nzType="primary" (click)="add()">
+                <i class="anticon anticon-plus"></i>
+                <span>新增</span>
+            </button>
+           
+            <!-- <nz-dropdown [nzTrigger]="'click'" [nzPlacement]="'bottomLeft'">
+              <button nz-button nz-dropdown>云片一键新增</button>
+              <ul nz-menu>
+                <li nz-menu-item (click)="Yunadd(item.apikey)" *ngFor="let item of yun_data">{{item.apikey}}</li>
+                
+              </ul>
+            </nz-dropdown> -->
+          </div>
+        </div>
+      </form>
+
+      <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)">
+          <thead nz-thead>
+          <tr>
+            <th nz-th nzCheckbox>
+              <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+              </label>
+            </th>
+            <th nz-th [nzWidth]="'50%'"><span>短信名称</span></th>
+            <th nz-th [nzWidth]="'15%'"><span>所属平台</span></th>
+            <th nz-th [nzWidth]="'15%'"><span>创建时间</span></th>
+            <th nz-th><span>操作</span></th>
+          </tr>
+          </thead>
+          <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+            <td nz-td nzCheckbox>
+              <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+              </label>
+            </td>
+            <td nz-td>
+                <span *ngIf="editRow!=data.id">{{data.name}}</span>
+                <span *ngIf="editRow==data.id">
+                  <nz-input [(ngModel)]="data.name" style="width:100%;"></nz-input>
+                </span>
+            </td>
+            <td nz-td>
+                <span [innerHtml]="data.flag==1 ? '云片' : '阿里'"></span>
+            </td>
+            <td nz-td>
+                <span >{{data.create_time}}</span>
+                <!-- <span *ngIf="editRow==data.id">
+                  <nz-input [(ngModel)]="data.create_time" style="width:100%;"></nz-input>
+                </span> -->
+            </td>
+            
+            <td nz-td>
+              <span *ngIf="editRow!=data.id">
+                <a (click)="edit(data)">修改</a>
+              </span>
+              <span *ngIf="editRow==data.id">
+                <a (click)="save(data)">保存</a>
+                <span nz-table-divider></span>
+                  <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="cancel(data)">
+                    <a nz-popconfirm>取消</a>
+                  </nz-popconfirm>
+              </span>
+              <span >
+                  <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
+                    <a nz-popconfirm>删除</a>
+                  </nz-popconfirm>
+              </span>
+            </td>
+          </tr>
+          </tbody>
+        </nz-table>
+  
+    </nz-content>
+  </nz-layout>
+
+  <nz-modal [nzMaskClosable]="false" [nzWidth]="500" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
+  [nzVisible]="isVisibleMiddle" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
+  <ng-template #modalContent>
+
+    <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
+      <ul nz-menu [nzMode]="'horizontal'">
+        <li nz-menu-item (click)="onckeck();param.flag=2" [ngClass]="{'ant-menu-item-selected':param.flag==2}">
+          <span title><i class="anticon anticon-mail"></i>阿里</span>
+        </li>
+        <li nz-menu-item nzDisabled (click)="onckeck();param.flag=1" [ngClass]="{'ant-menu-item-selected':param.flag==1}">
+          <span title><i class="anticon anticon-mail"></i>云片</span>
+        </li>
+      </ul>
+      <div nz-form-item nz-row class="notErrMsg" *ngIf="param.flag==2">
+        <div nz-form-label>
+          <label nz-form-item-required>accesskeyid</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="accesskeyid"  [nzType]="'text'" [(ngModel)]="param.accesskeyid" [nzPlaceHolder]="'请填写accesskeyid'"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg" *ngIf="param.flag==2">
+        <div nz-form-label>
+          <label nz-form-item-required>accesskeysercet</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="accesskeysercet"  [nzType]="'text'" [(ngModel)]="param.accesskeysercet" [nzPlaceHolder]="'请填写accesskeysercet'"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg" *ngIf="param.flag==1">
+        <div nz-form-label>
+          <label nz-form-item-required>apikey</label>
+        </div>
+        <nz-select formControlName="apikey" style="width:100%;" [(ngModel)]="param.apikey" [nzPlaceHolder]="'选择一个apikey'" nzAllowClear>
+          <nz-option  *ngFor="let item of yun_data" [nzLabel]="item.apikey" [nzValue]="item.apikey" [nzDisabled]="item.disabled">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg" >
+        <div nz-form-label>
+          <label >name</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="name"  [nzType]="'text'" [(ngModel)]="param.name" [nzPlaceHolder]="'请填写name'"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg" >
+        <div nz-form-label>
+          <label >sign_name</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="sign_name"  [nzType]="'text'" [(ngModel)]="param.sign_name" [nzPlaceHolder]="'请填写sign_name'"></nz-input>
+        </div>
+      </div>
+      <button style="display:none;">save</button>
+    </form>
+
+  </ng-template>
+</nz-modal>
+  
