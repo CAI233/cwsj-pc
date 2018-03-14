@@ -12,25 +12,37 @@ export class OrgComponent implements OnInit {
   tableData: any = [];
   tableDataTree: any = [];
   editRow: any = {};
+  orgList: any = [];//机构
+  param:any={
+    org_id:this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null,
+    org_name:this.service.loginUserInfo ? this.service.loginUserInfo.org_name : null
+  }
   // 实例化一个对象
   constructor(private service: AppService) { }
 
   ngOnInit() {
+     //获取机构
+     this.service.post('/api/system/organization/getList', {
+      pageNum: 1,
+      pageSize: 1000,
+      enabled: 1,
+    }).then(success => {
+      this.orgList = success.data.rows;
+    })
     this.load();
   }
   load(){
     this._loading = true;
-    this.service.post('/api/system/department/getList',{}).then(success => {
+    this.service.post('/api/system/department/getList',{org_id:this.param.org_id}).then(success => {
       this.tableData = [{
-        org_id: this.service.loginUserInfo.org_id,
+        org_id: this.param.org_id,
         dept_id: 0,
-        dept_name: this.service.loginUserInfo.org_name,
+        dept_name: this.param.org_name,
         children: success.data
       }];
       this.service._toisLeaf(this.tableData);
       this._expanData();
       this._loading = false;
-      console.log(this.tableData)
     })
   }
   expandDataCache = {};
@@ -182,6 +194,7 @@ export class OrgComponent implements OnInit {
       isLeaf: true
     }
     parent.children(this.editRow)
+    console.log(11)
     this._expanData();
   }
   //新增子级
