@@ -15,6 +15,7 @@ export class EmailtemplateComponent implements OnInit {
   _displayData = [];
 
   editRow : any = null;
+  _loading: boolean = true;
 
   param : any = {
     pageSize:10,
@@ -35,15 +36,27 @@ export class EmailtemplateComponent implements OnInit {
 
 
   //加载邮件模板
-  load(){
+  load(reset?){
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    this._loading = true;
     this.service.post('/api/system/mailtemplate/pagequery',this.param).then(success => {
-      console.log(success)
-      this.data = success.data.rows;
+      this._loading = false;
+      if(success.code==0){
+        this.data = success.data.rows;
+        this.param.total = success.data.total;
+      }else{
+        this.data = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
     })
   }
 
   // 修改操作
   edit(data) {
+    
     this.editRow = data.mail_template_id;
   }
 
@@ -55,7 +68,6 @@ export class EmailtemplateComponent implements OnInit {
   }
 
   save(data){
-    console.log(data);
     if(!data.template_code){
       this.service.message.error('请填写模板编码');
       return false;

@@ -30,7 +30,7 @@
         </div>
       </form>
 
-      <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)">
+      <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" [nzIsPagination]="false" (nzDataChange)="_displayDataChange($event)">
           <thead nz-thead>
           <tr>
             <th nz-th nzCheckbox>
@@ -129,7 +129,7 @@
       </div>
       <div nz-form-item nz-row class="notErrMsg" >
         <div nz-form-label>
-          <label >name</label>
+          <label nz-form-item-required>name</label>
         </div>
         <div nz-form-control>
           <nz-input formControlName="name"  [nzType]="'text'" [(ngModel)]="param.name" [nzPlaceHolder]="'请填写name'"></nz-input>
@@ -137,7 +137,7 @@
       </div>
       <div nz-form-item nz-row class="notErrMsg" >
         <div nz-form-label>
-          <label >sign_name</label>
+          <label nz-form-item-required>sign_name</label>
         </div>
         <div nz-form-control>
           <nz-input formControlName="sign_name"  [nzType]="'text'" [(ngModel)]="param.sign_name" [nzPlaceHolder]="'请填写sign_name'"></nz-input>

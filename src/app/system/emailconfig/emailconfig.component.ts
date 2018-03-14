@@ -18,6 +18,7 @@ export class EmailconfigComponent implements OnInit {
     searchText:null
   };
 
+  _loading: boolean = true;
   data : any = [];
   editRow : any = [];
 
@@ -31,10 +32,21 @@ export class EmailconfigComponent implements OnInit {
   }
 
   //加载列表
-  load(){
+  load(reset?){
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    this._loading = true;
     this.service.post('/api/system/mailsetting/pagequery',this.param).then(success => {
-      console.log(success)
-      this.data = success.data.rows;
+      this._loading = false;
+      if(success.code==0){
+        this.data = success.data.rows;
+        this.param.total = success.data.total;
+      }else{
+        this.data = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
     })
   }
 

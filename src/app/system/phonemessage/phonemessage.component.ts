@@ -27,6 +27,7 @@ export class PhonemessageComponent implements OnInit {
   yun_data :any = [];
 
   editRow :any = null;
+  _loading: boolean = true;
   // tempEditObject :any = {};
 
 
@@ -44,10 +45,21 @@ export class PhonemessageComponent implements OnInit {
   }
 
   //加载短信模板列表
-  load(){
+  load(reset?){
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    this._loading = true;
     this.service.post('/api/system/msgtpl/getlist',this.param).then(success => {
-      console.log(success)
-      this.data = success.data.rows;
+      this._loading = false;
+      if(success.code==0){
+        this.data = success.data.rows;
+        this.param.total = success.data.total;
+      }else{
+        this.data = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
     })
   }
   load_yun(){

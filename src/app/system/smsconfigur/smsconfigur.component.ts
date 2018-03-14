@@ -20,6 +20,7 @@ export class SmsconfigurComponent implements OnInit {
   data :any = [];
   yun_data : any = [];
   editRow : any = null;
+  _loading: boolean = true;
 
   constructor(private service: AppService) { }
 
@@ -99,9 +100,22 @@ export class SmsconfigurComponent implements OnInit {
   
 
   //加载列表 
-  load(){
+  load(reset?){
+    // if (reset == true) {
+    //   this.param.pageNum = 1;
+    // }
+    this._loading = true;
     this.service.post('/api/system/msgset/list').then(success => {
         console.log(success);
+        this._loading = false;
+        // if(success.code==0){
+        //   this.data = success.data.rows;
+        //   this.param.total = success.data.total;
+        // }else{
+        //   this.data = [];
+        //   this.param.total = 0;
+        //   this.service.message.error(success.message);
+        // }
         this.data = success.data;
     })
   }
