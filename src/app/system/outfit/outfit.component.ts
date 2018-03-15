@@ -43,6 +43,8 @@ export class OutfitComponent implements OnInit {
     org_id: null,
     org_name: null,
     org_code: null,
+    auth_date_begin:null,
+    auth_date_end:null,
     remark: null
   };
   ngOnInit() {
@@ -94,12 +96,14 @@ export class OutfitComponent implements OnInit {
       if (this.formBean.org_id) {
         this.formBean.org_id = parseInt(this.formBean.org_id);
       }
-      console.log(this.formBean)
       this.formBean.formTitle = "修改机构";
     }
     else {
       this.formBean.formTitle = "新增机构";
+      this.formBean.auth_date_begin = null;
+      this.formBean.auth_date_end = null;
     }
+    console.log(this.formBean)
     this.formBean.isVisibleMiddle = true;
   };
   //关闭

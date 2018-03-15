@@ -71,7 +71,7 @@
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.pname.dept_name}}</span>
+                                <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0">{{item.parent.dept_name}}</span>
                                 <span *ngIf="editRow.dept_id == item.dept_id">
                                     <nz-cascader nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'dept_id'" [nzLabelProperty]="'dept_name'" [nzOptions]="tableData"
                                         [(ngModel)]="editRow.pname">

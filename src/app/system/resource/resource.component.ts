@@ -74,7 +74,6 @@ export class ResourceComponent implements OnInit {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
       const nodeCol = this.expandDataCacheCol[root.res_id];
-
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           let expand = false;
@@ -107,10 +106,6 @@ export class ResourceComponent implements OnInit {
           });
         }
       }
-      // if (node.children && node.children.length == 0) {
-      //   node.children = null;
-      // }
-
     }
     return array;
   }
@@ -176,7 +171,7 @@ export class ResourceComponent implements OnInit {
     this.service.post('/api/system/resource/delete', {
       mark: 'del',
       res_ids: [data.res_id],
-      org_id:this.paramCol.org_id
+      org_id: this.paramCol.org_id
     }).then(success => {
       if (success.code == 0) {
         this.load();
@@ -203,14 +198,15 @@ export class ResourceComponent implements OnInit {
       order_weight: new Date().getTime(),
       org_id: data.org_id,
       pid: data.res_id,
-      parent_name: data.res_name,
       res_name: null,
       res_type: 1,
       res_type_name: '菜单',
+      pname: data.pname || [],
       res_id: null,
       disabled: true,
       isLeaf: true
     }
+    this.editRow.pname.push({ res_id: data.res_id, res_name: data.res_name })
     if (!data.children) data.children = [];
     data.children.push(this.editRow);
     this._expanData();
@@ -228,11 +224,13 @@ export class ResourceComponent implements OnInit {
       org_id: data.org_id,
       res_type: 1,
       res_type_name: '菜单',
+      pname: data.pname || [],
       res_icon: null,
       res_url: null,
       disabled: true,
       isLeaf: true
     }
+    this.editRow.pname.push({ res_id: data.res_id, res_name: data.res_name })
     if (!data.children) data.children = [];
     data.children.push(this.editRow);
     this._expanData();

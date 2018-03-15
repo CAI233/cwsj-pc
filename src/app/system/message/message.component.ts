@@ -133,7 +133,7 @@ export class MessageComponent implements OnInit {
     };
   }
   //删除模块
-  _delModel(item) {
+  _delModel(item,$event) {
     this.service.post('/api/system/module/del', {
       ids: [item.mod_id]
     }).then(success => {
@@ -144,6 +144,7 @@ export class MessageComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
+    event.stopPropagation();
   }
   //取消
   handleCancelMiddle(e?: any) {
