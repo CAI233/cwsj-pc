@@ -27,7 +27,7 @@ export class SmsconfigurComponent implements OnInit {
   ngOnInit() {
     this.myForm = this.service.fb.group({
       accesskeyid: false,
-      accesskeysercet:false,
+      accesskeysecret:false,
       apikey:false,
       name:false,
       sign_name:false
@@ -56,13 +56,22 @@ export class SmsconfigurComponent implements OnInit {
     })
   }
 
+  // 启用与停用状态
+  _enabled(data) {
+    data.enabled = data.enabled == 1 ? 2 : 1;
+    this.service.post('/api/system/msgset/enabled',{id:data.id,enabled:data.enabled}).then(success => {
+      this.load();
+    })
+    console.log(data.status)
+  }
+
   // 修改后保存
   save(data){
     let now_data = {
       id:data.id,
       flag:data.flag,
       accesskeyid:data.accesskeyid,
-      accesskeysercet:data.accesskeysercet,
+      accesskeysecret:data.accesskeysecret,
       apikey:data.apikey,
       sign_name:data.sign_name,
       name:data.name
@@ -78,8 +87,8 @@ export class SmsconfigurComponent implements OnInit {
         this.service.message.error('请填写accesskeyid');
         return false;
       }
-      if(!data.accesskeysercet){
-        this.service.message.error('请填写accesskeysercet');
+      if(!data.accesskeysecret){
+        this.service.message.error('请填写accesskeysecret');
         return false;
       }
     }
@@ -160,8 +169,8 @@ export class SmsconfigurComponent implements OnInit {
         this.service.message.error('请填写accesskeyid');
         return false;
       }
-      if(!this.param.accesskeysercet){
-        this.service.message.error('请填写accesskeysercet');
+      if(!this.param.accesskeysecret){
+        this.service.message.error('请填写accesskeysecret');
         return false;
       }
     }

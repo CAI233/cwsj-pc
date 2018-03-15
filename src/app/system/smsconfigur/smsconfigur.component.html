@@ -37,8 +37,9 @@
               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
               </label>
             </th>
-            <th nz-th [nzWidth]="'50%'"><span>短信名称</span></th>
+            <th nz-th [nzWidth]="'30%'"><span>短信名称</span></th>
             <th nz-th [nzWidth]="'15%'"><span>所属平台</span></th>
+            <th nz-th [nzWidth]="'10%'"><span>状态</span></th>
             <th nz-th [nzWidth]="'15%'"><span>创建时间</span></th>
             <th nz-th><span>操作</span></th>
           </tr>
@@ -57,6 +58,13 @@
             </td>
             <td nz-td>
                 <span [innerHtml]="data.flag==1 ? '云片' : '阿里'"></span>
+            </td>
+            <td nz-td>
+              <span>
+                <div style="margin-top:8px;">
+                  <nz-switch [ngModel]="data.enabled==1" [nzSize]="'small'" (click)="_enabled(data)"></nz-switch>
+                </div>
+              </span>
             </td>
             <td nz-td>
                 <span >{{data.create_time}}</span>
@@ -112,10 +120,10 @@
       </div>
       <div nz-form-item nz-row class="notErrMsg" *ngIf="param.flag==2">
         <div nz-form-label>
-          <label nz-form-item-required>accesskeysercet</label>
+          <label nz-form-item-required>accesskeysecret</label>
         </div>
         <div nz-form-control>
-          <nz-input formControlName="accesskeysercet"  [nzType]="'text'" [(ngModel)]="param.accesskeysercet" [nzPlaceHolder]="'请填写accesskeysercet'"></nz-input>
+          <nz-input formControlName="accesskeysecret"  [nzType]="'text'" [(ngModel)]="param.accesskeysecret" [nzPlaceHolder]="'请填写accesskeysecret'"></nz-input>
         </div>
       </div>
       <div nz-form-item nz-row class="notErrMsg" *ngIf="param.flag==1">
