@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AppService } from '../../app.service';
 
 
@@ -30,6 +31,9 @@ export class EmailtemplateComponent implements OnInit {
 
 
     this.load();
+
+
+    
   }
 
   
@@ -85,29 +89,26 @@ export class EmailtemplateComponent implements OnInit {
   }
 
 
-  _displayDataChange($event) {
-    this._displayData = $event;
-    this._refreshStatus();
-  }
-
-  _refreshStatus() {
-    const allChecked = this._displayData.every(value => value.disabled || value.checked);
-    const allUnChecked = this._displayData.every(value => value.disabled || !value.checked);
-    this._allChecked = allChecked;
-    this._indeterminate = (!allChecked) && (!allUnChecked);
-  }
-
   _checkAll(value) {
     if (value) {
-      this._displayData.forEach(data => {
+      this.data.forEach(data => {
         if (!data.disabled) {
           data.checked = true;
         }
       });
     } else {
-      this._displayData.forEach(data => data.checked = false);
+      this.data.forEach(data => data.checked = false);
     }
     this._refreshStatus();
   }
+  _refreshStatus() {
+    const allChecked = this.data.every(value => value.disabled || value.checked);
+    const allUnChecked = this.data.every(value => value.disabled || !value.checked);
+    this._allChecked = allChecked;
+    this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
 
+
+
+  
 }

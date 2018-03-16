@@ -72,19 +72,18 @@ export class EmailconfigComponent implements OnInit {
     // 一键删除
     delRows(){
       let now_arrList = [];
-    console.log(this._displayData)
-    this._displayData.forEach( value => { 
-      
-      if(value.checked){now_arrList.push(value.mail_setting_id)}
-    })
+      this.data.forEach( value => { 
+        
+        if(value.checked){now_arrList.push(value.mail_setting_id)}
+      })
 
-    if (now_arrList.length==0) {
-      this.service.message.error('请选择要删除的模块');
-      return false;
-    }
-    this.service.post('/api/system/mailsetting/del',{ids:now_arrList}).then(success => {
-      this.load();
-    })
+      if (now_arrList.length==0) {
+        this.service.message.error('请选择要删除的模块');
+        return false;
+      }
+      this.service.post('/api/system/mailsetting/del',{ids:now_arrList}).then(success => {
+        this.load();
+      })
     }
 
     // 新增
@@ -98,7 +97,8 @@ export class EmailconfigComponent implements OnInit {
         update_time: null,
         mail_setting_id:null
       };
-      this._displayData.unshift(this.new_tempEditObject);
+      
+      this.data.unshift(this.new_tempEditObject);
       this.editRow = this.new_tempEditObject.mail_setting_id;
     }
 
@@ -133,28 +133,22 @@ export class EmailconfigComponent implements OnInit {
     }
 
 
-  _displayDataChange($event) {
-    this._displayData = $event;
-    this._refreshStatus();
-  }
-
-  _refreshStatus() {
-    const allChecked = this._displayData.every(value => value.disabled || value.checked);
-    const allUnChecked = this._displayData.every(value => value.disabled || !value.checked);
-    this._allChecked = allChecked;
-    this._indeterminate = (!allChecked) && (!allUnChecked);
-  }
-
-  _checkAll(value) {
-    if (value) {
-      this._displayData.forEach(data => {
-        if (!data.disabled) {
-          data.checked = true;
-        }
-      });
-    } else {
-      this._displayData.forEach(data => data.checked = false);
+    _checkAll(value) {
+      if (value) {
+        this.data.forEach(data => {
+          if (!data.disabled) {
+            data.checked = true;
+          }
+        });
+      } else {
+        this.data.forEach(data => data.checked = false);
+      }
+      this._refreshStatus();
     }
-    this._refreshStatus();
-  }
+    _refreshStatus() {
+      const allChecked = this.data.every(value => value.disabled || value.checked);
+      const allUnChecked = this.data.every(value => value.disabled || !value.checked);
+      this._allChecked = allChecked;
+      this._indeterminate = (!allChecked) && (!allUnChecked);
+    }
 }

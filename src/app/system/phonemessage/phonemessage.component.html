@@ -84,7 +84,7 @@
                 <a nz-popconfirm>取消</a>
               </nz-popconfirm>
           </span>
-          <span >
+          <span *ngIf="editRow!=data.id">
               <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                 <a nz-popconfirm>删除</a>
               </nz-popconfirm>
