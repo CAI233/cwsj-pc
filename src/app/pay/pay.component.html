@@ -5,7 +5,7 @@
         <a href="#/home">首页</a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item>
-        机构管理
+        支付设置
       </nz-breadcrumb-item>
     </nz-breadcrumb>
   </nz-header>
@@ -71,7 +71,7 @@
         </div>
         <div nz-col [nzSpan]="12">
           <div nz-form-label>
-            <label nz-form-item-required>似钥</label>
+            <label nz-form-item-required>私钥</label>
           </div>
           <div nz-form-control nzHasFeedback>
             <nz-input formControlName="app_private_key" [(ngModel)]="formBean.app_private_key"></nz-input>
@@ -111,6 +111,14 @@
           </div>
           <div nz-form-control nzHasFeedback>
             <nz-input formControlName="mch_id" [(ngModel)]="formBean.mch_id"></nz-input>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <div nz-form-label>
+            <label nz-form-item-required>服务号id</label>
+          </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-input formControlName="app_id" [(ngModel)]="formBean.app_id"></nz-input>
           </div>
         </div>
         <div nz-col [nzSpan]="12">

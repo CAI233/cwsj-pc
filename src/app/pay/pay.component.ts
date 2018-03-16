@@ -20,7 +20,7 @@ export class PayComponent implements OnInit {
     pay_type_id:null,           //支付方式id(1:支付宝,2:微信)
     pay_mark:null,              //支付说明
     base_url:null,              //域名
-    show_url:null,              //支付成功后跳转地址	
+    show_url:null,              //支付成功后跳转地址
     rsa_private_key:null,       //rsa秘钥
     app_private_key:null,       //私钥
     alipay_public_key:null,     //公钥
@@ -72,6 +72,7 @@ export class PayComponent implements OnInit {
         app_private_key: false,
         alipay_public_key: false,
         mch_id: [null, [this.service.validators.required]],
+        app_id: [null, [this.service.validators.required]],
         app_key: [null, [this.service.validators.required]],
       })
     }
