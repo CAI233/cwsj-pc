@@ -37,7 +37,7 @@
     </form>
 
 
-    <nz-table #nzTable [nzDataSource]="data"  (nzDataChange)="_displayDataChange($event)" nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+    <nz-table #nzTable [nzDataSource]="data"  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
     [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
     (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
       <thead nz-thead>
@@ -97,7 +97,7 @@
 </nz-layout>
 
 <nz-modal [nzMaskClosable]="false" [nzWidth]="500" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
-  [nzVisible]="isVisibleMiddle" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
+  [nzVisible]="isVisibleMiddle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
   <ng-template #modalContent>
 
     <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">

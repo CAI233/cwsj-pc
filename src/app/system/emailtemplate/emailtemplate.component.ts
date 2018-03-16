@@ -13,7 +13,7 @@ export class EmailtemplateComponent implements OnInit {
 
   _allChecked = false;
   _indeterminate = false;
-  _displayData = [];
+
 
   editRow : any = null;
   _loading: boolean = true;

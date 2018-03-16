@@ -10,7 +10,7 @@ export class EmailconfigComponent implements OnInit {
 
   _allChecked = false;
   _indeterminate = false;
-  _displayData = [];
+
 
   param :any = {
     pageSize:10,

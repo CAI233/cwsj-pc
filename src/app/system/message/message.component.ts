@@ -144,7 +144,6 @@ export class MessageComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
-    event.stopPropagation();
   }
   //取消
   handleCancelMiddle(e?: any) {

@@ -13,7 +13,6 @@ export class PhonemessageComponent implements OnInit {
 
   _allChecked = false;
   _indeterminate = false;
-  _displayData = [];
   isVisibleMiddle: boolean = false;
   myForm: FormGroup;
 

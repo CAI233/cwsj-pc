@@ -98,7 +98,7 @@
   </nz-layout>
 
   <nz-modal [nzMaskClosable]="false" [nzWidth]="500" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
-  [nzVisible]="isVisibleMiddle" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
+  [nzVisible]="isVisibleMiddle"  (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
   <ng-template #modalContent>
 
     <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
