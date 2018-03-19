@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -34,32 +35,38 @@ export class PlayerComponent implements OnInit {
     total: 0,
     pageSize: 10,
     pageNum: 1,
-    vote_id: null,
+    vote_id: parseInt(this.routerInfo.snapshot.params['id']),
   };
   _loading: boolean = true;
 
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(private routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
+
+  //跳转到选手投票用户页面
+  routerJump(id) {
+    this.router.navigate(['activity/votemember', id]);
+  }
   //表单
   myForm: FormGroup;
   formBean: any = {
     formTitle: '新增选手',
     isVisibleMiddle: false,
-    contestant_name:null,
-    phone:null,
-    card:null,
-    contestant_ims:null,
-    cover:null,
-    remark:null,
-  
-
+    contestant_name: null,
+    phone: null,
+    card: null,
+    contestant_ims: null,
+    cover: null,
+    remark: null,
   };
   activitySelect: any = [];
   ngOnInit() {
+    console.log(this.param.vote_id)
     this.service.post('/api/system/vote/manage/list', { pageNum: 1, pageSize: 1000 }).then(success => {
       if (success.code == 0) {
         this.activitySelect = success.data.rows;
-        this.param.vote_id = this.activitySelect[0].vote_id;
+        if (!this.param.vote_id || this.param.vote_id == ':id') {
+          this.param.vote_id = this.activitySelect[0].vote_id;
+        }
         this.reload();
       } else {
         this.service.message.error(success.messaage)
@@ -114,14 +121,14 @@ export class PlayerComponent implements OnInit {
     }
     if (this.myForm.valid) {
       if (!this.formBean.cover || this.formBean.cover === '') {
-        this.service.message.error('请填写选手简介');
+        this.service.message.error('请上传照片');
         return false;
       }
       if (!this.formBean.remark || this.formBean.remark === '') {
-        this.service.message.error('请填写选手简介');
+        this.service.message.error('请填写个人简介');
         return false;
       }
-      this.formBean.vote_id=this.param.vote_id
+      this.formBean.vote_id = this.param.vote_id
       this.service.post('/api/system/vote/contestant/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
@@ -219,9 +226,24 @@ export class PlayerComponent implements OnInit {
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
-
+  //批量审核
+  _audits() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要审核的数据内容!');
+    } else {
+      let ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.id) })
+      this.service.post('/api/system/vote/contestant/enabled', { ids: ids }).then(success => {
+        if (success.code == 0) {
+          this.reload();
+        } else {
+          this.service.message.error(success.message)
+        }
+      })
+    }
+  }
   //审核
-  _enabled(id) {
+  _audit(id) {
     this.service.post('/api/system/vote/contestant/enabled', { ids: [id] }).then(success => {
       if (success.code == 0) {
         this.reload();
@@ -232,14 +254,19 @@ export class PlayerComponent implements OnInit {
   }
 
   //锁定
-  _lock(id) {
-    this.service.post('/api/system/vote/contestant/lock', { ids: [id] }).then(success => {
-      if (success.code == 0) {
-        this.reload();
-      } else {
-        this.service.message.error(success.message)
-      }
-    })
+  _lock(id, is_lock) {
+    is_lock = is_lock == 1 ? 2 : 1,
+      this.service.post('/api/system/vote/contestant/lock', { ids: [id], is_lock: is_lock }).then(success => {
+        if (success.code == 0) {
+          this.reload();
+        } else {
+          this.service.message.error(success.message)
+        }
+      })
   }
 
+  //导出排行榜
+  _export() {
+    this.service.get('/api/system/vote/export?vote_id=' + this.param.vote_id);
+  }
 }
