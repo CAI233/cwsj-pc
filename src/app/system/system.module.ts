@@ -6,6 +6,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";//引入NZ 使
 import { routes } from './system.routing';
 import { RouterModule } from '@angular/router';
 
+//富文本编辑器
+import { CKEditorModule } from 'ng2-ckeditor';
+
 import { UserComponent } from './user/user.component';
 import { MainComponent } from './main/main.component';
 import { RoleComponent } from './role/role.component';
@@ -29,7 +32,8 @@ import { EmailconfigComponent } from './emailconfig/emailconfig.component';
     ReactiveFormsModule,
     CommonModule,
     RouterModule.forChild(routes),
-    NgZorroAntdModule.forRoot() //引入NZ
+    NgZorroAntdModule.forRoot(), //引入NZ
+    CKEditorModule
   ],
   declarations: [
     UserComponent,

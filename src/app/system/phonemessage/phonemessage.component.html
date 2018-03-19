@@ -37,7 +37,7 @@
     </form>
 
 
-    <nz-table #nzTable [nzDataSource]="data"  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+    <nz-table #nzTable  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
     [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
     (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
       <thead nz-thead>

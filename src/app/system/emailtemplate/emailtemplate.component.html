@@ -20,8 +20,7 @@
         </div>
       </div>
     </form> -->
-
-    <nz-table #nzTable [nzDataSource]="data" nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+    <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
     [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
     (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
         <thead nz-thead>
@@ -43,33 +42,19 @@
             </label>
           </td>
           <td nz-td>
-              <span *ngIf="editRow!=data.mail_template_id" [innerHtml]="data.template_code"></span>
-              <span *ngIf="editRow==data.mail_template_id">
-                <nz-input [(ngModel)]="data.template_code" style="width:100%;"></nz-input>
-              </span>
+              <span [innerHtml]="data.mail_template_id"></span>
           </td>
           <td nz-td>
-              <span *ngIf="editRow!=data.mail_template_id" [innerHtml]="data.content"></span>
-              <span *ngIf="editRow==data.mail_template_id">
-                <nz-input [(ngModel)]="data.content" [nzType]="'textarea'" style="width:100%;" [nzSize]="'large'" [nzRows]="5"></nz-input>
-              </span>
-              <!-- <span [innerHtml]="data.flag==1 ? '云片' : '阿里'"></span> -->
+              <span [innerHtml]="data.content"></span>
           </td>
           <td nz-td>
               <span >{{data.update_time}}</span>
           </td>
           <td nz-td>
-            <span *ngIf="editRow!=data.mail_template_id">
+            <span>
               <a (click)="edit(data)">修改</a>
-            </span>
-            <span *ngIf="editRow==data.mail_template_id">
-              <a (click)="save(data)">保存</a>
-              <span nz-table-divider></span>
-                <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="cancel(data)">
-                  <a nz-popconfirm>取消</a>
-                </nz-popconfirm>
-            </span>
-            <span *ngIf="editRow!=data.mail_template_id">
+            </span>&nbsp;&nbsp;&nbsp;
+            <span>
                 <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>
@@ -80,3 +65,28 @@
       </nz-table>
   </nz-content>
 </nz-layout>
+<nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
+  [nzVisible]="isVisibleMiddle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
+      <div nz-form-item nz-row class="notErrMsg">
+        <div nz-form-label>
+          <label nz-form-item-required>模板编号</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="num"  [nzType]="'text'" [(ngModel)]="param.template_code" [nzPlaceHolder]="'请填写模板编号'"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg">
+        <div nz-form-label>
+          <label nz-form-item-required>模板内容</label>
+        </div>
+        <div nz-form-control>
+            <ckeditor [config]="config" [(ngModel)]="param.content" formControlName="test" [readonly]="false" debounce="500"></ckeditor>
+        
+        </div>
+      </div>
+      <button style="display:none;">save</button>
+    </form>
+  </ng-template>
+</nz-modal>
