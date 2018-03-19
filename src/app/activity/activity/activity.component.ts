@@ -47,7 +47,7 @@ export class ActivityComponent implements OnInit {
   //表单
   myForm: FormGroup;
   formBean: any = {
-    formTitle: '新增机构',
+    formTitle: '新增活动',
     isVisibleMiddle: false,
     vote_img: null,
     vote_remark: null,

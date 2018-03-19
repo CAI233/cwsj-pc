@@ -14,7 +14,6 @@
       <!--表单-->
       <form nz-form>
         <!--行-->
-
         <div nz-row nz-form-item>
           <div nz-col [nzSpan]="6">
             <div nz-form-label nz-col [nzSpan]="5">
@@ -26,11 +25,31 @@
               </nz-select>
             </div>
           </div>
+
+        </div>
+        <div nz-row nz-form-item>
+          <div class="row-actions">
+            <button nz-button nzType="primary" (click)="showModalMiddle()">
+              <i class="anticon anticon-plus"></i>
+              <span>新增</span>
+            </button>
+            <button nz-button nzType="primary" (click)="editModalMiddle()">
+              <i class="anticon anticon-edit"></i>
+              <span>修改</span>
+            </button>
+            <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
+              <button nz-popconfirm nz-button nzType="danger">
+                <i class="anticon anticon-delete"></i>
+                <span>删除</span>
+              </button>
+            </nz-popconfirm>
+          </div>
           <div class="row-questions">
             <nz-input [nzType]="'search'" [nzPlaceHolder]="'选手名称'" name="searchText" [(ngModel)]="param.searchText" style="width: 200px;"
               (nzOnSearch)="reload(true)"></nz-input>
           </div>
         </div>
+
       </form>
       <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
         [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
@@ -73,28 +92,38 @@
               <span>{{data.contestant_name}}</span>
             </td>
             <td nz-td>
-              <span>{{data.cover_small}}</span>
+              <img class="uhead" src="{{service.ctxPath + data.cover}}">
             </td>
             <td nz-td>
               <span>{{data.votes}}</span>
             </td>
             <td nz-td>
-              <span *ngIf="data.enabled==1">正常</span>
-              <span *ngIf="data.enabled==2"><em>未审核</em></span>
+              <div *ngIf="data.is_lock==1">
+                <span *ngIf="data.is_lock==2">正常</span>
+                <span *ngIf="data.is_lock==1">
+                  <em>锁定</em>
+                </span>
+              </div>
+              <div *ngIf="data.is_lock==2">
+                <span *ngIf="data.enabled==1">正常</span>
+                <span *ngIf="data.enabled==2">
+                  <em>未审核</em>
+                </span>
+              </div>
             </td>
             <td nz-td>
               <span>
                 <a href="javascript:void(0)" (click)="showModalMiddle(data)">投票用户列表</a>
                 <span nz-table-divider></span>
                 <a href="javascript:void(0)" (click)="showModalMiddle(data)">编辑选手</a>
+                <span nz-table-divider *ngIf="data.enabled==1&& data.is_lock==2"></span>
+                <a href="javascript:void(0)" *ngIf="data.enabled==1 && data.is_lock==2" (click)="_lock(data.id)">锁定</a>
+                <span nz-table-divider *ngIf="data.enabled==1&& data.is_lock==1"></span>
+                <a href="javascript:void(0)" *ngIf="data.enabled==1&& data.is_lock==1" (click)="_lock(data.id)">解锁</a>
+                <span nz-table-divider *ngIf="data.enabled==2"></span>
+                <a href="javascript:void(0)" *ngIf="data.enabled==2" (click)="_enabled(data.id)">审核</a>
                 <span nz-table-divider></span>
-                <a href="javascript:void(0)" (click)="showModalMiddle(data)">锁定</a>
-                <span nz-table-divider></span>
-                <a href="javascript:void(0)" (click)="_enabled(data.serial_num)">
-                  <em>未审核</em>
-                </a>
-                <span nz-table-divider></span>
-                <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.vote_id)" [nzPlacement]="'left'">
+                <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.id)" [nzPlacement]="'left'">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>
               </span>
@@ -117,13 +146,13 @@
         <div nz-col [nzSpan]="12">
           <div class="userHead">
             <div class="uimg">
-              <img *ngIf="formBean.vote_img" src="{{ service.ctxPath + formBean.vote_img }}" />
+              <img *ngIf="formBean.cover" src="{{ service.ctxPath + formBean.cover }}" />
             </div>
             <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
               nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
               <button nz-button type="button">
                 <i class="anticon anticon-upload"></i>
-                <span>上传封面</span>
+                <span>上传照片</span>
               </button>
             </nz-upload>
           </div>
@@ -131,53 +160,36 @@
         <div nz-col [nzSpan]="12">
           <div nz-form-item nz-row>
             <div nz-form-label>
-              <label nz-form-item-required>活动标题</label>
+              <label nz-form-item-required>手机号码</label>
             </div>
             <div nz-form-control nzHasFeedback>
-              <nz-input formControlName="vote_name" [(ngModel)]="formBean.vote_name" [nzPlaceHolder]="'请输入活动标题'"></nz-input>
+              <nz-input formControlName="phone" [(ngModel)]="formBean.phone" [nzPlaceHolder]="'请输入手机号码'"></nz-input>
             </div>
           </div>
           <div nz-form-item nz-row>
             <div nz-form-label>
-              <label nz-form-item-required>开始时间</label>
+              <label nz-form-item-required>身份证号码</label>
             </div>
             <div nz-form-control nzHasFeedback>
-              <nz-datepicker style="width:100%" formControlName="begin_time" [(ngModel)]="formBean.begin_time" nzShowTime [nzPlaceHolder]="'请选择开始时间'"
-                [nzFormat]="'YYYY-MM-DD HH:mm:ss'"></nz-datepicker>
+              <nz-input formControlName="card" [(ngModel)]="formBean.card" [nzPlaceHolder]="'请输入身份证号码'"></nz-input>
             </div>
           </div>
           <div nz-form-item nz-row>
             <div nz-form-label>
-              <label nz-form-item-required>结束时间</label>
+              <label nz-form-item-required>真实姓名</label>
             </div>
             <div nz-form-control nzHasFeedback>
-              <nz-datepicker style="width:100%" formControlName="end_time" [(ngModel)]="formBean.end_time" nzShowTime [nzPlaceHolder]="'请选择结束时间'"
-                [nzFormat]="'YYYY-MM-DD HH:mm:ss'"></nz-datepicker>
+              <nz-input formControlName="contestant_name" [(ngModel)]="formBean.contestant_name" [nzPlaceHolder]="'请输入真实姓名'"></nz-input>
             </div>
           </div>
         </div>
       </div>
       <div nz-form-item nz-row>
         <div nz-form-label>
-          <label nz-form-item-required>活动简介</label>
-        </div>
-        <div nz-form-control nzHasFeedback>
-          <nz-input [nzType]="'textarea'" [nzAutosize]="{ minRows: 4, maxRows: 10 }" formControlName="vote_remark" [(ngModel)]="formBean.vote_remark "></nz-input>
-        </div>
-      </div>
-      <div nz-form-item nz-row>
-        <div nz-form-label>
-          <label nz-form-item-required>活动规则</label>
+          <label nz-form-item-required>个人简介</label>
         </div>
         <div nz-form-control>
-          <ckeditor [config]="config" [(ngModel)]="formBean.vote_role" formControlName="vote_role" [readonly]="false" debounce="500"></ckeditor>
-          <!-- (change)="onChange($event)"  -->
-          <!-- (editorChange)="onEditorChange($event)" -->
-          <!-- (ready)="onReady($event)"  -->
-          <!-- (focus)="onFocus($event)"  -->
-          <!-- (blur)="onBlur($event)"  -->
-          <!-- (contentDom)="onContentDom($event)"  -->
-          <!-- (fileUploadRequest)="onFileUploadRequest($event)" -->
+          <ckeditor [config]="config" [(ngModel)]="formBean.remark" formControlName="remark" [readonly]="false" debounce="500"></ckeditor>
         </div>
       </div>
       <button style="display:none;">save</button>
