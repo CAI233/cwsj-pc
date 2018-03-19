@@ -36,15 +36,14 @@ export class AppService {
         "status.501": "未实现。服务器不识别该请求方法，或者服务器没有能力完成请求。",
         "status.503": "服务不可用。服务器当前不可用(过载或故障)。",
         "status.600": "token失效，请重新登录。"
-      };
+    };
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
         // this.ctxPath = 'http://gw.cjszyun.net';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
-        // this.ctxPath = 'http://192.168.2.43:8989/wk';
-        this.ctxPath = 'http://192.168.2.30:19301';
+        this.ctxPath = 'http://192.168.2.43:19301';
     }
     //系统初始化
     init(callback?: any) {
@@ -101,11 +100,11 @@ export class AppService {
     //post请求
     post(url: string, body?: any): Promise<any> {
         body = body ? body : { token: this.token };
-        url = url.indexOf('http://') == -1 || url.indexOf('https://') == -1 ? this.ctxPath + url : url;
+        url = url.indexOf('http://') == -1 && url.indexOf('https://') == -1 ? this.ctxPath + url : url;
         let pos = this.http.post(url, body).toPromise();
         //异常就 设置为没有网络
         pos.catch(error => {
-            this.message.error('【'+ error.status +'】 ' + this.status['status.' + error.status], {nzDuration: 5000});
+            this.message.error('【' + error.status + '】 ' + this.status['status.' + error.status], { nzDuration: 5000 });
         })
         pos.then(res => {
             if (res['code'] == 600) {
@@ -113,6 +112,22 @@ export class AppService {
             }
         })
         return pos;
+    }
+    //get请求
+    get(url: string, body?: any): Promise<any> {
+        body = body ? body : { token: this.token };
+        url = url.indexOf('http://') == -1 && url.indexOf('https://') == -1 ? this.ctxPath + url : url;
+        let get = this.http.get(url, body).toPromise();
+        //异常就 设置为没有网络
+        get.catch(error => {
+            this.message.error('【' + error.status + '】 ' + this.status['status.' + error.status], { nzDuration: 5000 });
+        })
+        get.then(res => {
+            if (res['code'] == 600) {
+                this.sessionOut();
+            }
+        })
+        return get;
     }
     //isLeaf转换
     _toisLeaf(root) {

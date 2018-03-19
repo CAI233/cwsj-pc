@@ -39,7 +39,7 @@
           <div class="form-content-plan">
             <h1>欢迎使用本平台</h1>
             <div class="s1" (click)="update_login_type()" *ngIf="login_type != 1">
-              <img src="assets/img/login-1.png" />
+              <!-- <img src="assets/img/login-1.png" />
               <div class="login-tip">
                 <div class="poptip">
                   <div class="poptip-arrow">
@@ -48,7 +48,7 @@
                   </div>
                   <div class="poptip-content">扫码登录</div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="s2" (click)="update_login_type()" *ngIf="login_type == 1">
               <img src="assets/img/login-2.png" />
@@ -83,6 +83,13 @@
                     </nz-input>
                   </div>
                 </div>
+                <div nz-form-item>
+                    <div class="input-lg">
+                        <div id="captcha-box"></div>
+                    </div>
+                  </div>
+
+                
                 <div nz-form-item>
                   <div nz-form-control>
                     <button nz-button class="login-form-button btn-lg btn-full" [nzType]="'primary'" [nzLoading]="loading">
