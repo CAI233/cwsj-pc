@@ -43,14 +43,15 @@ export class PlayerComponent implements OnInit {
   //表单
   myForm: FormGroup;
   formBean: any = {
-    formTitle: '新增机构',
+    formTitle: '新增选手',
     isVisibleMiddle: false,
-    vote_img: null,
-    vote_remark: null,
-    vote_role: null,
-    vote_name: null,
-    begin_time: null,
-    end_time: null,
+    contestant_name:null,
+    phone:null,
+    card:null,
+    contestant_ims:null,
+    cover:null,
+    remark:null,
+  
 
   };
   activitySelect: any = [];
@@ -65,18 +66,18 @@ export class PlayerComponent implements OnInit {
       }
     })
     this.myForm = this.service.fb.group({
-      vote_name: [null, [this.service.validators.required]],
-      begin_time: [null, [this.service.validators.required]],
-      end_time: [null, [this.service.validators.required]],
-      vote_img: false,
-      vote_remark: [null, [this.service.validators.required]],
-      vote_role: false,
+      contestant_name: [null, [this.service.validators.required]],
+      phone: [null, [this.service.validators.required]],
+      card: [null, [this.service.validators.required]],
+      contestant_ims: false,
+      remark: false,
+      cover: false,
     })
   }
   //文件上传
   fileUpload(info): void {
     if (info.file.response && info.file.response.code == 0) {
-      this.formBean.vote_img = info.file.response.data[0].url;
+      this.formBean.cover = info.file.response.data[0].url;
     }
   }
   //打开
@@ -87,12 +88,10 @@ export class PlayerComponent implements OnInit {
         this.formBean[i] = bean[i];
       }
 
-      this.formBean.formTitle = "编辑活动";
+      this.formBean.formTitle = "编辑选手";
     }
     else {
-      this.formBean.formTitle = "新增活动";
-      this.formBean.begin_time = null;
-      this.formBean.end_time = null;
+      this.formBean.formTitle = "新增选手";
     }
     this.formBean.isVisibleMiddle = true;
   };
@@ -114,11 +113,16 @@ export class PlayerComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      if (!this.formBean.vote_role || this.formBean.vote_role === '') {
-        this.service.message.error('请填写活动规则');
+      if (!this.formBean.cover || this.formBean.cover === '') {
+        this.service.message.error('请填写选手简介');
         return false;
       }
-      this.service.post('/api/system/vote/manage/save', this.formBean).then(success => {
+      if (!this.formBean.remark || this.formBean.remark === '') {
+        this.service.message.error('请填写选手简介');
+        return false;
+      }
+      this.formBean.vote_id=this.param.vote_id
+      this.service.post('/api/system/vote/contestant/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.formClear()
@@ -141,7 +145,7 @@ export class PlayerComponent implements OnInit {
         this.formBean[i] = bean[i];
       }
 
-      this.formBean.formTitle = '修改机构';
+      this.formBean.formTitle = '编辑选手';
       this.formBean.isVisibleMiddle = true;
     }
   }
@@ -152,8 +156,8 @@ export class PlayerComponent implements OnInit {
     }
     else {
       let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.vote_id) })
-      this.service.post('/api/system/vote/manage/del', {
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.id) })
+      this.service.post('/api/system/vote/contestant/del', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
@@ -166,7 +170,7 @@ export class PlayerComponent implements OnInit {
     }
   }
   _delete(id) {
-    this.service.post('/api/system/vote/manage/del', {
+    this.service.post('/api/system/vote/contestant/del', {
       ids: [id], mark: 'del'
     }).then(success => {
       if (success.code == 0) {
@@ -216,8 +220,20 @@ export class PlayerComponent implements OnInit {
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
 
+  //审核
   _enabled(id) {
     this.service.post('/api/system/vote/contestant/enabled', { ids: [id] }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      } else {
+        this.service.message.error(success.message)
+      }
+    })
+  }
+
+  //锁定
+  _lock(id) {
+    this.service.post('/api/system/vote/contestant/lock', { ids: [id] }).then(success => {
       if (success.code == 0) {
         this.reload();
       } else {
