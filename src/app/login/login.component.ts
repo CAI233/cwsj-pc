@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   geetest_challenge: any; //验证对象
   geetest_seccode: any; //验证对象
   geetest_validate: any; //验证对象
-  vt: any;  //验证对象
+  code: any;  //验证对象
   constructor(private service: AppService) { }
 
   ngOnInit() {
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     this.service.get('/api/system/validcode', {
       name: 'zhangsan'
     }).then(success => {
+      this.code = success.code;
       initGeetest({
         // 以下配置参数来自服务端 SDK
         gt: success.gt,
@@ -44,7 +45,6 @@ export class LoginComponent implements OnInit {
           this.geetest_challenge = result.geetest_challenge;
           this.geetest_seccode = result.geetest_seccode;
           this.geetest_validate = result.geetest_validate;
-          this.vt = result.vt;
         })
       })
     })
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
         geetest_challenge: this.geetest_challenge,
         geetest_seccode: this.geetest_seccode,
         geetest_validate: this.geetest_validate,
-        vt: this.vt
+        code: this.code
       }).then(success => {
         if (success.code == 0) {
           this.service.loginTo(success, () => {
