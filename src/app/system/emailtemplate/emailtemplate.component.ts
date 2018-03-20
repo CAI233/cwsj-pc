@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppService } from '../../app.service';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -13,40 +13,62 @@ export class EmailtemplateComponent implements OnInit {
 
   _allChecked = false;
   _indeterminate = false;
+  isVisibleMiddle: boolean = false;
+  myForm: FormGroup;
 
-
-  editRow : any = null;
   _loading: boolean = true;
 
   param : any = {
     pageSize:10,
     pageNum:1,
-    searchText:null
+    total:0,
+    searchText:null,
+    content:null
   }
   data : any = [];
+
+  //ckeditor配置
+  config: any = {
+    width: '100%',
+    toolbar: 'MyToolbar',
+    toolbar_MyToolbar:
+      [
+        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
+        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+        { name: 'tools', items: ['Maximize'] },
+        { name: 'document', items: ['Source'] },
+        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
+        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
+        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+        { name: 'colors', items: ['TextColor', 'BGColor'] },
+      ]
+  }
+
 
   constructor(private service: AppService) { }
 
   ngOnInit() {
-
+    this.myForm = this.service.fb.group({
+      test: false,
+      num:false
+    })
 
     this.load();
-
-
-    
   }
 
   
 
 
   //加载邮件模板
-  load(reset?){
+  load(reset?: any){
     if (reset == true) {
       this.param.pageNum = 1;
     }
     this._loading = true;
     this.service.post('/api/system/mailtemplate/pagequery',this.param).then(success => {
       this._loading = false;
+      console.log(success)
       if(success.code==0){
         this.data = success.data.rows;
         this.param.total = success.data.total;
@@ -60,35 +82,41 @@ export class EmailtemplateComponent implements OnInit {
 
   // 修改操作
   edit(data) {
-    
-    this.editRow = data.mail_template_id;
+    this.param.mail_template_id = data.mail_template_id;
+    this.param.content = data.content;
+    this.isVisibleMiddle = true;
   }
 
-  // 取消操作
-  cancel(data) {
-    
-    this.editRow = null;
+
+//关闭弹窗
+handleCancelMiddle($event) {
+  this.isVisibleMiddle = false;
+  this.myForm.reset();
+}
+
+//确定
+handleOkMiddle($event) {
+  this._submitForm();
+}
+
+_submitForm() {
+  if(!this.param.mail_template_id){
+    this.service.message.error('请填写模板编码');
+    return false;
+  }
+  if(!this.param.content){
+    this.service.message.error('请填写模板内容');
+    return false;
+  }
+  this.service.post('/api/system/mailtemplate/update',{mail_template_id:this.param.mail_template_id,content:this.param.content}).then(success => {
+    this.isVisibleMiddle = false;
+    this.myForm.reset();
     this.load();
-  }
-
-  save(data){
-    if(!data.template_code){
-      this.service.message.error('请填写模板编码');
-      return false;
-    }
-    if(!data.content){
-      this.service.message.error('请填写模板内容');
-      return false;
-    }
-    this.service.post('/api/system/mailtemplate/update',data).then(success => {
-      this.editRow = null;
-      this.load();
-    })
+  })
+}
 
 
-  }
-
-
+// 全选
   _checkAll(value) {
     if (value) {
       this.data.forEach(data => {

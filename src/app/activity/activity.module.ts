@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { ActivityComponent } from './activity/activity.component';
 import { VoteMemberComponent } from './votemember/votemember.component';
 import { PlayerComponent } from './player/player.component';
+import { SettingComponent } from './setting/setting.component';
 
 //富文本编辑器
 import { CKEditorModule } from 'ng2-ckeditor';
@@ -23,7 +24,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     NgZorroAntdModule.forRoot(), //引入NZ
     CKEditorModule
   ],
-  declarations: [ActivityComponent, VoteMemberComponent, PlayerComponent],
+  declarations: [ActivityComponent, SettingComponent, VoteMemberComponent, PlayerComponent],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
     { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } }

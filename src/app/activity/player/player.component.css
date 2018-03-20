@@ -26,6 +26,3 @@ form .ant-col-12 ~ .ant-col-12{
 form .ant-col-12:first-child{
     padding-right: 10px;
 }
-em{
-    color:red
-}
