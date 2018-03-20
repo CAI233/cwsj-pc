@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -43,7 +44,11 @@ export class ActivityComponent implements OnInit {
   _loading: boolean = true;
 
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(private service: AppService,private router: Router) { }
+   //跳转到选手页面
+   routerJump(id){
+    this.router.navigate(['activity/player',id]);
+  }
   //表单
   myForm: FormGroup;
   formBean: any = {

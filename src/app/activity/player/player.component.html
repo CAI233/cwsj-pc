@@ -43,6 +43,20 @@
                 <span>删除</span>
               </button>
             </nz-popconfirm>
+            <nz-dropdown>
+              <button nz-button nz-dropdown>
+                <span>更多操作</span>
+                <i class="anticon anticon-down"></i>
+              </button>
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <a (click)="_audits()">批量审核</a>
+                </li>
+                <li nz-menu-item>
+                  <a (click)="_export()">导出排行榜</a>
+                </li>
+              </ul>
+            </nz-dropdown>
           </div>
           <div class="row-questions">
             <nz-input [nzType]="'search'" [nzPlaceHolder]="'选手名称'" name="searchText" [(ngModel)]="param.searchText" style="width: 200px;"
@@ -67,10 +81,16 @@
               <span>选手名称</span>
             </th>
             <th nz-th>
+              <span>手机号</span>
+            </th>
+            <th nz-th>
               <span>照片</span>
             </th>
             <th nz-th>
               <span>票数</span>
+            </th>
+            <th nz-th>
+              <span>是否锁定</span>
             </th>
             <th nz-th>
               <span>状态</span>
@@ -92,36 +112,32 @@
               <span>{{data.contestant_name}}</span>
             </td>
             <td nz-td>
+              <span>{{data.phone}}</span>
+            </td>
+            <td nz-td>
               <img class="uhead" src="{{service.ctxPath + data.cover}}">
             </td>
             <td nz-td>
               <span>{{data.votes}}</span>
             </td>
             <td nz-td>
-              <div *ngIf="data.is_lock==1">
-                <span *ngIf="data.is_lock==2">正常</span>
-                <span *ngIf="data.is_lock==1">
-                  <em>锁定</em>
-                </span>
-              </div>
-              <div *ngIf="data.is_lock==2">
-                <span *ngIf="data.enabled==1">正常</span>
-                <span *ngIf="data.enabled==2">
-                  <em>未审核</em>
-                </span>
-              </div>
+              <nz-switch [ngModel]="data.is_lock == 1" [nzSize]="'middle'" (click)="_lock(data.id,data.is_lock)"></nz-switch>
+            </td>
+            <td nz-td>
+              <span *ngIf="data.enabled==1">
+                <em style="color:#1bc11b">正常</em>
+              </span>
+              <span *ngIf="data.enabled==2">
+                <em style="color:red">未审核</em>
+              </span>
             </td>
             <td nz-td>
               <span>
-                <a href="javascript:void(0)" (click)="showModalMiddle(data)">投票用户列表</a>
+                <a href="javascript:void(0)" (click)="routerJump(data.serial_num)">投票用户列表</a>
                 <span nz-table-divider></span>
                 <a href="javascript:void(0)" (click)="showModalMiddle(data)">编辑选手</a>
-                <span nz-table-divider *ngIf="data.enabled==1&& data.is_lock==2"></span>
-                <a href="javascript:void(0)" *ngIf="data.enabled==1 && data.is_lock==2" (click)="_lock(data.id)">锁定</a>
-                <span nz-table-divider *ngIf="data.enabled==1&& data.is_lock==1"></span>
-                <a href="javascript:void(0)" *ngIf="data.enabled==1&& data.is_lock==1" (click)="_lock(data.id)">解锁</a>
                 <span nz-table-divider *ngIf="data.enabled==2"></span>
-                <a href="javascript:void(0)" *ngIf="data.enabled==2" (click)="_enabled(data.id)">审核</a>
+                <a href="javascript:void(0)" *ngIf="data.enabled==2" (click)="_audit(data.id)">审核</a>
                 <span nz-table-divider></span>
                 <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.id)" [nzPlacement]="'left'">
                   <a nz-popconfirm>删除</a>

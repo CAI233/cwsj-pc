@@ -25,6 +25,8 @@ import { SmsconfigurComponent } from './smsconfigur/smsconfigur.component';
 import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component';
 import { EmailconfigComponent } from './emailconfig/emailconfig.component';
 
+//富文本编辑器
+import { CKEditorModule } from 'ng2-ckeditor';
 
 @NgModule({
   imports: [
