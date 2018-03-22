@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'system', loadChildren: './system/system.module#SystemModule' },
   { path: 'adv', loadChildren: './adv/adv.module#AdvModule' },
   { path: 'activity', loadChildren: './activity/activity.module#ActivityModule' },
+  { path: 'cwsjresource', loadChildren: './cwsj-resource/cwsj-resource.module#CwsjResourceModule' },
 
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
