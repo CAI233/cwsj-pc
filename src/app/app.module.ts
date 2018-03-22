@@ -16,7 +16,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ErrorComponent } from './error/error.component';
 import { LoginComponent } from './login/login.component';
-import { PayComponent } from './pay/pay.component';
 //路由
 import { routes } from './app.routing';
 //公共服务
@@ -35,8 +34,6 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
     HomeComponent,
     ErrorComponent,
     LoginComponent,
-    PayComponent,
-    
   ],
   imports: [
     BrowserModule,
