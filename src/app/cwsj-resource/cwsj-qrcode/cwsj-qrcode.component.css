@@ -1,0 +1,22 @@
+
+:host ::ng-deep .ant-card-head {
+    height: 85px;
+    padding: 5px 0 5px 10px;
+    line-height: 18px;
+}
+:host ::ng-deep .ant-card-body {
+    padding: 15px;
+  }
+  .card-btn{
+    text-align:center;
+    margin-top:15px;
+    float:left;
+    width:100%;
+    letter-spacing:10px
+  }
+  .pager{
+    text-align: right;
+  }
+  .card-table{
+    margin-bottom: 20px;
+  }
