@@ -1,6 +1,6 @@
 <nz-layout class="ng-main" style="height:100%">
 
-  <nz-sider class="ng-left" [nzWidth]="250" [nzCollapsed]="isCollapsed" *ngIf="service.loginUserMenus" style="overflow-x:hidden;">
+  <nz-sider class="ng-left" [nzWidth]="250" [nzCollapsed]="isCollapsed" *ngIf="service.loginUserMenus">
     <div class="ng-left-logo">
       <a href="#/home">
         <img src="assets/img/logo.png">
@@ -21,7 +21,7 @@
             </li>
           </ng-container>
           <ng-container *ngIf="one.children && one.children.length > 0 && one.res_type==1">
-            <li nz-submenu [nzOpen]="one.select">
+            <li nz-submenu [(nzOpen)]="one.select" (nzOpenChange)="menuOpenChange($event, service.loginUserMenus, one)">
               <span title>
                 <i class="anticon anticon-{{one.res_icon}}"></i>
                 <span>{{one.res_name}}</span>
@@ -34,7 +34,7 @@
                     </li>
                   </ng-container>
                   <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1">
-                    <li nz-submenu [nzOpen]="two.select">
+                    <li nz-submenu [(nzOpen)]="two.select" (nzOpenChange)="menuOpenChange($event,  one.children, two)">
                       <span title>{{two.res_name}}</span>
                       <ul>
                         <ng-container *ngFor="let three of two.children">

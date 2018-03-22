@@ -40,10 +40,10 @@ export class AppService {
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
-        // this.ctxPath = 'http://gw.cjszyun.net';
+        this.ctxPath = 'http://gw.cjszyun.net';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
-        this.ctxPath = 'http://192.168.2.43:19301';
+        // this.ctxPath = 'http://192.168.2.43:19304';
     }
     //系统初始化
     init(callback?: any) {

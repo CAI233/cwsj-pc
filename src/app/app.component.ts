@@ -152,8 +152,12 @@ export class AppComponent {
       }
     });
   }
-  ngAfterViewInit() {
-
+  //监控菜单点击
+  menuOpenChange(event, arr, node){
+    arr.forEach(element => {
+       if(element != node)
+        element.select = false;
+    });
   }
   ngDoCheck() {
     if (!this.service.token && !this.service.loginUserInfo && this.activeMenu && this.activeMenu.module && this.activeMenu.module != 'login') {
