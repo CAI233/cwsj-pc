@@ -7,6 +7,7 @@ import { AppService } from '../../app.service'
 })
 export class CwsjResourceComponent implements OnInit {
   isCollapse = true;
+  userState: any;
   param: any = {
     dept_id: null,
     enabled: null,

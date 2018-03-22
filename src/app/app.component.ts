@@ -62,6 +62,9 @@ export class AppComponent {
           this.service.loginUserMenus = null;
           localStorage.clear();
         }
+        else if(menu.module != 'error' && menu.module != 'home' && !this.service.validataMenu(menu.module)){
+          this.router.navigate(['/error']);
+        }
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {

@@ -16,6 +16,7 @@ import { SmsconfigurComponent } from './smsconfigur/smsconfigur.component';
 import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component';
 import { EmailconfigComponent } from './emailconfig/emailconfig.component';
 import { PayComponent } from './pay/pay.component';
+
 export const routes: Routes = [
     { path: '', component: MainComponent, data: { title: '系统管理', module: 'system', power: "SHOW" } },
     { path: 'user', component: UserComponent, data: { title: '用户管理', module: 'user', power: "SHOW" } },
@@ -32,5 +33,5 @@ export const routes: Routes = [
     { path: 'smsconfigur', component: SmsconfigurComponent, data: { title: '短信配置', module: 'smsconfigur', power: "SHOW" } },
     { path: 'emailtemplate', component: EmailtemplateComponent, data: { title: '邮件模板', module: 'emailtemplate', power: "SHOW" } },
     { path: 'emailconfig', component: EmailconfigComponent, data: { title: '邮件配置', module: 'emailconfig', power: "SHOW" } },
-    { path: 'pay', component: EmailconfigComponent, data: { title: '支付管理', module: 'pay', power: "SHOW" } }
+    { path: 'pay', component: PayComponent, data: { title: '支付管理', module: 'pay', power: "SHOW" } }
 ];
