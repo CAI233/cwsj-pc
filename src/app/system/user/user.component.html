@@ -16,16 +16,16 @@
               <!--行-->
               <div nz-row nz-form-item>
                   <!--列-->
-                  <div nz-col [nzSpan]="6">
-                        <div nz-form-label nz-col [nzSpan]="5">
-                            <label>切换机构</label>
-                        </div>
-                        <div nz-form-control nz-col [nzSpan]="17">
-                            <nz-select name="selectOrg" [(ngModel)]="paramCol.org_id" [nzPlaceHolder]="'请选择'" (ngModelChange)="reload(true)" >
-                                <nz-option *ngFor="let option of orgList" [nzLabel]="option.org_name" [nzValue]="option.org_id"></nz-option>
-                            </nz-select>
-                        </div>
+                <div nz-col [nzSpan]="6">
+                    <div nz-form-label nz-col [nzSpan]="5">
+                        <label>切换机构</label>
                     </div>
+                    <div nz-form-control nz-col [nzSpan]="17">
+                        <nz-select name="selectOrg" [(ngModel)]="paramCol.org_id" [nzPlaceHolder]="'请选择'" (ngModelChange)="reload(true)">
+                            <nz-option *ngFor="let option of orgList" [nzLabel]="option.org_name" [nzValue]="option.org_id"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
                   <div nz-col [nzSpan]="6">
                       <div nz-form-label nz-col [nzSpan]="5">
                           <label>模糊查询</label>

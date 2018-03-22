@@ -10,7 +10,8 @@
         </nz-breadcrumb>
     </nz-header>
     <nz-content class="main-page-content">
-        <div class="tableListSearch">
+        <!--本系统不需要此功能-->
+        <div class="tableListSearch" style="display:none">
             <form nz-form *ngIf="orgId==1">
                 <!--行-->
                 <div nz-row nz-form-item>
@@ -32,7 +33,9 @@
                     </div>
                 </div>
             </form>
-            <nz-table #nzTable [nzDataSource]="tableData" [nzIsPagination]="false" [nzLoading]="_loading">
+        </div>
+        
+        <nz-table #nzTable [nzDataSource]="tableData" [nzIsPagination]="false" [nzLoading]="_loading">
                 <thead nz-thead>
                     <tr>
                         <th nz-th [nzWidth]="'20%'">
@@ -50,15 +53,15 @@
                         <th nz-th [nzWidth]="'10%'">
                             <span>父级</span>
                         </th>
-                        <th nz-th [nzWidth]="'5%'">
+                        <th nz-th [nzWidth]="'10%'">
                             <span>类型</span>
                         </th>
                         <th nz-th [nzWidth]="'10%'">
                             <span>排序</span>
                         </th>
-                        <th nz-th [nzWidth]="'5%'" *ngIf="orgId==1 && paramCol.org_id==1">
+                        <!-- <th nz-th [nzWidth]="'5%'" *ngIf="orgId==1 && paramCol.org_id==1">
                             <span>推送</span>
-                        </th>
+                        </th> -->
                         <th nz-th [nzWidth]="'20%'">
                             <span>操作</span>
                         </th>
@@ -126,11 +129,11 @@
                                         <nz-input [nzType]="'text'" name="order_weight" [(ngModel)]="editRow.order_weight"></nz-input>
                                     </span>
                                 </td>
-                                <td nz-td *ngIf="service.loginUserInfo.org_id==1 && paramCol.org_id==1">
+                                <!-- <td nz-td *ngIf="service.loginUserInfo.org_id==1 && paramCol.org_id==1">
                                     <span *ngIf="item.res_id">
                                         <nz-switch [ngModel]="item.is_forbid == 2" [nzSize]="'small'" (click)="_is_forbid(item)"></nz-switch>
                                     </span>
-                                </td>
+                                </td> -->
                                 <td nz-td>
                                     <span *ngIf="item.res_id == 0">
                                         <a (click)="_addChildren(item)">新增资源</a>
@@ -170,6 +173,5 @@
                     </ng-template>
                 </tbody>
             </nz-table>
-        </div>
     </nz-content>
 </nz-layout>
