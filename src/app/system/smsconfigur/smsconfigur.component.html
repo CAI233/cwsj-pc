@@ -14,7 +14,7 @@
         <!--行-->
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="add()">
+            <button nz-button nzType="primary" (click)="add()" *ngIf="this.service.validataAction('smsconfigur_add')">
                 <i class="anticon anticon-plus"></i>
                 <span>新增</span>
             </button>
@@ -62,7 +62,7 @@
             <td nz-td>
               <span>
                 <div style="margin-top:8px;">
-                  <nz-switch [ngModel]="data.enabled==1" [nzSize]="'small'" (click)="_enabled(data)"></nz-switch>
+                  <nz-switch [ngModel]="data.enabled==1" [nzSize]="'small'" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('smsconfigur_status')"></nz-switch>
                 </div>
               </span>
             </td>
@@ -74,7 +74,7 @@
             </td>
             
             <td nz-td>
-              <span *ngIf="editRow!=data.id">
+              <span *ngIf="editRow!=data.id && this.service.validataAction('smsconfigur_update')" >
                 <a (click)="edit(data)">修改</a>
               </span>
               <span *ngIf="editRow==data.id">
@@ -84,7 +84,7 @@
                     <a nz-popconfirm>取消</a>
                   </nz-popconfirm>
               </span>
-              <span >
+              <span *ngIf="editRow!=data.id && this.service.validataAction('smsconfigur_del')">
                   <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                     <a nz-popconfirm>删除</a>
                   </nz-popconfirm>

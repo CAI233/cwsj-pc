@@ -57,11 +57,13 @@ export class SmsconfigurComponent implements OnInit {
 
   // 启用与停用状态
   _enabled(data) {
-    data.enabled = data.enabled == 1 ? 2 : 1;
-    this.service.post('/api/system/msgset/enabled', { id: data.id, enabled: data.enabled }).then(success => {
-      this.load();
-    })
-    console.log(data.status)
+    if(this.service.validataAction('smsconfigur_status')){
+      data.enabled = data.enabled == 1 ? 2 : 1;
+      this.service.post('/api/system/msgset/enabled', { id: data.id, enabled: data.enabled }).then(success => {
+        this.load();
+      })
+    }
+   
   }
 
   // 修改后保存

@@ -203,27 +203,32 @@ export class AdvListComponent implements OnInit {
 
   //是否显示
   _is_show(data) {
-    this.service.post('/api/system/adv/json/updateshow', {
-      adv_id: data.adv_id,
-    }).then(success => {
-      if (success.code == 0) {
-        this.reload();
-      } else {
-        this.service.message.error(success.message);
-      }
-    })
+    if(this.service.validataAction('advlist_show')){
+      this.service.post('/api/system/adv/json/updateshow', {
+        adv_id: data.adv_id,
+      }).then(success => {
+        if (success.code == 0) {
+          this.reload();
+        } else {
+          this.service.message.error(success.message);
+        }
+      })
+    }
   }
   //启用停用
   _enabled(data) {
-    this.service.post('/api/system/adv/json/updateenable', {
-      adv_id: data.adv_id,
-    }).then(success => {
-      if (success.code == 0) {
-        this.reload();
-      } else {
-        this.service.message.error(success.message);
-      }
-    })
+    if(this.service.validataAction('advlist_status')){
+      this.service.post('/api/system/adv/json/updateenable', {
+        adv_id: data.adv_id,
+      }).then(success => {
+        if (success.code == 0) {
+          this.reload();
+        } else {
+          this.service.message.error(success.message);
+        }
+      })
+    }
+    
   }
 
 }

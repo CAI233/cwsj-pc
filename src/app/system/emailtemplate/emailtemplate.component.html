@@ -51,10 +51,10 @@
               <span >{{data.update_time}}</span>
           </td>
           <td nz-td>
-            <span>
+            <span *ngIf="this.service.validataAction('emailtemplate_update')">
               <a (click)="edit(data)">修改</a>
             </span>&nbsp;&nbsp;&nbsp;
-            <span>
+            <span *ngIf="this.service.validataAction('emailtemplate_del')">
                 <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>

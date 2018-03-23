@@ -72,6 +72,7 @@ export class AuthorityComponent implements OnInit {
   }
 
   enabled(data) {
+    console.log(data);
     console.log(this.service.validataAction('authority_status'))
     if (this.service.validataAction('authority_status')) {
       this.service.post('/api/system/role/res/rel/enabled', {

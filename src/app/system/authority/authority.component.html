@@ -41,7 +41,7 @@
       </nz-card>
     </div>
     <div class="content-right-con">
-      <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzIsPagination]="false" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+      <nz-table #nzTable [nzDataSource]="tableData" nzShowSizeChanger [nzShowTotal]="true" [nzIsPagination]="false" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
         [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
         (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;reload($event)">
         <thead nz-thead>
@@ -72,7 +72,7 @@
               <span >{{data.create_time}}</span>
             </td>
             <td nz-td>
-                <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('authority_status')" (click)="enabled(data)"></nz-switch>
+              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('authority_status')" (click)="enabled(data)"></nz-switch>
             </td>
           </tr>
         </tbody>

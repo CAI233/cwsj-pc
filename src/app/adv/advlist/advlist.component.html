@@ -87,12 +87,12 @@
             </td>
             <td nz-td>
               <span>
-                <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="_enabled(data)"></nz-switch>
+                <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('advlist_status')" (click)="_enabled(data)"></nz-switch>
               </span>
             </td>
             <td nz-td>
               <span>
-                <nz-switch [ngModel]="data.is_show == 1" [nzSize]="'small'" (click)="_is_show(data)"></nz-switch>
+                <nz-switch [ngModel]="data.is_show == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('advlist_show')" (click)="_is_show(data)"></nz-switch>
               </span>
             </td>
             <td nz-td>
