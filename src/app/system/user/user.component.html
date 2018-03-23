@@ -63,11 +63,11 @@
               </div>
               <div nz-row nz-form-item>
                   <div class="row-actions">
-                      <button nz-button nzType="primary" (click)="showModalMiddle()">
+                      <button nz-button nzType="primary" (click)="showModalMiddle()" *ngIf="this.service.validataAction('user_add')">
                           <i class="anticon anticon-plus"></i>
                           <span>新增</span>
                       </button>
-                      <button nz-button nzType="default" (click)="enabledUser()">
+                      <button nz-button nzType="default" (click)="enabledUser()" *ngIf="this.service.validataAction('user_start_stop')">
                           <span>启用/停用</span>
                       </button>
                   </div>
@@ -142,10 +142,10 @@
                       </td>
                       <td nz-td>
                           <span>
-                              <a href="javascript:void(0)" (click)="showModalMiddle(data)">修改</a>
+                              <a href="javascript:void(0)" (click)="showModalMiddle(data)" *ngIf="this.service.validataAction('user_update')">修改</a>
                               <span nz-table-divider></span>
                               <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.user_id)" [nzPlacement]="'left'">
-                                      <a nz-popconfirm >删除</a>
+                                      <a nz-popconfirm *ngIf="this.service.validataAction('user_del')">删除</a>
                                   </nz-popconfirm>
                           </span>
                       </td>
