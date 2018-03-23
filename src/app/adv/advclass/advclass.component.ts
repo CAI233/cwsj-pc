@@ -18,7 +18,7 @@ export class AdvClassComponent implements OnInit {
   };
   _loading: boolean = true;
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   //表单
   myForm: any;

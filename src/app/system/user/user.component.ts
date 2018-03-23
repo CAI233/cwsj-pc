@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
   roleList: any = []; //角色
   orgList: any = [];//机构
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     //获取机构

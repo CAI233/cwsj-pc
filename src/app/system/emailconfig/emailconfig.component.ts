@@ -24,7 +24,7 @@ export class EmailconfigComponent implements OnInit {
 
   new_tempEditObject : any = {};
 
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
 

@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   geetest_seccode: any; //验证对象
   geetest_validate: any; //验证对象
   code: any;  //验证对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     localStorage.clear();

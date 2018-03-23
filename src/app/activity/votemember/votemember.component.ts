@@ -17,7 +17,7 @@ export class VoteMemberComponent implements OnInit {
   };
   _loading: boolean = true;
   // 实例化一个对象
-  constructor(private routerIofo: ActivatedRoute, private service: AppService) { }
+  constructor(private routerIofo: ActivatedRoute, public service: AppService) { }
 
   //表单
   activitySelect: any = []; //活动下拉

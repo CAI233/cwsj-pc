@@ -21,7 +21,7 @@ export class SmsconfigurComponent implements OnInit {
   editRow: any = null;
   _loading: boolean = true;
 
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     this.myForm = this.service.fb.group({

@@ -18,7 +18,7 @@ export class OrgComponent implements OnInit {
     org_name: this.service.loginUserInfo ? this.service.loginUserInfo.org_name : null
   }
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     //获取机构

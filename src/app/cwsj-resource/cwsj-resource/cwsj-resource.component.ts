@@ -29,7 +29,7 @@ export class CwsjResourceComponent implements OnInit {
   depthList: any = []; //深度
   purposeList: any = [];//目的
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     //获取专业

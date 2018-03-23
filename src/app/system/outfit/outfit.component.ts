@@ -34,7 +34,7 @@ export class OutfitComponent implements OnInit {
   //省 市 区 街 
   _address: any;
   // 实例化一个对象
-  constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
+  constructor(public routerInfo: ActivatedRoute, public service: AppService, private router: Router) { }
   //表单
   myForm: FormGroup;
   formBean: any = {

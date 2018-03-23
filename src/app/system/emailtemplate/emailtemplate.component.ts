@@ -46,7 +46,7 @@ export class EmailtemplateComponent implements OnInit {
   }
 
 
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     this.myForm = this.service.fb.group({

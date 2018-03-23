@@ -10,7 +10,7 @@ export class CwsjCooperateComponent implements OnInit {
   tableDataTree: any = [];
   editRow: any = {};
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
   ngOnInit() {
     this.load();
   }

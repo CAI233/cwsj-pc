@@ -11,7 +11,7 @@ export class ResourceComponent implements OnInit {
   tableData: any = [];
   editRow: any = {};
   // 实例化一个对象
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
   orgId: any = this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null;
   paramCol: any = {
     org_id: this.service.loginUserInfo ? this.service.loginUserInfo.org_id : null

@@ -48,7 +48,7 @@ export class AppService {
         // this.ctxPath = 'http://192.168.2.43:19304';
         // this.ctxPath = 'http://192.168.2.43:19301';
         // this.ctxPath = 'http://192.168.2.139:19301';
-        this.ctxPath = 'http://192.168.2.41:8994';
+        // this.ctxPath = 'http://192.168.2.41:8994';
     }
     //系统初始化
     init(callback?: any) {

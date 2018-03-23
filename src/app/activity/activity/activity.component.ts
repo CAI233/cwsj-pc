@@ -44,7 +44,7 @@ export class ActivityComponent implements OnInit {
   _loading: boolean = true;
 
   // 实例化一个对象
-  constructor(private service: AppService,private router: Router) { }
+  constructor(public service: AppService,private router: Router) { }
    //跳转到选手页面
    routerJump(id){
     this.router.navigate(['activity/player',id]);

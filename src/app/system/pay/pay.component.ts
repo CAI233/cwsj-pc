@@ -14,7 +14,7 @@ export class PayComponent implements OnInit {
   tableData: any = []; //数据列表
   _loading: boolean = true;
   // 实例化一个对象
-  constructor(public routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
+  constructor(public routerInfo: ActivatedRoute, public service: AppService, private router: Router) { }
   //表单
   myForm: FormGroup;
   formBean: any={

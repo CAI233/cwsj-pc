@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SettingComponent implements OnInit {
 
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   myForm: FormGroup;
   formBean: any = {

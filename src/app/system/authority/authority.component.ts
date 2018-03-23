@@ -22,7 +22,7 @@ export class AuthorityComponent implements OnInit {
     pageSize: 1000,
     pageNum: 1
   };
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
   ngOnInit() {
     // 获取角色列表
     this.service.post('/api/system/role/list', {

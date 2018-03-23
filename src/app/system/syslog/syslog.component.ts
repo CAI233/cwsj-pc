@@ -19,7 +19,7 @@ export class SyslogComponent implements OnInit {
     searchText: null
   }
 
-  constructor(private service : AppService) { }
+  constructor(public service : AppService) { }
 
   ngOnInit() {
     this.reload();

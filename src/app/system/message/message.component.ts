@@ -30,7 +30,7 @@ export class MessageComponent implements OnInit {
   _indeterminate = false;
   tableData: any = []; //数据列表
   //构造
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
   //开始加载
   ngOnInit() {
     this.getMOduleList();

@@ -30,7 +30,7 @@ export class PhonemessageComponent implements OnInit {
   // tempEditObject :any = {};
 
 
-  constructor(private service: AppService) { }
+  constructor(public service: AppService) { }
 
   ngOnInit() {
     this.myForm = this.service.fb.group({

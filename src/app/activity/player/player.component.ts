@@ -40,7 +40,7 @@ export class PlayerComponent implements OnInit {
   _loading: boolean = true;
 
   // 实例化一个对象
-  constructor(private routerInfo: ActivatedRoute, private service: AppService, private router: Router) { }
+  constructor(private routerInfo: ActivatedRoute, public service: AppService, private router: Router) { }
 
   //跳转到选手投票用户页面
   routerJump(id) {
