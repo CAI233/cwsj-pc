@@ -255,7 +255,8 @@ export class PlayerComponent implements OnInit {
 
   //锁定
   _lock(id, is_lock) {
-    is_lock = is_lock == 1 ? 2 : 1,
+    if(this.service.validataAction('player_lock')){
+      is_lock = is_lock == 1 ? 2 : 1,
       this.service.post('/api/system/vote/contestant/lock', { ids: [id], is_lock: is_lock }).then(success => {
         if (success.code == 0) {
           this.reload();
@@ -263,6 +264,7 @@ export class PlayerComponent implements OnInit {
           this.service.message.error(success.message)
         }
       })
+    }
   }
 
   //导出排行榜

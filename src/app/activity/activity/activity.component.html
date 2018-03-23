@@ -94,8 +94,8 @@
               <span>
                 <a href="javascript:void(0)" (click)="routerJump(data.vote_id)">选手列表</a>
                 <span nz-table-divider></span>
-                <a href="javascript:void(0)" (click)="showModalMiddle(data)">编辑</a>
-                <span nz-table-divider></span>
+                <a href="javascript:void(0)" (click)="showModalMiddle(data)" *ngIf="this.service.validataAction('activity_update')">编辑</a>
+                <span nz-table-divider *ngIf="this.service.validataAction('activity_update')"></span>
                 <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.vote_id)" [nzPlacement]="'left'" *ngIf="this.service.validataAction('activity_del')">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>

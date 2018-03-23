@@ -121,7 +121,7 @@
               <span>{{data.votes}}</span>
             </td>
             <td nz-td>
-              <nz-switch [ngModel]="data.is_lock == 1" [nzSize]="'middle'" (click)="_lock(data.id,data.is_lock)"></nz-switch>
+              <nz-switch [ngModel]="data.is_lock == 1" [nzSize]="'middle'" (click)="_lock(data.id,data.is_lock)" [nzDisabled]="!this.service.validataAction('player_lock')"></nz-switch>
             </td>
             <td nz-td>
               <span *ngIf="data.enabled==1">
@@ -135,10 +135,10 @@
               <span>
                 <a href="javascript:void(0)" (click)="routerJump(data.serial_num)">投票用户列表</a>
                 <span nz-table-divider></span>
-                <a href="javascript:void(0)" (click)="showModalMiddle(data)">编辑选手</a>
-                <span nz-table-divider *ngIf="data.enabled==2"></span>
-                <a href="javascript:void(0)" *ngIf="data.enabled==2" (click)="_audit(data.id)">审核</a>
-                <span nz-table-divider></span>
+                <a href="javascript:void(0)" (click)="showModalMiddle(data)" *ngIf="this.service.validataAction('player_update')">编辑选手</a>
+                <span nz-table-divider *ngIf="data.enabled==2 && this.service.validataAction('player_update')"></span>
+                <a href="javascript:void(0)" *ngIf="data.enabled==2 && this.service.validataAction('player_enabled')" (click)="_audit(data.id)">审核</a>
+                <span nz-table-divider *ngIf="this.service.validataAction('player_enabled')"></span>
                 <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.id)" [nzPlacement]="'left'" *ngIf="this.service.validataAction('player_del')">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>
