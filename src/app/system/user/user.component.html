@@ -67,20 +67,9 @@
                           <i class="anticon anticon-plus"></i>
                           <span>新增</span>
                       </button>
-                      <nz-dropdown>
-                          <button nz-button nz-dropdown>
-                              <span>更多操作</span>
-                              <i class="anticon anticon-down"></i>
-                          </button>
-                          <ul nz-menu>
-                              <li nz-menu-item>
-                                  <a>批量审核</a>
-                              </li>
-                              <li nz-menu-item>
-                                  <a (click)="enabledUser()">启用/停用</a>
-                              </li>
-                          </ul>
-                      </nz-dropdown>
+                      <button nz-button nzType="default" (click)="enabledUser()">
+                          <span>启用/停用</span>
+                      </button>
                   </div>
                   <div class="row-questions">
                       <button nz-button nzType="primary" (click)="reload(true)" [nzLoading]="_loading">
