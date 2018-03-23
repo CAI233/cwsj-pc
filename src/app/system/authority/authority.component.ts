@@ -19,7 +19,7 @@ export class AuthorityComponent implements OnInit {
     role_id: null,
     pid: null,
     total: 0,
-    pageSize: 10,
+    pageSize: 1000,
     pageNum: 1
   };
   constructor(private service: AppService) { }

@@ -40,11 +40,11 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
     width: 100% !important;
 }
 .btn-lg{
-    height: 40px !important;
+    height: 50px !important;
     font-size: 15px !important;
 }
 .input-lg .ant-input{
-    height: 40px !important;
+    height: 50px !important;
     font-size: 15px !important;
 }
 .input-lg .anticon{
@@ -65,6 +65,14 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .ng-left{
     background: #001529 !important;
     box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    overflow-x: hidden;
+}
+.ng-left.ant-layout-sider-collapsed{
+    overflow-x: visible;
+}
+.ant-layout-sider-collapsed .ng-left-menu{
+    width: auto !important;
+    overflow: visible !important;
 }
 .ng-left .ant-menu-dark, .ng-left .ant-menu-dark .ant-menu-sub{
     background: #001529;

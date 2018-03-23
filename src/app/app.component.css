@@ -83,3 +83,11 @@
     background: #108ee9;
     line-height: 24px;
 }
+.ng-left-menu{
+    height: calc(100% - 64px);
+    height: -moz-calc(100% - 64px);
+    height: -webkit-calc(100% - 64px);
+    width: 270px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

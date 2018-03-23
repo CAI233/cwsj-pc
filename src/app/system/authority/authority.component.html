@@ -41,7 +41,7 @@
       </nz-card>
     </div>
     <div class="content-right-con">
-      <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+      <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzIsPagination]="false" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
         [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
         (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;reload($event)">
         <thead nz-thead>

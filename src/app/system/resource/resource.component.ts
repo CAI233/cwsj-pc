@@ -195,7 +195,7 @@ export class ResourceComponent implements OnInit {
     this.editRow = {
       enabled: 1,
       is_forbid: 1,
-      order_weight: new Date().getTime(),
+      order_weight: 1,
       org_id: data.org_id,
       pid: data.res_id,
       res_name: null,

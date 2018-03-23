@@ -24,6 +24,7 @@ import { PhonemessageComponent } from './phonemessage/phonemessage.component';
 import { SmsconfigurComponent } from './smsconfigur/smsconfigur.component';
 import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component';
 import { EmailconfigComponent } from './emailconfig/emailconfig.component';
+import { PayComponent } from './pay/pay.component';
 
 //富文本编辑器
 import { CKEditorModule } from 'ng2-ckeditor';
@@ -52,6 +53,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     PhonemessageComponent,
     EmailtemplateComponent,
     EmailconfigComponent,
+    PayComponent,
     SmsconfigurComponent
   ],
   providers: [  //引入NZ

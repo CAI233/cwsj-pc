@@ -27,37 +27,37 @@ export class LoginComponent implements OnInit {
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]]
     });
-    this.service.get('/api/system/validcode', {
-      name: 'zhangsan'
-    }).then(success => {
-      this.code = success.code;
-      initGeetest({
-        // 以下配置参数来自服务端 SDK
-        gt: success.gt,
-        challenge: success.challenge,
-        offline: !success.success,
-        new_captcha: success.new_captcha,
-        width: '100%'
-      }, (captchaObj) => {
-        captchaObj.appendTo('#captcha-box');
-        captchaObj.onSuccess(() => {
-          var result = captchaObj.getValidate();
-          this.geetest_challenge = result.geetest_challenge;
-          this.geetest_seccode = result.geetest_seccode;
-          this.geetest_validate = result.geetest_validate;
-        })
-      })
-    })
+    // this.service.get('/api/system/validcode', {
+    //   name: 'zhangsan'
+    // }).then(success => {
+    //   this.code = success.code;
+    //   initGeetest({
+    //     // 以下配置参数来自服务端 SDK
+    //     gt: success.gt,
+    //     challenge: success.challenge,
+    //     offline: !success.success,
+    //     new_captcha: success.new_captcha,
+    //     width: '100%'
+    //   }, (captchaObj) => {
+    //     captchaObj.appendTo('#captcha-box');
+    //     captchaObj.onSuccess(() => {
+    //       var result = captchaObj.getValidate();
+    //       this.geetest_challenge = result.geetest_challenge;
+    //       this.geetest_seccode = result.geetest_seccode;
+    //       this.geetest_validate = result.geetest_validate;
+    //     })
+    //   })
+    // })
   }
   //登录
   _submitForm() {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
-    if(!this.geetest_challenge || !this.geetest_seccode || !this.geetest_validate){
-      this.service.message.warning('请点击按钮进行验证')
-      return false;
-    }
+    // if(!this.geetest_challenge || !this.geetest_seccode || !this.geetest_validate){
+    //   this.service.message.warning('请点击按钮进行验证')
+    //   return false;
+    // }
     if (this.myForm.valid) {
       this.loading = true;
       this.service.post('/api/system/login', {

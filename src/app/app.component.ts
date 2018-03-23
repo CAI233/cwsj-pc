@@ -62,6 +62,9 @@ export class AppComponent {
           this.service.loginUserMenus = null;
           localStorage.clear();
         }
+        else if(menu.module != 'error' && menu.module != 'home' && !this.service.validataMenu(menu.module)){
+          this.router.navigate(['/error']);
+        }
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {
@@ -152,8 +155,12 @@ export class AppComponent {
       }
     });
   }
-  ngAfterViewInit() {
-
+  //监控菜单点击
+  menuOpenChange(event, arr, node){
+    arr.forEach(element => {
+       if(element != node)
+        element.select = false;
+    });
   }
   ngDoCheck() {
     if (!this.service.token && !this.service.loginUserInfo && this.activeMenu && this.activeMenu.module && this.activeMenu.module != 'login') {

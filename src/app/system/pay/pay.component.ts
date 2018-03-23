@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { AppService } from '../app.service';
+import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PayComponent implements OnInit {
 
+ 
   tableData: any = []; //数据列表
   _loading: boolean = true;
   // 实例化一个对象
@@ -141,4 +142,5 @@ export class PayComponent implements OnInit {
       }
     })
   }
+
 }

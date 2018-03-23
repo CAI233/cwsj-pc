@@ -15,6 +15,8 @@ export class AppService {
     public validators: any = Validators;
     public formGroup: any = FormGroup;
     public formControl: any = FormControl;
+    public menuItemArray: any = [];
+    public menuActionArray: any = [];
     private status = {
         "status.400": "错误的请求。由于语法错误，该请求无法完成。",
         "status.401": "未经授权。服务器拒绝响应。",
@@ -40,9 +42,10 @@ export class AppService {
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
-        // this.ctxPath = 'http://gw.cjszyun.net';
+        this.ctxPath = 'http://gw.cjszyun.net';
         // this.ctxPath = 'http://work.cjszyun.net';
         // this.ctxPath = 'http://cjzww.cjszyun.cn';
+        // this.ctxPath = 'http://192.168.2.43:19304';
         // this.ctxPath = 'http://192.168.2.43:19301';
         // this.ctxPath = 'http://192.168.2.139:19301';
         this.ctxPath = 'http://192.168.2.41:8994';
@@ -56,6 +59,7 @@ export class AppService {
             this.token = token;
             this.loginUserInfo = JSON.parse(userInfo);
             this.loginUserMenus = JSON.parse(menus);
+            this.parsonMenu(this.loginUserMenus);
             if (callback) {
                 callback();
             }
@@ -80,6 +84,7 @@ export class AppService {
                 if (res.code == 0) {
                     localStorage.setItem('userMenus', JSON.stringify(res.data));
                     this.loginUserMenus = res.data;
+                    this.parsonMenu(this.loginUserMenus);
                 }
                 if (callback) {
                     callback();
@@ -91,6 +96,38 @@ export class AppService {
                 callback();
             }
         }
+    }
+    //解析菜单元素
+    parsonMenu(array) {
+        array.forEach(element => {
+            if (element.res_type == 1) {
+                if (element.res_key != "") {
+                    this.menuItemArray.push({
+                        res_key: element.res_key,
+                        res_url: element.res_url
+                    });
+                }
+                if (element.children) {
+                    this.parsonMenu(element.children);
+                }
+            }
+            else if (element.res_type == 2) {
+                this.menuActionArray.push({
+                    res_key: element.res_key,
+                    res_url: element.res_url
+                });
+            }
+        });
+    }
+    //验证是否具有菜单权限
+    validataMenu(key): boolean {
+        let v = this.menuItemArray.filter(element => element.res_key == key);
+        return v && v.length > 0;
+    }
+    //验证是否具有功能权限
+    validataAction(key): boolean{
+        let v = this.menuActionArray.filter(element => element.res_key == key);
+        return v && v.length > 0;
     }
     //注销
     sessionOut() {
