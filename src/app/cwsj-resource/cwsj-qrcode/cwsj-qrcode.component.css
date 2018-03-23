@@ -20,3 +20,15 @@
   .card-table{
     margin-bottom: 20px;
   }
+
+  :host ::ng-deep .ant-layout-content {
+    position: relative;
+  }
+  :host ::ng-deep .ant-tabs-bar{
+    margin-bottom: 0
+  }
+  :host ::ng-deep nz-tabset{
+    background: #FFF
+  }
+  
+  
