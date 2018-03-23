@@ -16,11 +16,11 @@
         <!--行-->
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="showModalMiddle()" type="button">
+            <button nz-button nzType="primary" (click)="showModalMiddle()" type="button" *ngIf="this.service.validataAction('advlist_add')">
               <i class="anticon anticon-plus"></i>
               <span>新增</span>
             </button>
-            <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
+            <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'" *ngIf="this.service.validataAction('advlist_del')">
               <button nz-popconfirm nz-button nzType="danger" type="button">
                 <i class="anticon anticon-delete"></i>
                 <span>删除</span>
@@ -103,9 +103,9 @@
             </td>
             <td nz-td>
               <span>
-                <a href="javascript:void(0)" (click)="showModalMiddle(data)">修改</a>
+                <a href="javascript:void(0)" (click)="showModalMiddle(data)" *ngIf="this.service.validataAction('advlist_update')">修改</a>
                 <span nz-table-divider></span>
-                <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.adv_id)" [nzPlacement]="'left'">
+                <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.adv_id)" [nzPlacement]="'left'" *ngIf="this.service.validataAction('advlist_del')">
                   <a nz-popconfirm>删除</a>
                 </nz-popconfirm>
               </span>

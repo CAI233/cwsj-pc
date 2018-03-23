@@ -26,8 +26,6 @@ import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component'
 import { EmailconfigComponent } from './emailconfig/emailconfig.component';
 import { PayComponent } from './pay/pay.component';
 
-//富文本编辑器
-import { CKEditorModule } from 'ng2-ckeditor';
 
 @NgModule({
   imports: [
