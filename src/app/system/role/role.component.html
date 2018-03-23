@@ -16,16 +16,16 @@
         <!--行-->
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="showModalMiddle()" type="button">
+            <button nz-button nzType="primary" (click)="showModalMiddle()" type="button" *ngIf="this.service.validataAction('role_add')">
               <i class="anticon anticon-plus"></i>
               <span>新增</span>
             </button>
-            <button nz-button nzType="primary" (click)="editModalMiddle()" type="button">
+            <button nz-button nzType="primary" (click)="editModalMiddle()" type="button" *ngIf="this.service.validataAction('role_update')">
               <i class="anticon anticon-edit"></i>
               <span>修改</span>
             </button>
             <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
-              <button nz-popconfirm nz-button nzType="danger" type="button">
+              <button nz-popconfirm nz-button nzType="danger" type="button" *ngIf="this.service.validataAction('role_del')">
                 <i class="anticon anticon-delete"></i>
                 <span>删除</span>
               </button>
