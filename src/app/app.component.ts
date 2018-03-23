@@ -42,7 +42,7 @@ export class AppComponent {
       .mergeMap(route => route.data)
       .subscribe((event) => {
         //路由data的标题
-        if(!event['title']){
+        if (!event['title']) {
           event = { title: '首页', module: 'home', power: "SHOW" };
         }
         let title = event['title'];
@@ -62,20 +62,20 @@ export class AppComponent {
           this.service.loginUserMenus = null;
           localStorage.clear();
         }
-        else if(menu.module != 'error' && menu.module != 'home' && !this.service.validataMenu(menu.module)){
+        else if (menu.module != 'error' && menu.module != 'home' && !this.service.validataMenu(menu.module)) {
           this.router.navigate(['/error']);
         }
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {
             this.service.loginUserMenus.forEach(one => {
-              one.children.forEach(two =>{
-                if(two.res_key == menu.module){
+              one.children.forEach(two => {
+                if (two.res_key == menu.module) {
                   this.openTwoMenu(two, true);
                 }
-                else{
+                else {
                   two.children.forEach(element => {
-                    if(element.res_key == menu.module){
+                    if (element.res_key == menu.module) {
                       this.openTwoMenu(element, true);
                     }
                   });
@@ -121,14 +121,14 @@ export class AppComponent {
   openTwoMenu(item: any, rt?: boolean) {
     this.service.loginUserMenus.forEach(one => {
       one.select = false;
-      one.children.forEach(two =>{
-        if(two.res_id == item.res_id){
+      one.children.forEach(two => {
+        if (two.res_id == item.res_id) {
           one.select = rt ? rt : !one.select;
         }
-        else{
+        else {
           two.select = false;
           two.children.forEach(element => {
-            if(element.res_id == item.res_id){
+            if (element.res_id == item.res_id) {
               one.select = true;
               two.select = true;
             }
@@ -156,9 +156,9 @@ export class AppComponent {
     });
   }
   //监控菜单点击
-  menuOpenChange(event, arr, node){
+  menuOpenChange(event, arr, node) {
     arr.forEach(element => {
-       if(element != node)
+      if (element != node)
         element.select = false;
     });
   }
@@ -174,5 +174,16 @@ export class AppComponent {
     this.service.loginUserMenus = null;
     localStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  //判断子级是否菜单
+  getChildrenType(data) {
+    let bool = true
+    data.children.forEach(element => {
+      if (element.res_type == 2) {
+        bool = false;
+      }
+    })
+    return bool
   }
 }

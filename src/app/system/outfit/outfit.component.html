@@ -17,16 +17,16 @@
 
         <div nz-row nz-form-item>
           <div class="row-actions">
-            <button nz-button nzType="primary" (click)="showModalMiddle()">
+            <button nz-button nzType="primary" (click)="showModalMiddle()" *ngIf="this.service.validataAction('outfit_add')">
               <i class="anticon anticon-plus"></i>
               <span>新增</span>
             </button>
-            <button nz-button nzType="primary" (click)="editModalMiddle()">
+            <button nz-button nzType="primary" (click)="editModalMiddle()" *ngIf="this.service.validataAction('outfit_update')">
               <i class="anticon anticon-edit"></i>
               <span>修改</span>
             </button>
             <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
-              <button nz-popconfirm nz-button nzType="danger">
+              <button nz-popconfirm nz-button nzType="danger" *ngIf="this.service.validataAction('outfit_del')">
                 <i class="anticon anticon-delete"></i>
                 <span>删除</span>
               </button>
@@ -81,7 +81,7 @@
             <td nz-td>{{data.link_man}}</td>
             <td nz-td>{{data.link_mobile}}</td>
             <td nz-td>
-              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="_enabled(data)"></nz-switch>
+              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('outfit_status')" (click)="_enabled(data)"></nz-switch>
             </td>
           </tr>
         </tbody>
