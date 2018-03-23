@@ -43,12 +43,6 @@ export class AppService {
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
         this.ctxPath = 'http://gw.cjszyun.net';
-        // this.ctxPath = 'http://work.cjszyun.net';
-        // this.ctxPath = 'http://cjzww.cjszyun.cn';
-        // this.ctxPath = 'http://192.168.2.43:19304';
-        // this.ctxPath = 'http://192.168.2.43:19301';
-        // this.ctxPath = 'http://192.168.2.139:19301';
-        // this.ctxPath = 'http://192.168.2.41:8994';
     }
     //系统初始化
     init(callback?: any) {
