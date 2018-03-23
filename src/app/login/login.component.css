@@ -18,12 +18,19 @@ hr {
 .page-logo{
     float: left;
     height: 60px;
-    width: 300px;
+    width: 500px;
 }
 .page-logo img{
     float: left;
     height: 36px;
     margin: 12px 0;
+    display: none;
+}
+.page-logo label{
+    float: left;
+    color: #d5d5d5;
+    line-height: 60px;
+    font-size: 16px;
 }
 .page-content{
     float: left;
@@ -75,8 +82,8 @@ hr {
 }
 .form-header .p1 img{
     display: block;
-    margin: 0 auto;
-    height: 160px;
+    margin: 50px auto 0 auto;
+    height: 100px;
 }
 .form-header .p2{
     float: left;
