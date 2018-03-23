@@ -15,7 +15,7 @@
         <ng-template #title>
           模块列表
         </ng-template>
-        <ng-template #extra>
+        <ng-template #extra *ngIf="this.service.validataAction('message_module_add')">
           <a (click)="_addModel()">新增</a>
         </ng-template>
         <ng-template #body>
@@ -23,11 +23,11 @@
             <div class="mk-item" [ngClass]="{'selected': item.mod_id == param.mod_id}" (click)="set_mod_id(item)">
               <label>{{item.module_name}}</label>
               <span>
-                <button nz-button [nzType]="'dashed'" [nzShape]="'circle'" (click)="_editModel(item)">
+                <button nz-button [nzType]="'dashed'" [nzShape]="'circle'" (click)="_editModel(item)" *ngIf="this.service.validataAction('message_module_update')">
                   <i class="anticon anticon-edit"></i>
                 </button>
                 <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="_delModel(item)" [nzPlacement]="'bottom'">
-                  <button nz-popconfirm nz-button nzType="danger" [nzShape]="'circle'">
+                  <button nz-popconfirm nz-button nzType="danger" [nzShape]="'circle'" *ngIf="this.service.validataAction('message_module_del')">
                     <i class="anticon anticon-delete"></i>
                   </button>
                 </nz-popconfirm>
@@ -45,12 +45,12 @@
           <!--行-->
           <div nz-row nz-form-item>
             <div class="row-actions">
-              <button nz-button nzType="primary" type="button" (click)="_addMessage()">
+              <button nz-button nzType="primary" type="button" (click)="_addMessage()" *ngIf="this.service.validataAction('message_add')">
                 <i class="anticon anticon-plus"></i>
                 <span>新增</span>
               </button>
               <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
-                <button nz-popconfirm nz-button nzType="danger" type="button">
+                <button nz-popconfirm nz-button nzType="danger" type="button" *ngIf="this.service.validataAction('message_del')">
                   <i class="anticon anticon-delete"></i>
                   <span>删除</span>
                 </button>

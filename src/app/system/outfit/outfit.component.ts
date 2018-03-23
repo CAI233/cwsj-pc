@@ -43,8 +43,8 @@ export class OutfitComponent implements OnInit {
     org_id: null,
     org_name: null,
     org_code: null,
-    auth_date_begin:null,
-    auth_date_end:null,
+    auth_date_begin: null,
+    auth_date_end: null,
     remark: null
   };
   ngOnInit() {
@@ -264,13 +264,15 @@ export class OutfitComponent implements OnInit {
 
   //状态
   _enabled(data) {
-    data.enabled = data.enabled == 1 ? 2 : 1;
-    this.service.post('/api/system/organization/setEnabled', {
-      ids: [data.org_id],
-      enabled: data.enabled
-    }).then(success => {
-      this.reload();
-    })
+    if (this.service.validataAction('outfit_status')) {
+      data.enabled = data.enabled == 1 ? 2 : 1;
+      this.service.post('/api/system/organization/setEnabled', {
+        ids: [data.org_id],
+        enabled: data.enabled
+      }).then(success => {
+        this.reload();
+      })
+    }
   }
 
 }

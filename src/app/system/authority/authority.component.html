@@ -72,7 +72,7 @@
               <span >{{data.create_time}}</span>
             </td>
             <td nz-td>
-                <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="enabled(data)"></nz-switch>
+                <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('authority_status')" (click)="enabled(data)"></nz-switch>
             </td>
           </tr>
         </tbody>

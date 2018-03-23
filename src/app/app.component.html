@@ -28,12 +28,12 @@
               </span>
               <ul>
                 <ng-container *ngFor="let two of one.children">
-                  <ng-container *ngIf="!two.children || two.children.length == 0 && two.res_type==1">
+                  <ng-container *ngIf="!two.children || two.children.length == 0 || !getChildrenType(two) && two.res_type==1">
                     <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
                       <a href="{{two.res_url}}">{{two.res_name}}</a>
                     </li>
                   </ng-container>
-                  <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1">
+                  <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1 && getChildrenType(two)">
                     <li nz-submenu [(nzOpen)]="two.select" (nzOpenChange)="menuOpenChange($event,  one.children, two)">
                       <span title>{{two.res_name}}</span>
                       <ul>
