@@ -10,23 +10,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class PayComponent implements OnInit {
 
- 
+
   tableData: any = []; //数据列表
   _loading: boolean = true;
   // 实例化一个对象
   constructor(public routerInfo: ActivatedRoute, public service: AppService, private router: Router) { }
   //表单
   myForm: FormGroup;
-  formBean: any={
-    pay_type_id:null,           //支付方式id(1:支付宝,2:微信)
-    pay_mark:null,              //支付说明
-    base_url:null,              //域名
-    show_url:null,              //支付成功后跳转地址
-    rsa_private_key:null,       //rsa秘钥
-    app_private_key:null,       //私钥
-    alipay_public_key:null,     //公钥
-    mch_id:null,                //商户id
-    app_key:null,               //key
+  formBean: any = {
+    pay_type_id: null,           //支付方式id(1:支付宝,2:微信)
+    pay_mark: null,              //支付说明
+    base_url: null,              //域名
+    show_url: null,              //支付成功后跳转地址
+    rsa_private_key: null,       //rsa秘钥
+    app_private_key: null,       //私钥
+    alipay_public_key: null,     //公钥
+    mch_id: null,                //商户id
+    app_key: null,               //key
   }
   isVisibleMiddle: boolean = false;
   formTitle: string;
@@ -44,7 +44,7 @@ export class PayComponent implements OnInit {
     })
   }
   //打开
-  showModalMiddle(data?:any) {
+  showModalMiddle(data?: any) {
     if (data.pay_type_id == 1) {
       this.formBean.formTitle = "支付宝配置";
       this.service.post('/api/system/pay/config/alipay').then(success => {
@@ -95,11 +95,11 @@ export class PayComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      let url:string;
-      if(this.formBean.pay_type_id==1){
-        url='/api/system/pay/config/alipay/save';
-      }else if(this.formBean.pay_type_id==2){
-        url='/api/system/pay/config/weixinpay/save';
+      let url: string;
+      if (this.formBean.pay_type_id == 1) {
+        url = '/api/system/pay/config/alipay/save';
+      } else if (this.formBean.pay_type_id == 2) {
+        url = '/api/system/pay/config/weixinpay/save';
       }
       this.service.post(url, this.formBean).then(success => {
         if (success.code == 0) {
@@ -130,17 +130,19 @@ export class PayComponent implements OnInit {
 
   //启用停用
   enabled(data?: any) {
-    this.service.post('/api/system/pay/config/enabled', {
-      ids: [data.pay_type_id],
-      enabled: data.enabled==1?2:1
-    }).then(success => {
-      if (success.code == 0) {
-        this.reload();
-      }
-      else {
-        this.service.message.error(success.message);
-      }
-    })
+    if (this.service.validataAction('pay_status')) {
+      this.service.post('/api/system/pay/config/enabled', {
+        ids: [data.pay_type_id],
+        enabled: data.enabled == 1 ? 2 : 1
+      }).then(success => {
+        if (success.code == 0) {
+          this.reload();
+        }
+        else {
+          this.service.message.error(success.message);
+        }
+      })
+    }
   }
 
 }
