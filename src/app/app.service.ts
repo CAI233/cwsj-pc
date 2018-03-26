@@ -42,7 +42,8 @@ export class AppService {
     constructor(private http: Http, public router: Router, public routerInfo: ActivatedRoute,
         public message: NzMessageService, public confirm: NzModalService,
         public fb: FormBuilder) {
-        this.ctxPath = 'http://gw.cjszyun.net';
+        //this.ctxPath = 'http://cw.cjszyun.net';
+        this.ctxPath = 'http://192.168.2.41:8080';
     }
     //系统初始化
     init(callback?: any) {

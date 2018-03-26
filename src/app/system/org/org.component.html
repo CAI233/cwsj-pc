@@ -87,18 +87,26 @@
                                 </span>
                             </td>
                             <td nz-td>
-                                <span *ngIf="item.dept_pid == 0">
-                                    <a (click)="_addChildren(item)" *ngIf="this.service.validataAction('org_add')">新增组织</a>
+                                <!--新增-->
+                                <span *ngIf="item.dept_pid == 0 && this.service.validataAction('org_add')">
+                                    <a (click)="_addChildren(item)">新增组织</a>
                                 </span>
                                 <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0 ">
-                                    <a (click)="_editRow(item)" *ngIf="this.service.validataAction('org_update')">修改</a>
-                                    <span nz-table-divider *ngIf="this.service.validataAction('org_del')"></span>
-                                    <nz-popconfirm [nzTitle]="'确定要删除这个任务吗？'" (nzOnConfirm)="_delete(item)" [nzPlacement]="'left'">
-                                        <a nz-popconfirm *ngIf="this.service.validataAction('org_del')">删除</a>
-                                    </nz-popconfirm>
-                                    <span nz-table-divider *ngIf="this.service.validataAction('org_add')"></span>
-                                    <nz-dropdown>
-                                        <a class="ant-dropdown-link" *ngIf="this.service.validataAction('org_add')" nz-dropdown>更多操作
+                                    <!--修改-->
+                                    <ng-container *ngIf="this.service.validataAction('org_update')">
+                                        <a (click)="_editRow(item)" >修改</a>
+                                        <span nz-table-divider></span>
+                                    </ng-container>
+                                    <!--删除-->
+                                    <ng-container *ngIf="this.service.validataAction('org_del')">
+                                        <nz-popconfirm [nzTitle]="'确定要删除这个任务吗？'" (nzOnConfirm)="_delete(item)" [nzPlacement]="'left'">
+                                            <a nz-popconfirm >删除</a>
+                                        </nz-popconfirm>
+                                        <span nz-table-divider></span>
+                                    </ng-container>
+                                    <!--新增-->
+                                    <nz-dropdown *ngIf="this.service.validataAction('org_add')">
+                                        <a class="ant-dropdown-link" nz-dropdown>更多操作
                                             <i class="anticon anticon-down"></i>
                                         </a>
                                         <ul nz-menu>
