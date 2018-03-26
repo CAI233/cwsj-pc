@@ -131,7 +131,6 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .tableListSearch .ant-form-item{
     margin-bottom: 10px;
 }
-
 /*files*/
 :host ::ng-deep .avatar-uploader,
   :host ::ng-deep .avatar-uploader-trigger,

@@ -14,6 +14,7 @@ import { CwsjWaresComponent } from './cwsj-wares/cwsj-wares.component';
 import { CwsjCooperateComponent } from './cwsj-cooperate/cwsj-cooperate.component';
 import { CwsjBrandComponent } from './cwsj-brand/cwsj-brand.component';
 import { CwsjQrcodeComponent } from './cwsj-qrcode/cwsj-qrcode.component';
+import { CwsjVideoClassComponent } from './cwsj-video-class/cwsj-video-class.component';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { CwsjQrcodeComponent } from './cwsj-qrcode/cwsj-qrcode.component';
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
   ],
-  declarations: [CwsjTagComponent, CwsjVideoComponent, CwsjWaresComponent, CwsjCooperateComponent, CwsjBrandComponent, CwsjQrcodeComponent, CwsjResourceComponent],
+  declarations: [CwsjTagComponent, CwsjVideoComponent, CwsjWaresComponent, CwsjCooperateComponent, CwsjBrandComponent, CwsjQrcodeComponent, CwsjVideoClassComponent, CwsjResourceComponent],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
     { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } }

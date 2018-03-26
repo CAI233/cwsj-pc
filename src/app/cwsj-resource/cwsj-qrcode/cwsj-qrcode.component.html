@@ -12,7 +12,7 @@
   <nz-tabset>
     <nz-tab>
       <ng-template #nzTabHeading>
-       列表
+        列表
       </ng-template>
       <nz-content class="main-page-content">
         <div class="tableListSearch">
@@ -37,7 +37,7 @@
                 </div>
                 <div nz-form-control nz-col [nzSpan]="17">
                   <nz-select name="proSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <nz-option *ngFor="let option of proList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+                    <!-- <nz-option *ngFor="let option of proList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
                 </div>
               </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div nz-form-control nz-col [nzSpan]="17">
                   <nz-select name="depthSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <nz-option *ngFor="let option of depthList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+                    <!-- <nz-option *ngFor="let option of depthList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
                 </div>
               </div>
@@ -57,7 +57,7 @@
                 </div>
                 <div nz-form-control nz-col [nzSpan]="17">
                   <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+                    <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
                 </div>
               </div>
@@ -323,7 +323,108 @@
       <ng-template #nzTabHeading>
         新增
       </ng-template>
-      111212121
+      <nz-content class="main-page-content">
+        <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="3">
+              <div nz-form-label>
+                <label nz-form-item-required>二维码LOGO</label>
+              </div>
+              <div nz-form-control nzHasFeedback>
+                <div class="userHead">
+                  <div class="uimg">
+                    <img *ngIf="formBean.icon" src="{{ service.ctxPath + formBean.icon }}" />
+                  </div>
+                  <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
+                    nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
+                    <button nz-button type="button">
+                      <i class="anticon anticon-upload"></i>
+                      <span>上传</span>
+                    </button>
+                  </nz-upload>
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="20">
+              <div nz-form-item nz-row>
+                <div nz-col [nzSpan]="8">
+                  <div nz-form-label>
+                    <label nz-form-item-required>出版社名称</label>
+                  </div>
+                  <div nz-form-control>
+                    <nz-input formControlName="email" [nzType]="'email'" [(ngModel)]="formBean.email" [nzPlaceHolder]="'请填写出版社名称'"></nz-input>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="8" style="padding-left:10px">
+                  <div nz-form-label>
+                    <label nz-form-item-required>二维码名称</label>
+                  </div>
+                  <div nz-form-control>
+                    <nz-input formControlName="phone" [nzType]="'tel'" [(ngModel)]="formBean.phone" [nzPlaceHolder]="'请填写二维码名称'"></nz-input>
+                  </div>
+                </div>
+              </div>
+              <div nz-form-item nz-row>
+                <div nz-col [nzSpan]="8">
+                  <div nz-form-label>
+                    <label nz-form-item-required>标签</label>
+                  </div>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
+                      <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
+                      </nz-option> -->
+                    </nz-select>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="8" style="padding-left:10px">
+                  <div nz-form-label>
+                    <label nz-form-item-required>深度</label>
+                  </div>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
+                      <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
+                      </nz-option> -->
+                    </nz-select>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="8" style="padding-left:10px">
+                  <div nz-form-label>
+                    <label nz-form-item-required>目的</label>
+                  </div>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
+                      <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
+                      </nz-option> -->
+                    </nz-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-col [nzSpan]="8">
+              <div nz-form-label>
+                <label>关联作品</label>
+              </div>
+              <div nz-form-control>
+                <div nz-card-grid [ngStyle]="gridStyle">
+                  <img height="100%" width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1521722613584&di=57a7b274af74325abb380abff5ae0226&imgtype=0&src=http%3A%2F%2Fpic.baike.soso.com%2Fp%2F20140221%2F20140221033959-777378813.jpg">
+                </div>
+                <div nz-card-grid [ngStyle]="gridStyle">
+                  <img height="100%" width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1521722613584&di=57a7b274af74325abb380abff5ae0226&imgtype=0&src=http%3A%2F%2Fpic.baike.soso.com%2Fp%2F20140221%2F20140221033959-777378813.jpg">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-control nz-col [nzSpan]="12" [nzOffset]="6" style="margin-top:30px">
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">保存</button>
+              <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">取消</button>
+            </div>
+          </div>
+          <button style="display:none;">save</button>
+        </form>
+      </nz-content>
     </nz-tab>
   </nz-tabset>
 
@@ -333,7 +434,6 @@
 <nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent" [nzVisible]="isVisibleMiddle"
   [nzWidth]="620" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
   <ng-template #modalContent>
-
     <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
       <div nz-form-item nz-row style="margin-bottom:0;">
 
@@ -398,8 +498,8 @@
           </div>
           <div nz-form-control nzHasFeedback>
             <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
-              <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
-              </nz-option>
+              <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
+              </nz-option> -->
             </nz-select>
           </div>
         </div>
