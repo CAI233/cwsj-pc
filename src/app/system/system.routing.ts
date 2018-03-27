@@ -9,6 +9,7 @@ import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
+import { PersonalComponent } from './personal/personal.component';
 
 export const routes: Routes = [
     { path: 'user', component: UserComponent, data: { title: '用户管理', module: 'user', power: "SHOW" } },
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'authority', component: AuthorityComponent, data: { title: '权限管理', module: 'authority', power: "SHOW" } },
     { path: 'role', component: RoleComponent, data: { title: '角色管理', module: 'role', power: "SHOW" } },
     { path: 'syslog', component: SyslogComponent, data: { title: '系统日志', module: 'syslog', power: "SHOW" } },
-    { path: 'actionlog', component: ActionlogComponent, data: { title: '操作日志', module: 'actionlog', power: "SHOW" } }
+    { path: 'actionlog', component: ActionlogComponent, data: { title: '操作日志', module: 'actionlog', power: "SHOW" } },
+    { path: 'personal', component: PersonalComponent, data: { title: '设置个人信息', module: 'personal', power: "SHOW" } },
 ];

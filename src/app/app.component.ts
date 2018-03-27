@@ -16,7 +16,7 @@ export class AppComponent {
   menuList: Array<{ title: string, module: string, power: string, select: boolean }> = [];
   activeMenu: any;//当前页面
   showLeftMenu: boolean = false; //显示左侧菜单
-  fiterMenu: any = ['login','third','error', 'home']; //需要过滤权限的模块
+  fiterMenu: any = ['login','personal','error', 'home']; //需要过滤权限的模块
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title, public service: AppService) {
     //检测当前是否登录
     this.service.init(() => {

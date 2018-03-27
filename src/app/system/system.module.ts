@@ -18,6 +18,7 @@ import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
+import { PersonalComponent } from './personal/personal.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { SyslogComponent } from './syslog/syslog.component';
     AuthorityComponent,
     RoleComponent,
     ActionlogComponent,
+    PersonalComponent,
     SyslogComponent
   ],
   providers: [  //引入NZ
