@@ -187,4 +187,10 @@ export class AppComponent {
     })
     return bool
   }
+
+  //获取用户头像
+  getUserHead(){
+    console.log(this.service.loginUserInfo.icon)
+    return '<img src="/assets/img/footer-logo.png" class="head-uName-img">';
+  }
 }

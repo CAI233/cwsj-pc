@@ -75,7 +75,11 @@
             </nz-badge>
           </li>
           <li>
-            <span class="head-uName">蔡</span>
+            <span class="head-uName">
+              <img *ngIf="this.service.loginUserInfo && this.service.loginUserInfo.icon" src="{{this.service.loginUserInfo.icon}}">
+              <label *ngIf="this.service.loginUserInfo && !this.service.loginUserInfo.icon && this.service.loginUserInfo.user_real_name">{{this.service.loginUserInfo.user_real_name.substr(0,1)}}</label>
+              <img *ngIf="this.service.loginUserInfo && !this.service.loginUserInfo.icon  && !this.service.loginUserInfo.user_real_name" src="assets/img/footer-logo.png" class="head-uName-img">
+            </span>
           </li>
           <li>
             <a style="color:rgba(0, 0, 0, 0.65);text-decoration: none;" href="#/system/personal">设置</a>
