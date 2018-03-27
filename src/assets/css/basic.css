@@ -83,6 +83,12 @@ input:-webkit-autofill{box-shadow:0 0 0 1000px #fff inset}
 .ng-left span{
     font-size: 14px;
 }
+.ng-left span i{
+    font-size: 16px;
+}
+.ant-layout-sider-collapsed span i{
+    font-size: 20px !important;
+}
 :root .ant-menu-submenu-inline > .ant-menu-submenu-title:after{
     font-size: 15px !important;
 }

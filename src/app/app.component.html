@@ -59,7 +59,8 @@
       <nz-header *ngIf="service.loginUserMenus">
         <i class="anticon ng-action-menu" (click)="toggleCollapsed()" [class.anticon-menu-unfold]="isCollapsed" [class.anticon-menu-fold]="!isCollapsed"></i>
         <a href="#/home" class="ng-action-home">
-          <i class="anticon anticon-home"></i> 湖北长江传媒数字科技有限公司
+          <i class="anticon anticon-home"></i> 
+          <span *ngIf="this.service.loginUserInfo" [innerHTML]="this.service.loginUserInfo.org_name"></span>
         </a>
         <ul class="ng-top-raction">
           <li>
