@@ -10,7 +10,7 @@
     <div class="ng-left-menu">
       <ul nz-menu [nzMode]="'inline'" nzTheme='dark' [nzInlineCollapsed]="isCollapsed" *ngIf="service.loginUserMenus">
         <ng-container *ngFor="let one of service.loginUserMenus">
-          <ng-container *ngIf="!one.children || one.children.length == 0  && one.res_type==1">
+          <ng-container *ngIf="one.res_url  && one.res_type==1">
             <li nz-menu-item>
               <a href="{{one.res_url}}">
                 <span title>
@@ -20,7 +20,7 @@
               </a>
             </li>
           </ng-container>
-          <ng-container *ngIf="one.children && one.children.length > 0 && one.res_type==1">
+          <ng-container *ngIf="one.children && one.children.length > 0 && one.res_type==1 && !one.res_url">
             <li nz-submenu [(nzOpen)]="one.select" (nzOpenChange)="menuOpenChange($event, service.loginUserMenus, one)">
               <span title>
                 <i class="anticon anticon-{{one.res_icon}}"></i>
@@ -28,12 +28,12 @@
               </span>
               <ul>
                 <ng-container *ngFor="let two of one.children">
-                  <ng-container *ngIf="!two.children || two.children.length == 0 || !getChildrenType(two) && two.res_type==1">
+                  <ng-container *ngIf="two.res_url && two.res_type==1">
                     <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
                       <a href="{{two.res_url}}">{{two.res_name}}</a>
                     </li>
                   </ng-container>
-                  <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1 && getChildrenType(two)">
+                  <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1 && !two.res_url">
                     <li nz-submenu [(nzOpen)]="two.select" (nzOpenChange)="menuOpenChange($event,  one.children, two)">
                       <span title>{{two.res_name}}</span>
                       <ul>

@@ -10,7 +10,6 @@ import { RouterModule } from '@angular/router';
 import { CKEditorModule } from 'ng2-ckeditor';
 
 import { UserComponent } from './user/user.component';
-import { MainComponent } from './main/main.component';
 import { RoleComponent } from './role/role.component';
 import { ResourceComponent } from './resource/resource.component';
 import { OutfitComponent } from './outfit/outfit.component';
@@ -19,12 +18,6 @@ import { MessageComponent } from './message/message.component';
 import { AuthorityComponent } from './authority/authority.component';
 import { ActionlogComponent } from './actionlog/actionlog.component';
 import { SyslogComponent } from './syslog/syslog.component';
-import { ThirdComponent } from './third/third.component' ;
-import { PhonemessageComponent } from './phonemessage/phonemessage.component';
-import { SmsconfigurComponent } from './smsconfigur/smsconfigur.component';
-import { EmailtemplateComponent } from './emailtemplate/emailtemplate.component';
-import { EmailconfigComponent } from './emailconfig/emailconfig.component';
-import { PayComponent } from './pay/pay.component';
 
 
 @NgModule({
@@ -38,7 +31,6 @@ import { PayComponent } from './pay/pay.component';
   ],
   declarations: [
     UserComponent,
-    MainComponent,
     ResourceComponent,
     OutfitComponent,
     OrgComponent,
@@ -46,13 +38,7 @@ import { PayComponent } from './pay/pay.component';
     AuthorityComponent,
     RoleComponent,
     ActionlogComponent,
-    SyslogComponent,
-    ThirdComponent,
-    PhonemessageComponent,
-    EmailtemplateComponent,
-    EmailconfigComponent,
-    PayComponent,
-    SmsconfigurComponent
+    SyslogComponent
   ],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },

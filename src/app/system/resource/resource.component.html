@@ -44,7 +44,7 @@
                     <th nz-th [nzWidth]="'10%'">
                         <span>标识</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    <th nz-th [nzWidth]="'15%'">
                         <span>地址</span>
                     </th>
                     <th nz-th [nzWidth]="'10%'">
@@ -56,7 +56,7 @@
                     <th nz-th [nzWidth]="'10%'">
                         <span>类型</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    <th nz-th [nzWidth]="'5%'">
                         <span>排序</span>
                     </th>
                     <!-- <th nz-th [nzWidth]="'5%'" *ngIf="orgId==1 && paramCol.org_id==1">
@@ -140,7 +140,7 @@
                                 </span>
                                 <span *ngIf="editRow.res_id != item.res_id && item.res_id != 0">
                                     <!-- 修改 -->
-                                    <ng-container *ngIf="this.service.validataAction('resource_update')">
+                                    <ng-container *ngIf="this.service.validataAction('resource_edit')">
                                         <a (click)="_editRow(item)">修改</a>
                                         <span nz-table-divider *ngIf="this.service.validataAction('resource_del')"></span>
                                     </ng-container>
@@ -162,9 +162,9 @@
                                             <li nz-menu-item>
                                                 <a (click)="_addChildren(item)">新增子级</a>
                                             </li>
-                                            <li nz-menu-item>
+                                            <!-- <li nz-menu-item>
                                                 <a (click)="oneKeyPush(item.source_id)">更新</a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </nz-dropdown>
                                 </span>
