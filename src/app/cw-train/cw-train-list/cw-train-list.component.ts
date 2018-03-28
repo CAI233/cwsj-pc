@@ -29,22 +29,38 @@ export class CwTrainListComponent implements OnInit {
     org_name: null,
     org_code: null
   };
+  isCollapse: any = true;
   _loading: boolean = true;
   //省 市 区 街 
   _address: any;
+  //ckeditor配置
+  config: any = {
+    width: '100%',
+    toolbar: 'MyToolbar',
+    toolbar_MyToolbar:
+      [
+        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
+        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+        { name: 'tools', items: ['Maximize'] },
+        { name: 'document', items: ['Source'] },
+        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
+        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
+        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+        { name: 'colors', items: ['TextColor', 'BGColor'] },
+      ],
+      filebrowserImageUploadUrl:this.service.ctxPath + '/api/system/file/upload',
+  }
   // 实例化一个对象
   constructor(public service: AppService) { }
   //表单
   myForm: FormGroup;
   formBean: any = {
-    formTitle: '新增机构',
-    isVisibleMiddle: false,
-    org_id: null,
-    org_name: null,
-    org_code: null,
-    auth_date_begin: null,
-    auth_date_end: null,
-    remark: null
+    role_id:null,
+    role_idss:null,
+    email:null,
+    phone:null,
+    vote_role:null,
   };
   ngOnInit() {
     this.reload();
@@ -57,7 +73,11 @@ export class CwTrainListComponent implements OnInit {
       link_mobile: [null, [this.service.validators.required]],
       auth_date_begin: [null, [this.service.validators.required]],
       auth_date_end: [null, [this.service.validators.required]],
-      remark: [false]
+      remark: [false],
+      phone: [false],
+      vote_role: [false],
+      email: [false],
+      role_id: [false]
     })
   }
 
@@ -140,7 +160,7 @@ export class CwTrainListComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('/api/system/organization/save', this.formBean).then(success => {
+      this.service.post('//api/busiz/video/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.formBean.isVisibleMiddle = false;
           this.formClear()
@@ -189,7 +209,7 @@ export class CwTrainListComponent implements OnInit {
     else {
       let ids = [];
       this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.org_id) })
-      this.service.post('/api/system/organization/delete', {
+      this.service.post('/api/busiz/video/delete', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
@@ -208,7 +228,7 @@ export class CwTrainListComponent implements OnInit {
       this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
-    this.service.post('/api/system/organization/getList', this.param).then(success => {
+    this.service.post('/api/busiz/video/getlist', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;
