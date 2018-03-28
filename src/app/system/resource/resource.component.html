@@ -72,9 +72,11 @@
                     <ng-template ngFor let-item [ngForOf]="expandDataCache[data.res_id]">
                         <tr nz-tbody-tr *ngIf="(item.parent && item.parent.expand) || !(item.parent)">
                             <td nz-td>
-                                <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
-                                <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.res_id],item,$event)" [nzShowExpand]="!!item.children && item.children.length > 0"></nz-row-expand-icon>
-                                <span *ngIf="editRow.res_id != item.res_id">{{item.res_name}}</span>
+                                <span *ngIf="editRow.res_id != item.res_id">
+                                    <nz-row-indent [nzIndentSize]="item.level"></nz-row-indent>
+                                    <nz-row-expand-icon [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[data.res_id],item,$event)" [nzShowExpand]="!!item.children && item.children.length > 0"></nz-row-expand-icon>
+                                    <span>{{item.res_name}}</span>
+                                </span>
                                 <span *ngIf="editRow.res_id == item.res_id">
                                     <nz-input [nzType]="'text'" name="res_name" [(ngModel)]="editRow.res_name"></nz-input>
                                 </span>
@@ -101,7 +103,6 @@
                                 <span *ngIf="editRow.res_id != item.res_id && item.res_id">{{item.parent.res_name}}</span>
 
                                 <span *ngIf="editRow.res_id == item.res_id">
-                                    <!-- <nz-input [nzType]="'text'" name="pid" [(ngModel)]="editRow.pid"></nz-input> -->
                                     <nz-cascader nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'res_id'" [nzLabelProperty]="'res_name'" [nzOptions]="tableData"
                                         [(ngModel)]="editRow.pname">
                                     </nz-cascader>
@@ -121,19 +122,12 @@
                             </td>
                             <td nz-td>
                                 <span *ngIf="editRow.res_id != item.res_id">
-                                    <!-- <a (click)="_order(item,'top')"><i class="anticon anticon-arrow-up"></i></a>
-                                        <a (click)="_order(item,'down')"><i class="anticon anticon-arrow-down"></i></a> -->
                                     {{item.order_weight}}
                                 </span>
                                 <span *ngIf="editRow.res_id == item.res_id">
                                     <nz-input [nzType]="'text'" name="order_weight" [(ngModel)]="editRow.order_weight"></nz-input>
                                 </span>
                             </td>
-                            <!-- <td nz-td *ngIf="service.loginUserInfo.org_id==1 && paramCol.org_id==1">
-                                    <span *ngIf="item.res_id">
-                                        <nz-switch [ngModel]="item.is_forbid == 2" [nzSize]="'small'" (click)="_is_forbid(item)"></nz-switch>
-                                    </span>
-                                </td> -->
                             <td nz-td>
                                 <span *ngIf="item.res_id == 0">
                                     <a (click)="_addChildren(item)" *ngIf="this.service.validataAction('resource_add')">新增资源</a>

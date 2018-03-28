@@ -72,23 +72,19 @@ export class AuthorityComponent implements OnInit {
   }
 
   enabled(data) {
-    console.log(data);
-    console.log(this.service.validataAction('authority_status'))
-    if (this.service.validataAction('authority_status')) {
-      this.service.post('/api/system/role/res/rel/enabled', {
-        role_res_rel_id: data.role_res_rel_id,
-        enabled: data.enabled,
-        role_id: this.param.role_id,
-        res_id: data.res_id,
-      }).then(success => {
-        if (success.code == 0) {
-          this.reload();
-        }
-        else {
-          this.service.message.error(success.message);
-        }
-      })
-    }
+    this.service.post('/api/system/role/res/rel/enabled', {
+      role_res_rel_id: data.role_res_rel_id,
+      enabled: data.enabled,
+      role_id: this.param.role_id,
+      res_id: data.res_id,
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
   }
   /**************************表格部分*************************/
 

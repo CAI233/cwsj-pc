@@ -72,7 +72,13 @@
               <span >{{data.create_time}}</span>
             </td>
             <td nz-td>
-              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('authority_status')" (click)="enabled(data)"></nz-switch>
+              <span *ngIf="this.service.validataAction('authority_enable')">
+                  <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="enabled(data)"></nz-switch>
+              </span>
+              <span *ngIf="!this.service.validataAction('authority_enable')">
+                <label *ngIf="data.enabled == 1">是</label>
+                <label *ngIf="data.enabled != 1">否</label>
+              </span>             
             </td>
           </tr>
         </tbody>
