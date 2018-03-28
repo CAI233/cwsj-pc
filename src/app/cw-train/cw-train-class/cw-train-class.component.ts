@@ -42,14 +42,14 @@ export class CwTrainClassComponent implements OnInit {
     this.expandDataCacheCol = this.expandDataCache;
     this.expandDataCache = {};
     this.tableData.forEach(item => {
-      this.expandDataCache[item.dept_id] = this.convertTreeToList(item);
+      this.expandDataCache[item.menu_id] = this.convertTreeToList(item);
     });
   }
   collapse(array, data, $event) {
     if ($event === false) {
       if (data.children) {
         data.children.forEach(d => {
-          const target = array.find(a => a.dept_id === d.dept_id);
+          const target = array.find(a => a.menu_id === d.menu_id);
           target.expand = false;
           this.collapse(array, target, false);
         });
@@ -64,14 +64,14 @@ export class CwTrainClassComponent implements OnInit {
     while (stack.length !== 0) {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
-      const nodeCol = this.expandDataCacheCol[root.dept_id];
+      const nodeCol = this.expandDataCacheCol[root.menu_id];
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
           let expand = false;
           if (nodeCol) {
             let col = null;
             nodeCol.forEach(mm => {
-              if (mm.dept_id == node.children[i].dept_id)
+              if (mm.menu_id == node.children[i].menu_id)
                 col = mm;
             })
             if (col) {
@@ -86,14 +86,14 @@ export class CwTrainClassComponent implements OnInit {
           if (node.parent.pname) {
             node.parent.pname.forEach(element => {
               node.pname.push({
-                dept_id: element.dept_id,
-                dept_name: element.dept_name
+                menu_id: element.menu_id,
+                menu_name: element.menu_name
               });
             });
           }
           node.pname.push({
-            dept_id: node.parent.dept_id,
-            dept_name: node.parent.dept_name
+            menu_id: node.parent.menu_id,
+            menu_name: node.parent.menu_name
           });
         }
       }
@@ -102,8 +102,8 @@ export class CwTrainClassComponent implements OnInit {
   }
 
   visitNode(node, hashMap, array) {
-    if (!hashMap[node.dept_id]) {
-      hashMap[node.dept_id] = true;
+    if (!hashMap[node.menu_id]) {
+      hashMap[node.menu_id] = true;
       array.push(node);
     }
   }
@@ -124,7 +124,7 @@ export class CwTrainClassComponent implements OnInit {
   _loading: boolean = false;
   //保存
   _saveRow() {
-    if (!this.editRow.dept_name) {
+    if (!this.editRow.menu_name) {
       this.service.message.error('请填写组织名称');
       return false;
     }
@@ -135,14 +135,14 @@ export class CwTrainClassComponent implements OnInit {
     else {
       let pid = this.editRow.pname[this.editRow.pname.length - 1];
       if (typeof (pid) == 'object') {
-        pid = pid.dept_id;
+        pid = pid.menu_id;
       }
-      this.editRow.dept_pid = pid == 0 ? null : pid;
+      this.editRow.pid = pid == 0 ? null : pid;
     }
     this._loading = true;
     this.editRow.parent = null;
     this.editRow.children = null;
-    this.service.post('/api/system/department/save', this.editRow).then(success => {
+    this.service.post('/api/busiz/videoMenu/save', this.editRow).then(success => {
       if (success.code == 0) {
         this.editRow = {};
         this.load();
@@ -155,9 +155,9 @@ export class CwTrainClassComponent implements OnInit {
   }
   //删除
   _delete(data) {
-    this.service.post('/api/system/department/delete', {
+    this.service.post('/api/busiz/videoMenu/del', {
       mark: 'del',
-      ids: [data.dept_id]
+      ids: [data.menu_id]
     }).then(success => {
       this.load();
     })
@@ -170,14 +170,14 @@ export class CwTrainClassComponent implements OnInit {
       address: null,
       dept_code: null,
       dept_path: null,
-      dept_id: null,
+      menu_id: null,
       org_id: parent.org_id,
       pname: parent.pname || [],
-      dept_name: null,
+      menu_name: null,
       disabled: true,
       isLeaf: true
     }
-    this.editRow.pname.push({ dept_id: parent.dept_id, dept_name: parent.dept_name })
+    this.editRow.pname.push({ menu_id: parent.menu_id, menu_name: parent.menu_name })
     if (!parent.children) parent.children = [];
     parent.children.push(this.editRow)
     this._expanData();
@@ -192,14 +192,14 @@ export class CwTrainClassComponent implements OnInit {
       address: null,
       dept_code: null,
       dept_path: null,
-      dept_id: null,
+      menu_id: null,
       org_id: parent.org_id,
       pname: parent.pname || [],
-      dept_name: null,
+      menu_name: null,
       disabled: true,
       isLeaf: true
     }
-    this.editRow.pname.push({ dept_id: parent.dept_id, dept_name: parent.dept_name })
+    this.editRow.pname.push({ menu_id: parent.menu_id, menu_name: parent.menu_name })
     if (!parent.children) parent.children = [];
     parent.children.push(this.editRow);
     this._expanData();
