@@ -6,7 +6,7 @@ import { AppService } from '../../app.service';
   styleUrls: ['./cw-analysis.component.css']
 })
 export class CwAnalysisComponent implements OnInit {
-  param: object ={
+  param: any ={
     total: 0,
     pageSize: 10,
     pageNum: 1,
@@ -46,11 +46,11 @@ export class CwAnalysisComponent implements OnInit {
     console.log(this.formBean)
   }
   //取消编辑
-  _cancelMiddle(){
+  _cancelMiddle(event?:any){
     this.isVisibleMiddle = false;
   }
   //提交编辑
-  _okMiddle(){
+  _okMiddle(event?:any){
     this._submitForm();
   }
   //刷新列表

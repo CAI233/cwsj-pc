@@ -243,20 +243,4 @@ export class ResourceComponent implements OnInit {
     value: 2
   }]
 
-  // //一键更新
-  // oneKeyPush(source_id = 0) {
-  //   this._loading = true;
-  //   this.service.post('/api/system/resource/allot_sysResource', {
-  //     org_id: this.paramCol.org_id,
-  //     source_id: source_id
-  //   }).then(success => {
-  //     this._loading = false;
-  //     if (success.code == 0) {
-  //       this.load();
-  //     } else {
-  //       this.service.message.error(success.message);
-  //     }
-  //   })
-  // }
-
 }
