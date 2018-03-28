@@ -81,7 +81,10 @@
             <td nz-td>{{data.link_man}}</td>
             <td nz-td>{{data.link_mobile}}</td>
             <td nz-td>
-              <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('outfit_status')" (click)="_enabled(data)"></nz-switch>
+              <nz-switch [ngModel]="data.enabled == 1" 
+                          [nzSize]="'small'" 
+                          [nzDisabled]="!this.service.validataAction('outfit_enable') || data.org_id == 1" 
+                          (click)="_enabled(data)"></nz-switch>
             </td>
           </tr>
         </tbody>
