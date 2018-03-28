@@ -92,7 +92,7 @@
                                     </span>
                                     <span *ngIf="editRow.dept_id != item.dept_id && item.dept_pid != 0 ">
                                         <!-- 修改 -->
-                                        <ng-container *ngIf="this.service.validataAction('org_update')">
+                                        <ng-container *ngIf="this.service.validataAction('org_edit')">
                                             <a (click)="_editRow(item)">修改</a>
                                             <span nz-table-divider *ngIf="this.service.validataAction('org_del')"></span>
                                         </ng-container>

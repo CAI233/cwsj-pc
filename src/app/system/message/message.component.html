@@ -23,7 +23,7 @@
             <div class="mk-item" [ngClass]="{'selected': item.mod_id == param.mod_id}" (click)="set_mod_id(item)">
               <label>{{item.module_name}}</label>
               <span>
-                <button nz-button [nzType]="'dashed'" [nzShape]="'circle'" (click)="_editModel(item)" *ngIf="this.service.validataAction('message_module_update')">
+                <button nz-button [nzType]="'dashed'" [nzShape]="'circle'" (click)="_editModel(item)" *ngIf="this.service.validataAction('message_module_edit')">
                   <i class="anticon anticon-edit"></i>
                 </button>
                 <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="_delModel(item)" [nzPlacement]="'bottom'">

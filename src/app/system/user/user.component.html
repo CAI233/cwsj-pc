@@ -137,7 +137,7 @@
                         <td nz-td>
                             <span>
                                 <!-- 修改 -->
-                                <ng-container *ngIf="this.service.validataAction('user_update')">
+                                <ng-container *ngIf="this.service.validataAction('user_edit')">
                                     <a href="javascript:void(0)" (click)="showModalMiddle(data)">修改</a>
                                     <span nz-table-divider *ngIf="this.service.validataAction('user_del')"></span>
                                 </ng-container>
