@@ -40,7 +40,7 @@ import { PersonalComponent } from './personal/personal.component';
     RoleComponent,
     ActionlogComponent,
     PersonalComponent,
-    SyslogComponent
+    SyslogComponent,
   ],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
