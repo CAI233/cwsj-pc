@@ -29,6 +29,7 @@ export class CwAdvListComponent implements OnInit {
     create_time: null,
     enabled: null,
   };
+  advClassRemark: string;
   _loading: boolean = true;
   // 实例化一个对象
   constructor(public service: AppService) { }
@@ -38,7 +39,7 @@ export class CwAdvListComponent implements OnInit {
   formBean: any = {
     role_id: null,
     adv_name: null,
-    adv_cat_id:null,
+    adv_cat_id: null,
     remark: null
   };
   //文件上传
@@ -47,10 +48,10 @@ export class CwAdvListComponent implements OnInit {
       this.formBean.adv_img = info.file.response.data[0].url;
     }
   }
-  //新闻分类下拉
+  //广告分类下拉
   advClassList: any = [];
   ngOnInit() {
-    //获取新闻分类
+    //获取广告分类
     this.service.post('/api/system/advcat/json/advcatlist', { pageNum: 1, pageSize: 1000 }).then(success => {
       if (success.code == 0) {
         this.advClassList = success.data.rows;
@@ -75,10 +76,10 @@ export class CwAdvListComponent implements OnInit {
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
-      this.formTitle = "修改新闻";
+      this.formTitle = "修改广告";
     }
     else {
-      this.formTitle = "新增新闻";
+      this.formTitle = "新增广告";
     }
     this.isVisibleMiddle = true;
   };
@@ -129,7 +130,7 @@ export class CwAdvListComponent implements OnInit {
       })
     }
   }
-  _delete(id){
+  _delete(id) {
     this.service.post('/api/system/adv/json/deleteadvs', {
       adv_ids: [id], mark: 'del'
     }).then(success => {
@@ -145,7 +146,6 @@ export class CwAdvListComponent implements OnInit {
   reload(reset?) {
     if (reset == true) {
       this.param.pageNum = 1;
-      this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
     this.service.post('/api/system/adv/json/getadvlist', this.param).then(success => {
@@ -161,7 +161,11 @@ export class CwAdvListComponent implements OnInit {
       }
     })
   }
-
+  resetForm() {
+    this.param.adv_cat_id = null;
+    this.param.adv_cat_nmae = null;
+    this.param.searchText = "";
+  }
   //全选
   _checkAll(value) {
     if (value) {
@@ -200,24 +204,9 @@ export class CwAdvListComponent implements OnInit {
     });
     this.reload();
   }
-
-  //是否显示
-  _is_show(data) {
-    if(this.service.validataAction('cw_adv_list_show')){
-      this.service.post('/api/system/adv/json/updateshow', {
-        adv_id: data.adv_id,
-      }).then(success => {
-        if (success.code == 0) {
-          this.reload();
-        } else {
-          this.service.message.error(success.message);
-        }
-      })
-    }
-  }
   //启用停用
   _enabled(data) {
-    if(this.service.validataAction('cw_adv_list_enable')){
+    if (this.service.validataAction('cw_adv_list_enable')) {
       this.service.post('/api/system/adv/json/updateenable', {
         adv_id: data.adv_id,
       }).then(success => {
@@ -228,7 +217,15 @@ export class CwAdvListComponent implements OnInit {
         }
       })
     }
-    
-  }
 
+  }
+  getAdvClassRemark() {
+    setTimeout(_ => {
+      this.advClassList.forEach(element => {
+        if (element.adv_cat_id == this.formBean.adv_cat_id) {
+          this.advClassRemark = element.adv_cat_remark
+        }
+      })
+    }, 50)
+  }
 }

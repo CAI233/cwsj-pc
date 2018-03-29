@@ -5,7 +5,7 @@
         <a href="#/home">首页</a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item>
-        新闻列表
+        广告列表
       </nz-breadcrumb-item>
     </nz-breadcrumb>
   </nz-header>
@@ -13,6 +13,37 @@
     <div class="tableListSearch">
       <!--表单-->
       <form nz-form>
+        <div nz-row nz-form-item>
+          <!--列-->
+          <div nz-col [nzSpan]="8">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>广告分类</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-select name="proSelect" [(ngModel)]="param.adv_cat_id" [nzPlaceHolder]="'请选择'"  nzAllowClear>
+                  <nz-option *ngFor="let option of advClassList"  [nzLabel]="option.adv_cat_name" [nzValue]="option.adv_cat_id" [nzDisabled]="option.disabled">
+                    </nz-option>
+              </nz-select>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="8">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>广告名称</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="8" style="padding:2px 0;">
+            <button nz-button nzType="primary" (click)="reload(true)" [nzLoading]="_loading">
+              <i class="anticon anticon-search"></i>
+              <span>查询</span>
+            </button>
+            <button nz-button nzType="button" (click)="resetForm()">
+              <span>重置</span>
+            </button>
+          </div>
+        </div>
         <!--行-->
         <div nz-row nz-form-item>
           <div class="row-actions">
@@ -27,10 +58,6 @@
               </button>
             </nz-popconfirm>
 
-          </div>
-          <div class="row-questions">
-            <nz-input [nzType]="'search'" [nzPlaceHolder]="'新闻名称'" name="searchText" [(ngModel)]="paramCol.searchText" style="width: 200px;"
-              (nzOnSearch)="reload(true)"></nz-input>
           </div>
         </div>
       </form>
@@ -47,24 +74,21 @@
               <span>封面</span>
             </th>
             <th nz-th [nzWidth]="'20%'">
-              <span>新闻名称</span>
+              <span>广告名称</span>
             </th>
             <th nz-th [nzWidth]="'15%'">
-              <span>新闻链接</span>
+              <span>广告链接</span>
             </th>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th [nzWidth]="'15%'">
               <span>启用/停用</span>
               <nz-table-sort [(nzValue)]="sortMap.enabled" (nzValueChange)="sort('enabled', $event)"></nz-table-sort>
             </th>
-            <th nz-th [nzWidth]="'10%'">
-              <span>是否显示</span>
-            </th>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th [nzWidth]="'15%'">
               <span>创建日期</span>
               <nz-table-sort [(nzValue)]="sortMap.create_time" (nzValueChange)="sort('create_time', $event)"></nz-table-sort>
             </th>
             <th nz-th [nzWidth]="'15%'">
-              <span>备注</span>
+              <span>描述</span>
             </th>
             <th nz-th [nzWidth]="'20%'">
               <span>操作</span>
@@ -89,11 +113,6 @@
               <span>
                 <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('cw_adv_list_enable')"
                   (click)="_enabled(data)"></nz-switch>
-              </span>
-            </td>
-            <td nz-td>
-              <span>
-                <nz-switch [ngModel]="data.is_show == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('cw_adv_list_show')" (click)="_is_show(data)"></nz-switch>
               </span>
             </td>
             <td nz-td>
@@ -123,55 +142,61 @@
   [nzWidth]="620" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
   <ng-template #modalContent>
     <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
-      <div nz-form-item nz-row style="margin-bottom:0;">
+      <div nz-form-item nz-row>
+        <div class="userHead">
+          <div class="uimg">
+            <img *ngIf="formBean.adv_img" src="{{ service.ctxPath + formBean.adv_img }}" />
+          </div>
+          <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
+            nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
+            <button nz-button type="button">
+              <i class="anticon anticon-upload"></i>
+              <span>上传广告图</span>
+            </button>
+          </nz-upload>
+          <!-- <nz-input formControlName="icon" [(ngModel)]="formBean.icon" [nzType]="'hidden'"></nz-input> -->
+        </div>
+      </div>
+      <div nz-form-item nz-row>
         <div nz-col [nzSpan]="12">
-          <div class="userHead">
-            <div class="uimg">
-              <img *ngIf="formBean.adv_img" src="{{ service.ctxPath + formBean.adv_img }}" />
-            </div>
-            <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
-              nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
-              <button nz-button type="button">
-                <i class="anticon anticon-upload"></i>
-                <span>上传封面</span>
-              </button>
-            </nz-upload>
-            <!-- <nz-input formControlName="icon" [(ngModel)]="formBean.icon" [nzType]="'hidden'"></nz-input> -->
+          <div nz-form-label>
+            <label nz-form-item-required>广告名称</label>
+          </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-input formControlName="adv_name" [(ngModel)]="formBean.adv_name" [nzPlaceHolder]="'请输入广告名称'"></nz-input>
           </div>
         </div>
         <div nz-col [nzSpan]="12">
-          <div nz-form-item nz-row>
-            <div nz-form-label>
-              <label nz-form-item-required>新闻名称</label>
-            </div>
-            <div nz-form-control nzHasFeedback>
-              <nz-input formControlName="adv_name" [(ngModel)]="formBean.adv_name" [nzPlaceHolder]="'请输入新闻名称'"></nz-input>
-            </div>
+          <div nz-form-label>
+            <label>广告链接</label>
           </div>
-          <div nz-form-item nz-row>
-            <div nz-form-label>
-              <label nz-form-item-required>新闻分类</label>
-            </div>
-            <div nz-form-control nzHasFeedback>
-              <nz-select formControlName="adv_cat_id" [nzPlaceHolder]="'请选择新闻分类'" [(ngModel)]="formBean.adv_cat_id" [nzNotFoundContent]="'无法找到'">
-                <nz-option *ngFor="let option of advClassList" [nzLabel]="option.adv_cat_name" [nzValue]="option.adv_cat_id" [nzDisabled]="option.disabled">
-                </nz-option>
-              </nz-select>
-            </div>
-          </div>
-          <div nz-form-item nz-row>
-            <div nz-form-label>
-              <label>新闻链接</label>
-            </div>
-            <div nz-form-control nzHasFeedback>
-              <nz-input formControlName="adv_url" [(ngModel)]="formBean.adv_url" [nzPlaceHolder]="'请输入新闻链接'"></nz-input>
-            </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-input formControlName="adv_url" [(ngModel)]="formBean.adv_url" [nzPlaceHolder]="'请输入广告链接'"></nz-input>
           </div>
         </div>
       </div>
       <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="12">
+          <div nz-form-label>
+            <label nz-form-item-required>广告分类</label>
+          </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-select formControlName="adv_cat_id" [nzPlaceHolder]="'请选择广告分类'" (ngModelChange)="getAdvClassRemark()" [(ngModel)]="formBean.adv_cat_id" [nzNotFoundContent]="'无法找到'">
+              <nz-option *ngFor="let option of advClassList"  [nzLabel]="option.adv_cat_name" [nzValue]="option.adv_cat_id" [nzDisabled]="option.disabled">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <div nz-form-label>&emsp;</div>
+            <div nz-form-control>
+                {{advClassRemark}}
+            </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
         <div nz-form-label>
-          <label>备注</label>
+          <label>描述</label>
         </div>
         <div nz-form-control nzHasFeedback>
           <nz-input [nzType]="'textarea'" [nzRows]="'4'" formControlName="remark" [(ngModel)]="formBean.remark"></nz-input>

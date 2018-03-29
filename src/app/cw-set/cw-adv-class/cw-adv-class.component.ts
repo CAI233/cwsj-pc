@@ -55,10 +55,10 @@ export class CwAdvClassComponent implements OnInit {
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
-      this.formTitle = "修改新闻分类";
+      this.formTitle = "修改广告分类";
     }
     else {
-      this.formTitle = "新增新闻分类";
+      this.formTitle = "新增广告分类";
     }
     this.isVisibleMiddle = true;
     console.log(this.formBean)

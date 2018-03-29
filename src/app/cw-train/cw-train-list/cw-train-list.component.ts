@@ -282,7 +282,7 @@ export class CwTrainListComponent implements OnInit {
 
   //状态
   _enabled(data) {
-    if (this.service.validataAction('outfit_status')) {
+    if (this.service.validataAction('cw_train_list_enable')) {
       data.enabled = data.enabled == 1 ? 2 : 1;
       this.service.post('/api/system/organization/setEnabled', {
         ids: [data.org_id],

@@ -23,18 +23,18 @@
             <div nz-row nz-form-item>
               <!--列-->
               <div nz-col [nzSpan]="8">
-                <div nz-form-label nz-col [nzSpan]="4">
+                <div nz-form-label nz-col [nzSpan]="6">
                   <label>创建日期</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="18">
+                <div nz-form-control nz-col [nzSpan]="16">
                   <nz-rangepicker name="searchTime" [(ngModel)]="paramCol.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
-                <div nz-form-label nz-col [nzSpan]="5">
+                <div nz-form-label nz-col [nzSpan]="7">
                   <label>视频名称</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="17">
+                <div nz-form-control nz-col [nzSpan]="15">
                   <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
                 </div>
               </div>
@@ -55,40 +55,40 @@
             </div>
             <div nz-row nz-form-item *ngIf="!isCollapse">
               <div nz-col [nzSpan]="8">
-                <div nz-form-label nz-col [nzSpan]="4">
+                <div nz-form-label nz-col [nzSpan]="6">
                   <label>视频分类</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="18">
+                <div nz-form-control nz-col [nzSpan]="16">
                   <nz-select name="proSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
                     <!-- <nz-option *ngFor="let option of proList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
-                  <div nz-form-label nz-col [nzSpan]="5">
+                  <div nz-form-label nz-col [nzSpan]="7">
                     <label>资源标签</label>
                   </div>
-                  <div nz-form-control nz-col [nzSpan]="17">
+                  <div nz-form-control nz-col [nzSpan]="15">
                     <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
                       <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                     </nz-select>
                   </div>
                 </div>
-              <div nz-col [nzSpan]="4">
+              <div nz-col [nzSpan]="5">
                 <div nz-form-label nz-col [nzSpan]="8">
                   <label>审核状态</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="14">
+                <div nz-form-control nz-col [nzSpan]="15">
                   <nz-select name="depthSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
                     <!-- <nz-option *ngFor="let option of depthList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
                 </div>
               </div>
-              <div nz-col [nzSpan]="4">
+              <div nz-col [nzSpan]="5">
                 <div nz-form-label nz-col [nzSpan]="8">
                   <label>发布状态</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="14">
+                <div nz-form-control nz-col [nzSpan]="15">
                   <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
                     <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
                   </nz-select>
@@ -173,7 +173,7 @@
                 <td nz-td>{{data.link_man}}</td>
                 <td nz-td>{{data.link_mobile}}</td>
                 <td nz-td>
-                  <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('outfit_status')"
+                  <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('cw_train_list_enable')"
                     (click)="_enabled(data)"></nz-switch>
                 </td>
                 <td nz-td>
@@ -188,6 +188,7 @@
                       <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.user_id)" [nzPlacement]="'left'">
                         <a nz-popconfirm>删除</a>
                       </nz-popconfirm>
+                      <span nz-table-divider *ngIf="this.service.validataAction('resource_add')"></span>
                     </ng-container>
                     <nz-dropdown *ngIf="this.service.validataAction('resource_add')">
                       <a class="ant-dropdown-link" nz-dropdown>更多操作
