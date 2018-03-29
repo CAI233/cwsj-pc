@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CwResQuesComponent } from './cw-res-ques.component';
+import { CwAudioComponent } from './cw-audio.component';
 
-describe('CwResQuesComponent', () => {
-  let component: CwResQuesComponent;
-  let fixture: ComponentFixture<CwResQuesComponent>;
+describe('CwAudioComponent', () => {
+  let component: CwAudioComponent;
+  let fixture: ComponentFixture<CwAudioComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CwResQuesComponent ]
+      declarations: [ CwAudioComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CwResQuesComponent);
+    fixture = TestBed.createComponent(CwAudioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

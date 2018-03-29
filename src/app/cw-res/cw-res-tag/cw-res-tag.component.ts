@@ -4,7 +4,7 @@ import { AppService } from '../../app.service';
   selector: 'app-cw-res-tag',
   templateUrl: './cw-res-tag.component.html',
   styleUrls: ['./cw-res-tag.component.css'],
-  styles  : [ `
+  styles: [`
   :host ::ng-deep .vertical-center-modal {
     display: flex;
     align-items: center;
@@ -19,8 +19,8 @@ import { AppService } from '../../app.service';
 export class CwResTagComponent implements OnInit {
   param: any = {
     searchText: null,
-    pageNum:1,
-    pageSize:10,
+    pageNum: 1,
+    pageSize: 10,
     total: 0,
     pages: 0
   }
@@ -60,9 +60,9 @@ export class CwResTagComponent implements OnInit {
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
   //刷新
-  _reload(bool?:any){
+  _reload(bool?: any) {
     this._loading = true;
-    if(bool){
+    if (bool) {
       this.param.pageNum = 1;
       this.param.searchText = this.paramCol.searchText;
     }
@@ -74,54 +74,54 @@ export class CwResTagComponent implements OnInit {
     })
   }
   //新增
-  _cwResTagAdd(){
+  _cwResTagAdd() {
     this.isVisible = true;
     this.formBean = {};
   }
   //关闭
-  handleCancel(){
+  handleCancel(event?: any) {
     this.isVisible = false;
   }
   //提交
-  handleOk(){
-    if(!this.formBean.tag_name){
+  handleOk(event?: any) {
+    if (!this.formBean.tag_name) {
       this.service.message.warning('请填写标签名称');
       return false;
     }
     this.isConfirmLoading = true;
-    this.service.post('/api/busiz/tag/save',this.formBean).then(success => {
+    this.service.post('/api/busiz/tag/save', this.formBean).then(success => {
       this.isConfirmLoading = false;
-      if(success.code == 0){
+      if (success.code == 0) {
         this.isVisible = false;
         this._reload(true);
       }
-      else{
+      else {
         this.service.message.error(success.message);
       }
     })
   }
   //修改
-  _editRow(row){
-    for(let i in row){
+  _editRow(row) {
+    for (let i in row) {
       this.formBean[i] = row[i];
     }
     this.isVisible = true;
   }
   //删除
-  _delRows(){
+  _delRows() {
     if (this.tableData.filter(value => value.checked).length < 1) {
       this.service.message.warning('你没有选择需要删除的数据内容!');
     }
     else {
       let ids = [];
       this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.tag_id) });
-      this.service.post('/api/busiz/tag/del',{
+      this.service.post('/api/busiz/tag/del', {
         ids: ids
       }).then(success => {
-        if(success.code == 0){
+        if (success.code == 0) {
           this._reload(true);
         }
-        else{
+        else {
           this.service.message.error(success.message);
         }
       })

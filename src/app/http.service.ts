@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Request, RequestOptionsArgs, Response, RequestOptions, ConnectionBackend, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
-
+declare let returnCitySN: any;
 @Injectable()
 export class HttpService extends Http {  
   constructor(backend: ConnectionBackend, defaultOptions: RequestOptions) {
@@ -31,6 +31,11 @@ export class HttpService extends Http {
     let token = localStorage.getItem('token');
     options.headers.append('Content-Type', 'text/plain;charset=UTF-8');
     options.headers.set('token', token);
+    if(returnCitySN){
+      options.headers.set('IP', returnCitySN['cip']);
+      options.headers.set('Address', encodeURI(returnCitySN['cname']));
+    }
+    console.log(options)
     return options;
   }
   intercept(observable: Observable<Response>): Observable<Response> {

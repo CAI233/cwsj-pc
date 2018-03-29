@@ -10,8 +10,13 @@ export class CwAnalysisComponent implements OnInit {
     total: 0,
     pageSize: 10,
     pageNum: 1,
-    pages: 0
+    pages: 0,
+    searchText: null
   }
+  paramCol = {
+    searchText: null
+  }
+  
   _loading: boolean = false;
   isVisibleMiddle: boolean = false;
   tableData: any = [];
@@ -43,7 +48,14 @@ export class CwAnalysisComponent implements OnInit {
     if(!this.myForm.valid){
       return false;
     }
-    console.log(this.formBean)
+    this.service.post('/api/busiz/res/upload/save',this.formBean).then(success => {
+      if(success.code == 0){
+        this._reload(true);
+      }
+      else{
+        this.service.message.error(success.message);
+      }
+    })
   }
   //取消编辑
   _cancelMiddle(event?:any){
@@ -55,37 +67,14 @@ export class CwAnalysisComponent implements OnInit {
   }
   //刷新列表
   _reload(event?: any){
-    console.log(this.param)
+    if(event){
+      this.param.searchText = this.paramCol.searchText;
+      this.param.pageNum = 1;
+    }
     this._loading = true;
-    this.tableData = [{
-      task_name: '第一批内容',
-      task_url: '/2018/03/28',
-      create_time: '2018-03-28',
-      state: 1, //1 未解析  2解析中  3解析完成 4解析失败
-      success_num: 0,
-      error_num: 0
-    },{
-      task_name: '第一批内容',
-      task_url: '/2018/03/28',
-      create_time: '2018-03-28',
-      state: 2, //1 未解析  2解析中  3解析完成 4解析失败
-      success_num: 18988,
-      error_num: 7
-    },{
-      task_name: '第一批内容',
-      task_url: '/2018/03/28',
-      create_time: '2018-03-28',
-      state: 3, //1 未解析  2解析中  3解析完成 4解析失败
-      success_num: 18988,
-      error_num: 7
-    },{
-      task_name: '第一批内容',
-      task_url: '/2018/03/28',
-      create_time: '2018-03-28',
-      state: 4, //1 未解析  2解析中  3解析完成 4解析失败
-      success_num: 0,
-      error_num: 0
-    }];
-    this._loading = false;
+    this.service.post('/api/busiz/res/upload/getlist',this.param).then(success => {
+      this._loading = false;
+      this.tableData = success.data.rows;
+    })
   }
 }
