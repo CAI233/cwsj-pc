@@ -30,12 +30,12 @@
                 <ng-container *ngFor="let two of one.children">
                   <ng-container *ngIf="two.res_url && two.res_type==1">
                     <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == two.res_key">
-                      <a href="{{two.res_url}}">{{two.res_name}}</a>
+                      <a style="padding-left:5px;" href="{{two.res_url}}">{{two.res_name}}</a>
                     </li>
                   </ng-container>
                   <ng-container *ngIf="two.children && two.children.length > 0 && two.res_type==1 && !two.res_url">
                     <li nz-submenu [(nzOpen)]="two.select" (nzOpenChange)="menuOpenChange($event,  one.children, two)">
-                      <span title>{{two.res_name}}</span>
+                      <span title style="padding-left:5px;">{{two.res_name}}</span>
                       <ul>
                         <ng-container *ngFor="let three of two.children">
                           <li nz-menu-item [nzSelected]="activeMenu && activeMenu.module == three.res_key" *ngIf="three.res_type==1">

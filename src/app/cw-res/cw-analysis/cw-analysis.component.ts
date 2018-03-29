@@ -21,24 +21,26 @@ export class CwAnalysisComponent implements OnInit {
   isVisibleMiddle: boolean = false;
   tableData: any = [];
   formBean: any = {
-    task_id: null,
-    task_name: null,
-    task_url: null
+    upload_id: null,
+    upload_name: null,
+    upload_url: null
   }
   myForm: any;
   constructor(public service: AppService) { }
 
   ngOnInit() {
     this.myForm = this.service.fb.group({
-      task_name: [null, [this.service.validators.required]],
-      task_url: [null, [this.service.validators.required]]
+      upload_name: [null, [this.service.validators.required]],
+      upload_url: [null, [this.service.validators.required]]
     });
     this._reload();
   }
   //创建任务
   _cwAnalysisAdd(){
     this.isVisibleMiddle = true;
-
+    for(let i in this.formBean){
+      this.formBean[i] = null;
+    }
   }
   //提交任务
   _submitForm(){
@@ -50,6 +52,7 @@ export class CwAnalysisComponent implements OnInit {
     }
     this.service.post('/api/busiz/res/upload/save',this.formBean).then(success => {
       if(success.code == 0){
+        this.isVisibleMiddle = false;
         this._reload(true);
       }
       else{
@@ -75,6 +78,23 @@ export class CwAnalysisComponent implements OnInit {
     this.service.post('/api/busiz/res/upload/getlist',this.param).then(success => {
       this._loading = false;
       this.tableData = success.data.rows;
+      this.param.total = success.data.total;
+      this.param.pages = success.data.pages;
+    })
+  }
+  //修改任务
+  _editRow(data){
+    this.isVisibleMiddle = true;
+    for(let i in data){
+      this.formBean[i] = data[i];
+    }
+  }
+  //开始解析
+  _startRow(data){
+    this.service.post('/api/busiz/res/upload/start',{
+      upload_id: data.upload_id
+    }).then(success => {
+      this._reload(true);
     })
   }
 }

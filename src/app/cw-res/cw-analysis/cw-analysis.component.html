@@ -48,10 +48,7 @@
             <span>状态</span>
           </th>
           <th nz-th>
-            <span>解析成功</span>
-          </th>
-          <th nz-th>
-            <span>解析失败</span>
+            <span>文件数量</span>
           </th>
           <th nz-th>
             <span>操作</span>
@@ -60,24 +57,21 @@
       </thead>
       <tbody nz-tbody>
         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
-          <td nz-td>{{data.task_name}}</td>
-          <td nz-td>{{data.task_url}}</td>
+          <td nz-td>{{data.upload_name}}</td>
+          <td nz-td>{{data.upload_url}}</td>
           <td nz-td>{{data.create_time}}</td>
           <td nz-td>
-            <label *ngIf="data.state==1" style="color:#999">未解析</label>
-            <label *ngIf="data.state==2" style="color:#f90">解析中</label>
-            <label *ngIf="data.state==3" style="color:green">解析完成</label>
-            <label *ngIf="data.state==4" style="color:#f00">解析失败</label>
+            <label *ngIf="data.status==1" style="color:#999">未解析</label>
+            <label *ngIf="data.status==2" style="color:#f90">解析中</label>
+            <label *ngIf="data.status==3" style="color:green">解析完成</label>
+            <label *ngIf="data.status==4" style="color:#f00">解析失败</label>
           </td>
-          <td nz-td>{{data.success_num}}</td>
-          <td nz-td>
-            <a>{{data.error_num}}</a>
-          </td>
+          <td nz-td>{{data.file_num}}</td>
           <td nz-td>
             <ng-container *ngIf="data.state!=2">
-              <a href="javascript:void(0)">修改</a>
+              <a (click)="_editRow(data)">修改</a>
               <span nz-table-divider></span>
-              <a href="javascript:void(0)">解析</a>
+              <a (click)="_startRow(data)">解析</a>
             </ng-container>
           </td>
         </tr>
@@ -100,7 +94,7 @@
             <label nz-form-item-required>任务名称</label>
         </div>
         <div nz-form-control nzHasFeedback>
-            <nz-input formControlName="task_name" [(ngModel)]="formBean.task_name" [nzPlaceHolder]="'请输入任务名称'"></nz-input>
+            <nz-input formControlName="upload_name" [(ngModel)]="formBean.upload_name" [nzPlaceHolder]="'请输入任务名称'"></nz-input>
         </div>
       </div>
       <div nz-form-item nz-row>
@@ -108,7 +102,7 @@
             <label nz-form-item-required>任务路径</label>
         </div>
         <div nz-form-control nzHasFeedback>
-            <nz-input formControlName="task_url" [(ngModel)]="formBean.task_url" [nzPlaceHolder]="'请输入路径'"></nz-input>
+            <nz-input formControlName="upload_url" [(ngModel)]="formBean.upload_url" [nzPlaceHolder]="'请输入路径'"></nz-input>
         </div>
       </div>
     </form>
