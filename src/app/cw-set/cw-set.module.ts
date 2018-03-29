@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CwPayComponent } from './cw-pay/cw-pay.component';
 import { CwWinComponent } from './cw-win/cw-win.component';
-import { CwAdvComponent } from './cw-adv/cw-adv.component';
+import { CwAdvListComponent } from './cw-adv-list/cw-adv-list.component';
+import { CwAdvClassComponent } from './cw-adv-class/cw-adv-class.component';
 import { CwLogisComponent } from './cw-logis/cw-logis.component';
 import { CwEmailConComponent } from './cw-email-con/cw-email-con.component';
 import { CwEmailModuleComponent } from './cw-email-module/cw-email-module.component';
@@ -23,7 +24,7 @@ import { RouterModule } from '@angular/router';
     NgZorroAntdModule.forRoot(), //引入NZ
     CommonModule
   ],
-  declarations: [CwPayComponent, CwWinComponent, CwEmailConComponent, CwEmailModuleComponent, CwEmailSendComponent, CwAdvComponent, CwLogisComponent],
+  declarations: [CwPayComponent, CwWinComponent, CwEmailConComponent, CwEmailModuleComponent, CwEmailSendComponent, CwAdvListComponent,CwAdvClassComponent, CwLogisComponent],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
     { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } }
