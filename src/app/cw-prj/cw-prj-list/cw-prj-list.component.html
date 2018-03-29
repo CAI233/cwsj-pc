@@ -191,7 +191,7 @@
 </ng-template>
 </nz-modal>
 <nz-modal [nzMaskClosable]="false" [nzWidth]="600" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="showPaper"
-[nzVisible]="isShow"  [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)" [nzFooter]="none">
+[nzVisible]="isShow"  [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)" [nzFooter]="'none'">
 <ng-template #showPaper>
         <nz-card style="width:100%;">
             <ng-template #body>

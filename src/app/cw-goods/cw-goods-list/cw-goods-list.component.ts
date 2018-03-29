@@ -60,8 +60,16 @@ export class CwGoodsListComponent implements OnInit {
     })
   }
 
+  reload(reset?){
+    if(reset){
 
+    }
 
+  }
+  // 重置
+  resetForm(){
+    
+  }
 
 
   // 全选
