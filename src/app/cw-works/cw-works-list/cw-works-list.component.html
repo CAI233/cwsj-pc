@@ -251,6 +251,7 @@
     <nz-tab *ngIf="isVisibleMiddle">
       <ng-template #nzTabHeading>
         {{formTitle}}
+        <i class="anticon anticon-cross" (click)="closeTab()"></i>
       </ng-template>
       <nz-content class="main-page-content">
         <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">

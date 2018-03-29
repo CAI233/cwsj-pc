@@ -134,7 +134,11 @@ export class CwWorksListComponent implements OnInit {
   formClear() {
     this.myForm.reset();
   }
-
+  //关闭tab
+  closeTab() {
+    this.isVisibleMiddle = false;
+    this.selectedIndex = 0;
+  }
   //提交
   _submitForm() {
     for (const i in this.myForm.controls) {
