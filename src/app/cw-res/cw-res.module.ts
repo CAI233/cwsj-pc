@@ -15,13 +15,17 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";//引入NZ 使
 import { routes } from './cw-res.routing';
 import { RouterModule } from '@angular/router';
 
+//富文本编辑器
+import { CKEditorModule } from 'ng2-ckeditor';
+
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
-    CommonModule
+    CommonModule,
+    CKEditorModule
   ],
   declarations: [CwResTagComponent, CwResClassComponent, CwVideoComponent, CwAnalysisComponent, CwAudioComponent,CwBookComponent, CwQuesComponent],
   providers: [  //引入NZ

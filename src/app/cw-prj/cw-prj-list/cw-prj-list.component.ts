@@ -185,6 +185,7 @@ add(){
 
 //修改
 edit(data){
+  console.log(data);
   this.selRow = {};
   this.formTitle = "修改"
   this.isVisibleMiddle = true;

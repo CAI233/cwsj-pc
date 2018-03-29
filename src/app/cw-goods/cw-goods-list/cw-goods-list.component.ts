@@ -12,7 +12,13 @@ export class CwGoodsListComponent implements OnInit {
   _loading : boolean = false;
   _allChecked : boolean = false;
   _indeterminate : boolean = false;
-  data : any = [];
+  isVisibleMiddle : boolean = false;
+  formTitle : string;
+  data : any = [];//商品列表
+  selRow : any = {};//提交的对象
+  classData : any = [];//商品分类列表
+  tagData : any = [];//商品标签
+  brandData : any = [];//品牌标签
   param : any = {
     pageNum:1,
     pageSize:10,
@@ -26,18 +32,32 @@ export class CwGoodsListComponent implements OnInit {
   paramCol = {
     searchTime:[null,null]
   }
+
+  //ckeditor配置
+  config: any = {
+    width: '100%',
+    toolbar: 'MyToolbar',
+    toolbar_MyToolbar:
+      [
+        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
+        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+        { name: 'tools', items: ['Maximize'] },
+        { name: 'document', items: ['Source'] },
+        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
+        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
+        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+        { name: 'colors', items: ['TextColor', 'BGColor'] },
+      ]
+  }
+
   constructor(public service: AppService) { }
 
-  ngOnInit() {
-    this.myForm = this.service.fb.group({
-      test: false,
-      project_name:false,
-      
-    })
-
-
-    // 加载商品列表
-    this.load();
+  //文件上传
+  fileUpload(info): void {
+    if (info.file.response && info.file.response.code == 0) {
+      this.selRow.goods_cover = info.file.response.data[0].url;
+    }
   }
 
   // 项目列表
@@ -60,6 +80,50 @@ export class CwGoodsListComponent implements OnInit {
     })
   }
 
+  get_class(){
+    this.service.post('/api/busiz/goods/cat/tree').then(success => {
+      if(success.code==0){
+        this.classData = success.data;
+      }else{
+        console.log('商品分类····error')
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  get_tag(){
+    this.service.post('/api/busiz/goods/tag/list',{pageNum:1,pageSize:1000}).then(success => {
+      if(success.code==0){
+        this.tagData = success.data.rows;
+      }else{
+        
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  get_brand(){
+    this.service.post('/api/busiz/brand/brandlist').then(success => {
+      if(success.code==0){
+        this.brandData = success.data;
+      }else{
+        
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
+  get_tagName(id ?){
+    let name = '';
+    if(id){
+      for(let i in this.brandData){
+          if(this.brandData[i].brand_id == id){
+            name += this.brandData[i].brand_name;
+          }
+      }
+    }
+    return name;
+  }
+
+  //查询
   reload(reset?){
     if(reset){
 
@@ -71,6 +135,111 @@ export class CwGoodsListComponent implements OnInit {
     
   }
 
+
+  //关闭弹窗
+  handleCancelMiddle($event) {
+    this.isVisibleMiddle = false;
+    this.myForm.reset();
+  }
+
+  //确定
+  handleOkMiddle($event) {
+    this._submitForm();
+  }
+
+  // 新增操作
+  add(){
+    console.log(this.selRow.goods_type)
+    this.isVisibleMiddle = true;
+    this.selRow.real_price = 0;
+    if(this.selRow.goods_type==1){
+      this.formTitle = '新增纸质图书'
+    }else if(this.selRow.goods_type==2){
+      this.formTitle = '新增音视频'
+    }else{
+      this.formTitle = '新增电子书'
+    }
+  }
+  // 修改操作
+  edit(data){
+    console.log(data)
+    this.selRow = {};
+    this.isVisibleMiddle = true;
+    if(this.selRow.goods_type==1){
+      this.formTitle = '新增纸质图书'
+    }else if(this.selRow.goods_type==2){
+      this.formTitle = '新增音视频'
+    }else{
+      this.formTitle = '新增电子书'
+    }
+    for(let i in data){
+      this.selRow[i] = data[i];
+    }
+
+  }
+  // 删除操作
+  del(data){
+    this.service.post('/api/busiz/goods/del',{ids:[data.goods_id]}).then(success => {
+      if(success.code==0){
+        this.load();
+        this.service.message.success(success.message);
+      }else{
+        this.service.message.error(success.message);
+      }
+  })
+  }
+
+
+  // 折后价
+  sum(){
+    setTimeout(_=>{
+      this.selRow.real_price = (parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1
+    },50)
+  }
+  //提交
+  _submitForm(){
+    this.selRow.goods_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length-1]);
+    this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
+        if(success.code==0){
+          this.load();
+          this.isVisibleMiddle = false;
+          this.myForm.reset();
+          this.service.message.success(success.message);
+        }else{
+          this.service.message.error(success.message);
+        }
+    })
+  } 
+
+  ngOnInit() {
+    this.myForm = this.service.fb.group({
+      goods_name: false,
+      goods_cat_id:false,
+      goods_tag_ids:false,
+      key_word:false,
+      book_isbn:false,
+      publisher:false,
+      author_name:false,
+      publish_date:false,
+      price:false,
+      discount:false,
+      real_price:false,
+      inventory:false,
+      limit_buy:false,
+      remark:false
+    })
+
+
+    // 加载商品列表
+    this.load();
+
+    //加载商品分类
+    this.get_class();
+    // 加载商品标签
+    this.get_tag();
+    // 加载品牌列表
+    this.get_brand();
+  }
 
   // 全选
   _checkAll(value) {

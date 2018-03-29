@@ -115,8 +115,12 @@ export class CwPrjClassComponent implements OnInit {
   }
 
   _submitForm(){
-    console.log(this.selRow)
-    this.selRow.cat_pid = parseInt(this.selRow.parent.cat_id)
+    let pid = this.selRow.parent[this.selRow.parent.length - 1];
+    if(typeof(pid) == 'object'){
+      this.selRow.cat_pid = parseInt(this.selRow.parent.cat_id);
+    }else{
+      this.selRow.cat_pid = parseInt(pid)
+    }
     this.selRow.order_weight = parseInt(this.selRow.order_weight);
     if(!this.selRow.cat_name){
       this.service.message.error('请填写分类名称');
