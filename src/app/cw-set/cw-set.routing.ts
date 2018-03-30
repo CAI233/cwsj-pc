@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 //模块组件
-import { CwPayComponent } from './cw-pay/cw-pay.component';
 import { CwWinComponent } from './cw-win/cw-win.component';
 import { CwAdvListComponent } from './cw-adv-list/cw-adv-list.component';
 import { CwAdvClassComponent } from './cw-adv-class/cw-adv-class.component';
@@ -10,7 +9,6 @@ import { CwEmailModuleComponent } from './cw-email-module/cw-email-module.compon
 import { CwEmailSendComponent } from './cw-email-send/cw-email-send.component';
 
 export const routes: Routes = [
-  { path: 'cw_pay', component: CwPayComponent, data: { title: '支付设置', module: 'cw_pay', power: "SHOW" } },
   { path: 'cw_win', component: CwWinComponent, data: { title: '橱窗设置', module: 'cw_win', power: "SHOW" } },
   { path: 'cw_adv_list', component: CwAdvListComponent, data: { title: '广告设置', module: 'cw_adv_list', power: "SHOW" } },
   { path: 'cw_adv_class', component: CwAdvClassComponent, data: { title: '广告分类', module: 'cw_adv_class', power: "SHOW" } },

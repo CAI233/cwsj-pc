@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CwPayComponent } from './cw-pay/cw-pay.component';
 import { CwWinComponent } from './cw-win/cw-win.component';
 import { CwAdvListComponent } from './cw-adv-list/cw-adv-list.component';
 import { CwAdvClassComponent } from './cw-adv-class/cw-adv-class.component';
@@ -24,7 +23,7 @@ import { RouterModule } from '@angular/router';
     NgZorroAntdModule.forRoot(), //引入NZ
     CommonModule
   ],
-  declarations: [CwPayComponent, CwWinComponent, CwEmailConComponent, CwEmailModuleComponent, CwEmailSendComponent, CwAdvListComponent,CwAdvClassComponent, CwLogisComponent],
+  declarations: [CwWinComponent, CwEmailConComponent, CwEmailModuleComponent, CwEmailSendComponent, CwAdvListComponent,CwAdvClassComponent, CwLogisComponent],
   providers: [  //引入NZ
     { provide: NZ_MESSAGE_CONFIG, useValue: { nzDuration: 3000 } },
     { provide: NZ_NOTIFICATION_CONFIG, useValue: { nzTop: '20px' } }
