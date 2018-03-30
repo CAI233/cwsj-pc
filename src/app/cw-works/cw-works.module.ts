@@ -9,8 +9,6 @@ import { NgZorroAntdModule, NZ_MESSAGE_CONFIG, NZ_NOTIFICATION_CONFIG } from 'ng
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";//引入NZ 使用的form核心
 import { routes } from './cw-works.routing';
 import { RouterModule } from '@angular/router';
-//富文本编辑器
-import { CKEditorModule } from 'ng2-ckeditor';
 @NgModule({
   imports: [
     FormsModule,
@@ -18,7 +16,6 @@ import { CKEditorModule } from 'ng2-ckeditor';
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
     CommonModule,
-    CKEditorModule
   ],
   declarations: [CwWorksClassComponent, CwWorksTagComponent, CwWorksListComponent],
   providers: [  //引入NZ

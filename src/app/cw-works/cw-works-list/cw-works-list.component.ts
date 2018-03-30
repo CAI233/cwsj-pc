@@ -8,49 +8,43 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cw-works-list.component.css']
 })
 export class CwWorksListComponent implements OnInit {
-  @ViewChild("nzTabAdd") nzTabAdd;
+  @ViewChild("cat_idss") cat_idss;
+  @ViewChild("searchCatName") searchCatName;
+  @ViewChild("searchTagName") searchTagName;
+  @ViewChild("searchAuditName") searchAuditName;
   _allChecked = false;
   _indeterminate = false;
   tableData: any = []; //数据列表
   param: any = {
-    org_id: null,
     searchText: null,
     total: 0,
     pageSize: 10,
-    pageNum: 1
+    pageNum: 1,
   };
   paramCol: any = {
-    dept_id: null,
-    state: null,
-    date: null,
-    searchText: null
+    works_type: null,
+    audit_status: null,
+    tag_id: null,
+    cat_id: []
   }
-  sortMap = {
-    org_name: null,
-    org_code: null
-  };
+  auditList: any = [{
+    id: 1,
+    name: '草稿'
+  }, {
+    id: 2,
+    name: '待审核'
+  }, {
+    id: 3,
+    name: '通过'
+  }, {
+    id: 4,
+    name: '驳回'
+  }]
   isCollapse: any = true;
   _loading: boolean = true;
   //省 市 区 街 
   _address: any;
-  //ckeditor配置
-  config: any = {
-    width: '100%',
-    toolbar: 'MyToolbar',
-    toolbar_MyToolbar:
-      [
-        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
-        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-        { name: 'tools', items: ['Maximize'] },
-        { name: 'document', items: ['Source'] },
-        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
-        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
-        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-        { name: 'colors', items: ['TextColor', 'BGColor'] },
-      ],
-    filebrowserImageUploadUrl: this.service.ctxPath + '/api/system/file/upload',
-  }
+
   // 实例化一个对象
   constructor(public service: AppService) { }
   //表单
@@ -59,63 +53,75 @@ export class CwWorksListComponent implements OnInit {
   isVisibleMiddle: boolean = false;
   selectedIndex: number = 0;
   formBean: any = {
-    role_id: null,
-    role_idss: null,
-    email: null,
-    phone: null,
-    vote_role: null,
+    works_cover: null,
+    works_name: null,
+    works_cat_ids: null,
+    works_type: null,
+    discount: null,
+    real_price: null,
+    works_remark: null,
   };
+
+  worksTagList: any; //作品标签
   ngOnInit() {
+    //获取作品标签
+    this.service.post('/api/busiz/works/tag/list', { pageSize: 1000, pageNum: 1 }).then(success => {
+      if (success.code == 0)
+        this.worksTagList = success.data.rows;
+    })
     this.reload();
     this.myForm = this.service.fb.group({
-      org_name: [null, [this.service.validators.required]],
-      org_code: [null, [this.service.validators.required]],
-      streetParent: [null, [this.service.validators.required]],
-      office_address: [null, [this.service.validators.required]],
-      link_man: [null, [this.service.validators.required]],
-      link_mobile: [null, [this.service.validators.required]],
-      auth_date_begin: [null, [this.service.validators.required]],
-      auth_date_end: [null, [this.service.validators.required]],
-      remark: [false],
-      time: [false],
-      phone: [false],
-      works_name: [false],
-      vote_role: [false],
-      email: [false],
-      role_id: [false]
+      works_cover: false,
+      works_name: [null, [this.service.validators.required]],
+      works_cat_idss: [null, [this.service.validators.required]],
+      works_type: [null, [this.service.validators.required]],
+      tag_ids: [null, [this.service.validators.required]],
+      price: [null, [this.service.validators.required]],
+      discount: [null, [this.service.validators.required]],
+      real_price: [null, [this.service.validators.required]],
+      deadline: [null, [this.service.validators.required]],
+      works_remark: false,
     })
   }
 
-  loadData(e: { option: any, index: number, resolve: Function, reject: Function }): void {
+  loadCat(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
-      this.service.post('/api/system/region/list/tree', {
+      this.service.post('/api/busiz/works/cat/list', {
         code: null
       }).then(success => {
+        this.service._toisLeaf(success.data);
         e.resolve(success.data);
+
       })
       return;
     }
-    const option = e.option;
-    option.loading = true;
-    this.service.post('/api/system/region/list/tree', {
-      code: option.code
-    }).then(success => {
-      option.loading = false;
-      if (e.index == 2)
-        success.data.forEach(element => element.isLeaf = true);
-      e.resolve(success.data);
-    })
   }
   //打开
   showModalMiddle(bean?: any) {
+
     this.formBean = {};
     if (bean) {
       for (let i in bean) {
         this.formBean[i] = bean[i];
       }
+      let works_cat_ids_array = this.formBean.works_cat_ids.split(',')
+      //部门
+      if (works_cat_ids_array) {
+        this.formBean.works_cat_idss = [];
+        works_cat_ids_array.forEach((element, index) => {
+          this.formBean.works_cat_idss.push({ cat_id: element, cat_name: this.formBean.works_cat_names.split(',')[index] })
+        });
+      }
       this.formTitle = "修改作品";
     }
     else {
+      if (!this.paramCol.works_type) {
+        this.service.message.warning('请选择作品类型!')
+        return false;
+      }
+      this.formBean.works_type = this.paramCol.works_type;
+      this.formBean.deadline = null;
+      this.formBean.real_price = 0;
       this.formTitle = "新增作品";
     }
     this.isVisibleMiddle = true;
@@ -138,6 +144,15 @@ export class CwWorksListComponent implements OnInit {
   closeTab() {
     this.isVisibleMiddle = false;
     this.selectedIndex = 0;
+    this.myForm.reset();
+  }
+  resetForm() {
+    this.paramCol.audit_status = null;
+    this.paramCol.cat_id = [];
+    this.paramCol.tag_id = null;
+    this.searchCatName._lastValue = []
+    this.searchTagName._lastValue = []
+    this.searchAuditName._lastValue = []
   }
   //提交
   _submitForm() {
@@ -145,7 +160,14 @@ export class CwWorksListComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
-      this.service.post('//api/busiz/video/save', this.formBean).then(success => {
+      // if(!this.formBean.works_cover){
+      //   this.service.message.error('请上传封面');
+      //   return false;
+      // }
+
+      this.formBean.works_cat_id = this.formBean.works_cat_idss[this.formBean.works_cat_idss.length - 1]
+      this.formBean.works_cat_names = this.cat_idss._displayLabelContext.labels.join(',');
+      this.service.post('/api/busiz/works/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
           this.formClear()
@@ -157,35 +179,6 @@ export class CwWorksListComponent implements OnInit {
       })
     }
   }
-  //修改
-  editModalMiddle() {
-    if (this.tableData.filter(value => value.checked).length != 1) {
-      this.service.message.warning('请选择修改数据，并且同时只能修改一条!');
-    }
-    else {
-      let bean = this.tableData.filter(value => value.checked)[0];
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
-      //地理组织
-      this.formBean.streetParent = [{
-        code: bean.province_code,
-        region_name: bean.province
-      }, {
-        code: bean.city_code,
-        region_name: bean.city
-      }, {
-        code: bean.area_code,
-        region_name: bean.area
-      }, {
-        code: bean.street_code,
-        region_name: bean.street
-      }];
-      console.log(this.formBean)
-      this.formTitle = '修改机构';
-      this.isVisibleMiddle = true;
-    }
-  }
   //删除
   delRows() {
     if (this.tableData.filter(value => value.checked).length < 1) {
@@ -193,8 +186,8 @@ export class CwWorksListComponent implements OnInit {
     }
     else {
       let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.org_id) })
-      this.service.post('/api/busiz/video/delete', {
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.works_id) })
+      this.service.post('/api/busiz/works/del', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
@@ -206,10 +199,39 @@ export class CwWorksListComponent implements OnInit {
       })
     }
   }
+  _delete(id) {
+    this.service.post('/api/busiz/works/del', {
+      ids: [id], mark: 'del'
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  //获取折后价
+  getPrice() {
+    setTimeout(_ => {
+      this.formBean.real_price = (this.formBean.price / 10 * this.formBean.discount).toFixed(2)
+      if (isNaN(this.formBean.real_price))
+        this.formBean.real_price = null;
+    }, 50)
+
+  }
   //重新查询
   reload(reset?: any) {
     if (reset == true) {
       this.param.pageNum = 1;
+      this.param.searchText = this.paramCol.searchText;
+      this.param.audit_status = this.paramCol.audit_status;
+      this.param.tag_id = this.paramCol.tag_id;
+
+      if (this.paramCol.cat_id.length > 0)
+        this.param.cat_id = this.paramCol.cat_id[this.paramCol.cat_id.length - 1];
+      else
+        this.param.cat_id = null;
     }
     this._loading = true;
     this.service.post('/api/busiz/works/list', this.param).then(success => {
@@ -244,35 +266,33 @@ export class CwWorksListComponent implements OnInit {
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
-  //排序
-  sort(name, value) {
-    if (value) {
-      this.param.sort_name = name;
-      this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
+
+  //上架下架
+  statusWorks(data) {
+    if (this.service.validataAction('cw_works_list_put')) {
+      data.status = data.status == 1 ? 2 : 1;
+      this.service.post('/api/busiz/works/save', data).then(success => {
+        this.reload();
+      })
+    }
+  }
+  //提交审核
+  submitAudit() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要提交审核的数据!');
     }
     else {
-      this.param.sort_name = null;
-      this.param.sort_rule = null;
-    }
-    Object.keys(this.sortMap).forEach(key => {
-      if (key !== name) {
-        this.sortMap[key] = null;
-      } else {
-        this.sortMap[key] = value;
-      }
-    });
-    this.reload();
-  }
-
-  //状态
-  _enabled(data) {
-    if (this.service.validataAction('cw_train_list_enable')) {
-      data.enabled = data.enabled == 1 ? 2 : 1;
-      this.service.post('/api/system/organization/setEnabled', {
-        ids: [data.org_id],
-        enabled: data.enabled
+      let ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.works_id) })
+      this.service.post('/api/busiz/works/audit', {
+        ids: ids, mark: 'audit'
       }).then(success => {
-        this.reload();
+        if (success.code == 0) {
+          this.reload();
+        }
+        else {
+          this.service.message.error(success.message);
+        }
       })
     }
   }
