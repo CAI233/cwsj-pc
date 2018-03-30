@@ -189,6 +189,19 @@ export class CwGoodsListComponent implements OnInit {
   })
   }
 
+  //上架状态
+  _enabled(data ?){
+    let status = data.enabled == 1 ? 2 : 1 ;
+    this.service.post('/api/busiz/goods/shelves',{ids:[data.goods_id],enabled:status}).then(success => {
+      if(success.code==0){
+        this.load();
+        this.service.message.success(success.message);
+      }else{
+        this.service.message.error(success.message);
+      }
+  })
+  }
+
 
   // 折后价
   sum(){

@@ -84,7 +84,11 @@ export class CwQuesComponent implements OnInit {
   
   }
 
-
+  reload(rest ?){
+    if(rest){
+      
+    }
+  }
 
   //关闭弹窗
 handleCancelMiddle($event) {

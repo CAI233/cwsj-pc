@@ -157,11 +157,24 @@ export class CwPrjListComponent implements OnInit {
       this.param.pageNum = 1;
     }
 
-    if(this.paramCol.length>0){
+    console.log(this.paramCol)
+    if(this.paramCol.searchTime.length>0){
+
       this.param.begin_time = this.timeout(this.paramCol.searchTime[0]);
       this.param.end_time = this.timeout(this.paramCol.searchTime[1]);
     }
+
+    if(this.param.parent){
+      let class_id = this.param.parent[this.param.parent.length-1];
+      if(typeof(class_id)=='object'){
+        this.param.project_cat_id = parseInt(class_id.cat_id);
+      }else{
+        this.param.project_cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
+      }
+    }
+    
     console.log(this.param)
+    this.load();
   }
   // 重置
   resetForm(){
@@ -170,6 +183,7 @@ export class CwPrjListComponent implements OnInit {
       pageNum:1,
       searchText:null
     }
+    this.paramCol.searchTime = [];
     this.load();
   }
 
@@ -264,9 +278,9 @@ timeout(d){
   let M,D,H,mm,ss;
     M = (m.getMonth() + 1)<10 ? '0'+(m.getMonth() + 1) : (m.getMonth() + 1);
     D = m.getDate() <10 ? '0'+m.getDate() : m.getDate();
-    // H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
-    // mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
-    // ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+  //   H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+  //   mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+  //   ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
   // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
   return m.getFullYear() + '-' + M + '-' + D ;
 }
