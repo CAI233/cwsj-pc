@@ -175,6 +175,7 @@ export class CwGoodsListComponent implements OnInit {
     for(let i in data){
       this.selRow[i] = data[i];
     }
+    this.selRow.goods_tag_ids = this.selRow.tag_ids;
 
   }
   // 删除操作
@@ -211,7 +212,17 @@ export class CwGoodsListComponent implements OnInit {
   }
   //提交
   _submitForm(){
-    this.selRow.goods_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length-1]);
+    console.log(this.selRow);
+    if(this.selRow.parent){
+      let class_id = this.selRow.parent[this.selRow.parent.length-1];
+      if(typeof(class_id)=='object'){
+        this.selRow.goods_cat_id = parseInt(class_id.cat_id);
+      }else{
+        this.selRow.goods_cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
+      }
+    }
+    this.selRow.goods_tag_ids = this.selRow.goods_tag_ids.split(",");
+    // this.selRow.goods_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length-1]);
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){
           this.load();
