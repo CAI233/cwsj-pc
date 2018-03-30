@@ -1,0 +1,19 @@
+ .paper_title{
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #000;
+ }
+ .cont_question {
+    padding: 10px 20px;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.68em
+}
+.cont_answer,.cont_analys{
+    padding: 10px 15px;
+}
+.cont_question p,.cont_answer p,.cont_analys p{
+    font-size: 14px;
+    color: #000;
+}

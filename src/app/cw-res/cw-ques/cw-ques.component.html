@@ -41,12 +41,12 @@
             <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
             </label>
           </th>
-          <th nz-th [nzWidth]="'15%'"><span>题目类型</span></th>
-          <!-- <th nz-th [nzWidth]="'20%'"><span>题目内容</span></th> -->
+          <th nz-th [nzWidth]="'10%'"><span>题目类型</span></th>
+          <th nz-th [nzWidth]="'20%'"><span>题目内容</span></th>
           <th nz-th [nzWidth]="'15%'"><span>题目标签</span></th>
-          <th nz-th [nzWidth]="'15%'"><span>参考分值</span></th>
+          <th nz-th [nzWidth]="'10%'"><span>参考分值</span></th>
           <th nz-th [nzWidth]="'15%'"><span>使用次数</span></th>
-          <th nz-th [nzWidth]="'15%'"><span>发布状态</span></th>
+          <th nz-th [nzWidth]="'10%'"><span>审核状态</span></th>
           <th nz-th><span>操作</span></th>
         </tr>
         </thead>
@@ -60,6 +60,9 @@
               <span >{{['单选题','多选题','判断题'][data.type]}}</span>
           </td>
           <td nz-td>
+              <span [innerHtml]="data.title"></span>
+          </td>
+          <td nz-td>
               <span [innerHtml]="data.tag_names"></span>
           </td>
           <td nz-td>
@@ -69,12 +72,12 @@
               <span>{{data.number}}</span>
           </td>
           <td nz-td>
-              <span>{{['待审核','审核未通过','审核通过'][data.audit_status-2]}}</span>
+              <span>{{['发布','未发布'][data.enabled-1]}}</span>
           </td>
           <td>
             <a (click)="_addRows()">审核</a>
             <span nz-table-divider></span>
-            <a (click)="_seeRows()">预览</a>
+            <a (click)="_seeRows(data)">预览</a>
             <span nz-table-divider></span>
             <a (click)="_updateRows()">修改</a>
             <span nz-table-divider></span>
@@ -109,11 +112,9 @@
                 <label nz-form-item-required>题目标签</label>
               </div>
               <div nz-form-control>
-                <div class="row-actions" style="width:100%">
-                  <nz-select style="width:100%;" formControlName="type" [(ngModel)]="param.type" [nzPlaceHolder]="'请选择题目类型'" nzShowSearch>
-                    <nz-option *ngFor="let item of typeData" [nzLabel]="item.type_name" [nzValue]="item.id" ></nz-option>
-                  </nz-select>
-                </div>
+                <nz-select style="width:100%;" nzTags [(ngModel)]="param.label_ids" [nzPlaceHolder]="'请选择题目标签'" nzShowSearch>
+                  <nz-option *ngFor="let item of goods_data" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
+                </nz-select>
               </div>
           </div>
         </div>
@@ -149,4 +150,26 @@
       </form>
     </ng-template>
   </nz-modal>
+  <nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="paperContent"
+    [nzVisible]="paperList" (nzOnCancel)="handleCancel($event)" [nzTitle]="'试题预览'" [nzFooter]="seeList">
+    <ng-template #paperContent>
+        <div class="paper_title">
+            <p>试题类型:&nbsp;&nbsp;{{['单选题','多选题','判断题'][selRow.type]}}</p>
+        </div>
+        <div class="paper_cont">
+            <div class="cont_question">
+                <span  [innerHtml]="selRow.title"></span>
+            </div>
+            <div class="cont_answer" nz-row>
+                <span nz-col [nzSpan]="3">【答案】</span><span nz-col [nzSpan]="21" [innerHtml]="selRow.analysis"></span>
+            </div>
+            <div class="cont_analys" nz-row>
+                <span nz-col [nzSpan]="4">【题目解析】</span><span nz-col [nzSpan]="20" [innerHtml]="selRow.parsing"></span>
+            </div>
+        </div>
+    </ng-template>
+  
+  
+  </nz-modal>
+
   
