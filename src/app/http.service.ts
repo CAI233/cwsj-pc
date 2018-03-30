@@ -35,7 +35,6 @@ export class HttpService extends Http {
       options.headers.set('IP', returnCitySN['cip']);
       options.headers.set('Address', encodeURI(returnCitySN['cname']));
     }
-    console.log(options)
     return options;
   }
   intercept(observable: Observable<Response>): Observable<Response> {

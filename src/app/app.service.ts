@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 //消息提示
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 declare let window: any;
+declare let Date: any;
 @Injectable()
 export class AppService {
     ctxPath: string; //服务器地址
@@ -120,7 +121,7 @@ export class AppService {
         return v && v.length > 0;
     }
     //验证是否具有功能权限
-    validataAction(key): boolean{
+    validataAction(key): boolean {
         let v = this.menuActionArray.filter(element => element.res_key == key);
         return v && v.length > 0;
     }
@@ -174,5 +175,27 @@ export class AppService {
                 element.isLeaf = true;
             }
         });
+    }
+    //日期格式转换
+    dateFormat (obj, format) {
+        var date = {
+            "M+": obj.getMonth() + 1,
+            "d+": obj.getDate(),
+            "h+": obj.getHours(),
+            "m+": obj.getMinutes(),
+            "s+": obj.getSeconds(),
+            "q+": Math.floor((obj.getMonth() + 3) / 3),
+            "S+": obj.getMilliseconds()
+        };
+        if (/(y+)/i.test(format)) {
+            format = format.replace(RegExp.$1, (obj.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        for (var k in date) {
+            if (new RegExp("(" + k + ")").test(format)) {
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1
+                    ? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+            }
+        }
+        return format;
     }
 }

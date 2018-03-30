@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CwBookComponent } from './cw-book.component';
+import { CwResListComponent } from './cw-res-list.component';
 
-describe('CwBookComponent', () => {
-  let component: CwBookComponent;
-  let fixture: ComponentFixture<CwBookComponent>;
+describe('CwResListComponent', () => {
+  let component: CwResListComponent;
+  let fixture: ComponentFixture<CwResListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CwBookComponent ]
+      declarations: [ CwResListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CwBookComponent);
+    fixture = TestBed.createComponent(CwResListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

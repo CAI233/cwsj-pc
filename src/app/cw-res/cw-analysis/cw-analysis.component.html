@@ -55,7 +55,7 @@
           <span>成功数量</span>
         </th>
         <th nz-th>
-          <span>描述</span>
+          <span>任务描述</span>
         </th>
         <th nz-th>
           <span>操作</span>
@@ -75,9 +75,9 @@
         </td>
         <td nz-td>{{data.file_num}}</td>
         <td nz-td>{{data.final_num}}</td>
-        <td nz-td>{{data.remark}}</td>
+        <td nz-td style="color:#f90">{{data.remark}}</td>
         <td nz-td>
-          <ng-container *ngIf="data.state!=2">
+          <ng-container *ngIf="data.status != 2">
             <a (click)="_editRow(data)">修改</a>
             <span nz-table-divider></span>
             <a (click)="_startRow(data)">解析</a>

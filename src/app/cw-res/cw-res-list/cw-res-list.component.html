@@ -1,0 +1,165 @@
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a href="#/home">首页</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        资源中心
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        音频管理
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content">
+    <div class="tableListSearch">
+      <!--表单-->
+      <form nz-form>
+        <!--行-->
+        <div nz-row nz-form-item>
+          <!--列-->
+          <div nz-col [nzSpan]="8">
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label>上传日期</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="18">
+              <nz-rangepicker name="searchTime" [(ngModel)]="paramCol.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col [nzSpan]="5">
+              <label>资源名称</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="17">
+              <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'模糊查询音频名称'" [nzSize]="'default'"></nz-input>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="10" style="padding:2px 0;">
+            <button nz-button nzType="primary" (click)="_reload(true)" [nzLoading]="_loading">
+              <i class="anticon anticon-search"></i>
+              <span>查询</span>
+            </button>
+            <button nz-button nzType="button" (click)="_resetForm()">
+              <span>重置</span>
+            </button>
+            <a style="margin-left:8px;font-size:12px;" (click)="isCollapse=!isCollapse">
+              更多
+              <i class="anticon" [class.anticon-down]="isCollapse" [class.anticon-up]="!isCollapse"></i>
+            </a>
+
+            <button nz-button nzType="button" style="float:right" nzType="dashed" [nzLoading]="_upload">
+              <i class="anticon anticon-upload"></i>
+              <span>上传资源文件</span>
+            </button>
+          </div>
+        </div>
+        <!--行-->
+        <div nz-row nz-form-item *ngIf="!isCollapse">
+            <div nz-col [nzSpan]="8">
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label>资源分类</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="18">
+                  <nz-cascader nzChangeOnSelect 
+                    [nzPlaceHolder]="'请选择'" 
+                    [nzValueProperty]="'cat_id'" 
+                    [nzLabelProperty]="'cat_name'" 
+                    [nzOptions]="resClassList"
+                    name="res_class_ids"
+                    [(ngModel)]="paramCol.res_class_ids">
+                  </nz-cascader>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="6">
+                <div nz-form-label nz-col [nzSpan]="5">
+                  <label>资源类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="17">
+                    <nz-select nzAllowClear [nzFilter]="false" [nzPlaceHolder]="'请选择资源类型'"  [(ngModel)]="paramCol.res_type" name="res_type">
+                      <nz-option *ngFor="let option of resTypeList" [nzLabel]="option" [nzValue]="option"></nz-option>
+                    </nz-select>
+                </div>
+              </div>
+          </div>
+      </form>
+    </div>
+
+    <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true"
+    [nzAjaxData]="tableData" 
+    [nzLoading]="_loading" 
+    [nzPageSize]="param.pageSize"
+    [nzPageIndex]="param.pageNum" 
+    [nzTotal]="param.total" 
+    (nzPageIndexChangeClick)="param.pageNum=$event;_reload()"
+    (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;_reload()">
+       <thead nz-thead>
+         <tr>
+           <th nz-th nzCheckbox>
+               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)"></label>
+           </th>
+           <th nz-th [nzWidth]="'20%'">
+             <span>名称</span>
+           </th>
+           <th nz-th [nzWidth]="'20%'">
+             <span>文件名</span>
+           </th>
+           <th nz-th [nzWidth]="'10%'">
+            <span>格式</span>
+           </th>
+           <th nz-th [nzWidth]="'10%'">
+            <span>大小</span>
+           </th>
+           <th nz-th [nzWidth]="'10%'">
+            <span>类型</span>
+           </th>
+           <th nz-th [nzWidth]="'10%'">
+            <span>分类</span>
+          </th>
+           <th nz-th [nzWidth]="'10%'">
+             <span>创建时间</span>
+           </th>
+           <th nz-th>
+               <span>操作</span>
+           </th>
+         </tr>
+       </thead>
+       <tbody nz-tbody>
+         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+           <td nz-td nzCheckbox>
+               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
+           </td>
+           <td nz-td>
+             <span>{{data.res_name}}</span>
+           </td>
+           <td nz-td>
+            <span>{{data.res_name}}</span>
+          </td>
+          <td nz-td>
+            <span>{{data.res_name}}</span>
+          </td>
+          <td nz-td>
+            <span>{{data.res_name}}</span>
+          </td>
+          <td nz-td>
+            <span>{{data.res_name}}</span>
+          </td>
+           <td nz-td>
+             <span>{{data.tag_name}}</span>
+           </td>
+           <td nz-td>
+             <span>{{data.create_time}}</span>
+           </td>
+           <td>
+             <a (click)="_editRow(data)">修改</a>
+           </td>
+         </tr>
+       </tbody>
+     </nz-table>
+
+
+
+
+
+  </nz-content>
+</nz-layout>
