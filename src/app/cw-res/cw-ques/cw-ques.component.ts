@@ -26,9 +26,14 @@ export class CwQuesComponent implements OnInit {
   _loading: boolean = true;
   formTitle : string; 
 
-  isList : boolean = false;//新增与修改
-  isDetails : boolean = false;//详情
 
+
+  isList : boolean = false;//新增与修改
+  paperList : boolean = false;//预览
+  isDetails : boolean = false;//详情
+  seeList : boolean = false;//预览页面确定和取消按钮隐藏
+  selRow : any = {};//试题预览对象
+  goods_data : any = [];
   //ckeditor配置
   config: any = {
     width: '100%',
@@ -61,6 +66,9 @@ export class CwQuesComponent implements OnInit {
     this.load();
 
     // this.get_all();
+
+    //加载商品标签
+    this.get_goods();
   }
 
   load(reset?){
@@ -81,7 +89,17 @@ export class CwQuesComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
-  
+  }
+  // 商品标签
+
+  get_goods(){
+    this.service.post('/api/busiz/goods/tag/list',{pageNum:1,pageSize:1000}).then(success => {
+      if(success.code==0){
+        this.goods_data = success.data.rows;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
   }
 
   reload(rest ?){
@@ -108,6 +126,7 @@ _addRows(){
   this.param.content = 'ce是地方大使馆'
 }
 
+// 提交
 _submitForm() {
 
   this.isList = false;
@@ -115,6 +134,24 @@ _submitForm() {
 
 }
 
+
+//预览
+_seeRows(data){
+  this.paperList = true;
+  console.log(data)
+  for(let i in data){
+    this.selRow[i] = data[i]
+  }
+  console.log(this.selRow)
+}
+
+
+// 预览关闭
+
+handleCancel($event) {
+  this.paperList = false;
+  // this.myForm.reset();
+}
 
 _checkAll(value) {
   if (value) {

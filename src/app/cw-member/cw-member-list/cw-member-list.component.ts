@@ -43,6 +43,15 @@ export class CwMemberListComponent implements OnInit {
   
   }
 
+  reload(rest ?){
+    if(rest){
+      this.load();
+    }
+  }
+  resetForm(){
+    this.param.searchText = null;
+    this.load();
+  }
 
 
   ngOnInit() {
