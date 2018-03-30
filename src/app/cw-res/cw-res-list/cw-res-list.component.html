@@ -47,11 +47,15 @@
               更多
               <i class="anticon" [class.anticon-down]="isCollapse" [class.anticon-up]="!isCollapse"></i>
             </a>
+            <!--文件上传-->
+            <nz-upload *ngIf="this.service.validataAction('cw_res_list_upload')" style="float:right" [nzShowUploadList]="false" (nzChange)="_uploadChange($event)"
+              [nzDisabled]="_uploadDisabled" nzAction="{{this.service.ctxPath + '/api/busiz/res/upload'}}">
+              <button nz-button [nzLoading]="_upload" nzType="dashed">
+                <i class="anticon anticon-upload"></i>
+                <span>上传资源文件</span>
+              </button>
+            </nz-upload>
 
-            <button nz-button nzType="button" style="float:right" nzType="dashed" [nzLoading]="_upload">
-              <i class="anticon anticon-upload"></i>
-              <span>上传资源文件</span>
-            </button>
           </div>
         </div>
         <!--行-->
@@ -94,66 +98,135 @@
     (nzPageIndexChangeClick)="param.pageNum=$event;_reload()"
     (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;_reload()">
        <thead nz-thead>
-         <tr>
-           <th nz-th nzCheckbox>
-               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)"></label>
-           </th>
-           <th nz-th [nzWidth]="'20%'">
-             <span>名称</span>
-           </th>
-           <th nz-th [nzWidth]="'20%'">
-             <span>文件名</span>
-           </th>
-           <th nz-th [nzWidth]="'10%'">
+        <tr>
+          <th nz-th nzCheckbox>
+            <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)"></label>
+          </th>
+          <th nz-th [nzWidth]="'20%'">
+            <span>名称</span>
+          </th>
+          <th nz-th [nzWidth]="'7%'">
             <span>格式</span>
-           </th>
-           <th nz-th [nzWidth]="'10%'">
+          </th>
+          <th nz-th [nzWidth]="'7%'">
             <span>大小</span>
-           </th>
-           <th nz-th [nzWidth]="'10%'">
+          </th>
+          <th nz-th [nzWidth]="'7%'">
             <span>类型</span>
-           </th>
-           <th nz-th [nzWidth]="'10%'">
+          </th>
+          <th nz-th [nzWidth]="'9%'">
+            <span>目录</span>
+          </th>
+          <th nz-th [nzWidth]="'10%'">
             <span>分类</span>
           </th>
-           <th nz-th [nzWidth]="'10%'">
-             <span>创建时间</span>
-           </th>
-           <th nz-th>
-               <span>操作</span>
-           </th>
-         </tr>
+          <th nz-th [nzWidth]="'10%'">
+            <span>转码</span>
+          </th>
+          <th nz-th [nzWidth]="'10%'">
+            <span>创建时间</span>
+          </th>
+          <th nz-th>
+            <span>操作</span>
+          </th>
+        </tr>
        </thead>
        <tbody nz-tbody>
-         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
-           <td nz-td nzCheckbox>
-               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
-           </td>
-           <td nz-td>
-             <span>{{data.res_name}}</span>
-           </td>
-           <td nz-td>
-            <span>{{data.res_name}}</span>
-          </td>
-          <td nz-td>
-            <span>{{data.res_name}}</span>
-          </td>
-          <td nz-td>
-            <span>{{data.res_name}}</span>
-          </td>
-          <td nz-td>
-            <span>{{data.res_name}}</span>
-          </td>
-           <td nz-td>
-             <span>{{data.tag_name}}</span>
-           </td>
-           <td nz-td>
-             <span>{{data.create_time}}</span>
-           </td>
-           <td>
-             <a (click)="_editRow(data)">修改</a>
-           </td>
-         </tr>
+          <ng-container *ngFor="let data of nzTable.data">
+            <tr nz-tbody-tr *ngIf="data.res_id == formBean.res_id">
+              <td nz-td nzCheckbox>
+                <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
+              </td>
+              <td nz-td>
+                <span><nz-input [nzType]="'text'" name="res_name" [(ngModel)]="formBean.res_name"></nz-input></span>
+              </td>
+              <td nz-td>
+                <span>{{data.res_format}}</span>
+              </td>
+              <td nz-td>
+                <span *ngIf="data.res_format != 'pdf'">{{(data.res_size/1024/1024).toFixed(1)}}MB</span>
+                <span *ngIf="data.res_format == 'pdf'">{{data.res_size}}页</span>
+              </td>
+              <td nz-td>
+                <span>{{data.res_type}}</span>
+              </td>
+              <td nz-td>
+                <span>{{_getParentFile(data)}}</span>
+              </td>
+              <td nz-td>
+                <span>
+                    <nz-cascader nzChangeOnSelect 
+                    [nzPlaceHolder]="'请选择'" 
+                    [nzValueProperty]="'cat_id'" 
+                    [nzLabelProperty]="'cat_name'" 
+                    [nzOptions]="resClassList"
+                    name="res_class_ids"
+                    (nzSelectionChange)="_selectChange($event)"
+                    [(ngModel)]="formBean.res_class_ids">
+                  </nz-cascader>
+                </span>
+              </td>
+              <td nz-td>
+                <span *ngIf="data.trans_status == 2" style="color:red">失败</span>
+                <span *ngIf="data.trans_status != 2" style="color:green">成功</span>
+              </td>
+              <td nz-td>
+                <span>{{data.create_time}}</span>
+              </td>
+              <td>
+                <a (click)="_saveRow(data)">保存</a>
+                <span nz-table-divider *ngIf="this.service.validataAction('cw_res_list_del')"></span>
+                <a (click)="_cancelRow(data)">取消</a>
+              </td>
+            </tr>
+            <tr nz-tbody-tr *ngIf="data.res_id != formBean.res_id">
+                <td nz-td nzCheckbox>
+                  <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
+                </td>
+                <td nz-td>
+                  <span>{{data.res_name}}</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.res_format}}</span>
+                </td>
+                <td nz-td>
+                  <span *ngIf="data.res_format != 'pdf'">{{(data.res_size/1024/1024).toFixed(1)}}MB</span>
+                  <span *ngIf="data.res_format == 'pdf'">{{data.res_size}}页</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.res_type}}</span>
+                </td>
+                <td nz-td>
+                  <span>{{_getParentFile(data)}}</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.res_cat_name}}</span>
+                </td>
+                <td nz-td>
+                  <span *ngIf="data.trans_status == 2" style="color:red">失败</span>
+                  <span *ngIf="data.trans_status != 2" style="color:green">成功</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.create_time}}</span>
+                </td>
+                <td>
+                  <!-- 修改 -->
+                  <ng-container *ngIf="this.service.validataAction('cw_res_list_edit')">
+                    <a (click)="_editRow(data)">修改</a>
+                    <span nz-table-divider *ngIf="this.service.validataAction('cw_res_list_del')"></span>
+                  </ng-container>
+                  <!-- 删除 -->
+                  <ng-container *ngIf="this.service.validataAction('cw_res_list_del')">
+                    <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delRow(data)" [nzPlacement]="'left'">
+                      <a nz-popconfirm>删除</a>
+                    </nz-popconfirm>
+                    <span nz-table-divider></span>
+                  </ng-container>
+                  <a (click)="_fwRow(data)">预览</a>
+                </td>
+              </tr>
+          </ng-container>
+            
        </tbody>
      </nz-table>
 

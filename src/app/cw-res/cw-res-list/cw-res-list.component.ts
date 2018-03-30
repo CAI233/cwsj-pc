@@ -23,7 +23,8 @@ export class CwResListComponent implements OnInit {
   paramCol = {
     searchText: null,
     searchTime: null,
-    res_class_id: null,
+    res_class_ids: null,
+    res_cat_id: null,
     res_type: null
   }
   isCollapse: boolean = false;
@@ -35,6 +36,11 @@ export class CwResListComponent implements OnInit {
 
   _allChecked = false; //全选
   _indeterminate = false; //半选
+  formBean: any = {
+    res_id: null,
+    res_name: null,
+    res_cat_name: null
+  };
   constructor(public service: AppService) { }
 
   ngOnInit() {
@@ -62,10 +68,10 @@ export class CwResListComponent implements OnInit {
         this.param[i] = this.paramCol[i];
       }
       if (this.paramCol['res_class_ids']) {
-        this.param['res_class_id'] = this.paramCol['res_class_ids'][this.paramCol['res_class_ids'].length - 1]
+        this.param['res_cat_id'] = this.paramCol['res_class_ids'][this.paramCol['res_class_ids'].length - 1]
       }
       else {
-        this.param['res_class_id'] = null;
+        this.param['res_cat_id'] = null;
       }
       if (this.paramCol.searchTime) {
         this.param['upload_start'] = this.service.dateFormat(this.paramCol.searchTime[0], 'yyyy-MM-dd');
@@ -106,7 +112,115 @@ export class CwResListComponent implements OnInit {
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
   //重置
-  _resetForm(){
-
+  _resetForm() {
+    this.paramCol.searchText = null;
+    this.paramCol.searchTime = null;
+    this.paramCol.res_class_ids = null;
+    this.paramCol.res_cat_id = null;
+    this.paramCol.res_type = null;
+    this._reload(true);
+  }
+  //获取目录
+  _getParentFile(row) {
+    let arr = row.res_url.split('/');
+    arr.pop();
+    return arr.pop();
+  }
+  //删除
+  _delRow(row) {
+    this.service.post('/api/busiz/res/del', { ids: [row.res_id] }).then(success => {
+      if (success.code == 0) {
+        this._reload(true);
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  //修改
+  _editRow(row) {
+    for (let i in row) {
+      this.formBean[i] = row[i];
+    }
+    this.formBean['res_class_ids'] = [];
+    if (row.cat_ids && row.cat_names) {
+      let ids = row.cat_ids.split(',');
+      let names = row.cat_names.split(',');
+      for (let i = 0; i < ids.length; i++) {
+        this.formBean['res_class_ids'].push({
+          cat_id: ids[i],
+          cat_name: names[i]
+        });
+      }
+    }
+    console.log(this.formBean)
+  }
+  _uploadDisabled: boolean = false;
+  _loadingFile: any = null;
+  //文件上传
+  _uploadChange(res) {
+    if (res.file.status == 'uploading') {
+      if (!this._loadingFile) {
+        this._loadingFile = this.service.message.loading('文件正在上传...', { nzDuration: 0 }).messageId;
+        this._uploadDisabled = true;
+      }
+    }
+    else {
+      this.service.message.remove(this._loadingFile);
+      this._uploadDisabled = false;
+      if (res.file.status == 'done') {
+        this.service.message.success('文件上传成功!');
+        this._reload(true);
+      }
+      else {
+        this.service.message.error('文件上传失败!');
+      }
+    }
+  }
+  //保存
+  _saveRow() {
+    if (!this.formBean.res_name) {
+      this.service.message.warning('请填写文件名称!');
+      return false;
+    }
+    if (!this.formBean.res_cat_id) {
+      this.service.message.warning('请选择资源分类!');
+      return false;
+    }
+    console.log(this.formBean)
+    this.service.post('/api/busiz/res/update', this.formBean).then(success => {
+      if (success.code == 0) {
+        this.formBean = {
+          res_id: null,
+          res_name: null,
+          res_cat_name: null
+        };
+        this._reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  //选项改变
+  _selectChange(options) {
+    let ids = [];
+    let names = [];
+    options.forEach(element => {
+      ids.push(element.cat_id);
+      names.push(element.cat_name);
+    });
+    if (names.length > 0) {
+      this.formBean['res_cat_name'] = names[names.length - 1];
+      this.formBean['res_cat_id'] = ids[ids.length - 1];
+      this.formBean['cat_ids'] = ids.toString();
+      this.formBean['cat_names'] = names.toString();
+    }
+    else {
+      this.formBean['res_cat_name'] = null;
+      this.formBean['res_cat_id'] = null;
+      this.formBean['cat_ids'] = null;
+      this.formBean['cat_names'] = null;
+    }
   }
 }
