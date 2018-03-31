@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+
+declare let wangEditor: any
 @Component({
   selector: 'app-cw-works-list',
   templateUrl: './cw-works-list.component.html',
@@ -33,24 +35,7 @@ export class CwWorksListComponent implements OnInit {
   _loading: boolean = true;
   //省 市 区 街 
   _address: any;
-  //ckeditor配置
-  config: any = {
-    width: '100%',
-    toolbar: 'MyToolbar',
-    toolbar_MyToolbar:
-      [
-        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
-        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-        { name: 'tools', items: ['Maximize'] },
-        { name: 'document', items: ['Source'] },
-        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
-        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
-        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-        { name: 'colors', items: ['TextColor', 'BGColor'] },
-      ],
-    filebrowserImageUploadUrl: this.service.ctxPath + '/api/system/file/upload',
-  }
+
   // 实例化一个对象
   constructor(public service: AppService) { }
   //表单
@@ -83,6 +68,18 @@ export class CwWorksListComponent implements OnInit {
       vote_role: [false],
       email: [false],
       role_id: [false]
+    })
+  }
+  _initEditor() {
+    setTimeout(time => {
+      var editor = new wangEditor('#editor');
+      editor.customConfig.uploadImgShowBase64 = true;
+      editor.create();
+      editor.txt.html(this.formBean.works_remark);
+      // editor.txt.clear();
+      // editor.txt.append('<p>追加的内容</p>');
+      // console.log(editor.txt.html())
+      // console.log(editor.txt.text())
     })
   }
 
@@ -120,6 +117,7 @@ export class CwWorksListComponent implements OnInit {
     }
     this.isVisibleMiddle = true;
     this.selectedIndex = 1;
+    this._initEditor();
   };
 
   //关闭

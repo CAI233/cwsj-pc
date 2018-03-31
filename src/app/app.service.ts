@@ -45,7 +45,7 @@ export class AppService {
         public fb: FormBuilder) {
         this.ctxPath = 'http://cw.cjszyun.net';
         // this.ctxPath = 'http://192.168.2.30:8080';
-        // this.ctxPath = 'http://192.168.2.47:8080';
+        // this.ctxPath = 'http://192.168.2.41:8080';
     }
     //系统初始化
     init(callback?: any) {

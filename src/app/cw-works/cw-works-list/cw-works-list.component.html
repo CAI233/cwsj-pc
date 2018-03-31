@@ -358,14 +358,7 @@
               <label nz-form-item-required>作品简介</label>
             </div>
             <div nz-form-control>
-              <ckeditor [config]="config" [(ngModel)]="formBean.vote_role" formControlName="vote_role" [readonly]="false" debounce="500"></ckeditor>
-              <!-- (change)="onChange($event)"  -->
-              <!-- (editorChange)="onEditorChange($event)" -->
-              <!-- (ready)="onReady($event)"  -->
-              <!-- (focus)="onFocus($event)"  -->
-              <!-- (blur)="onBlur($event)"  -->
-              <!-- (contentDom)="onContentDom($event)"  -->
-              <!-- (fileUploadRequest)="onFileUploadRequest($event)" -->
+                <div id="editor"></div>
             </div>
           </div>
           <div nz-form-item nz-row>

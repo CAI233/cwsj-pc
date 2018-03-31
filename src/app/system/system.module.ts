@@ -7,8 +7,6 @@ import { routes } from './system.routing';
 import { RouterModule } from '@angular/router';
 
 //富文本编辑器
-import { CKEditorModule } from 'ng2-ckeditor';
-
 import { UserComponent } from './user/user.component';
 import { RoleComponent } from './role/role.component';
 import { ResourceComponent } from './resource/resource.component';
@@ -27,8 +25,7 @@ import { PersonalComponent } from './personal/personal.component';
     ReactiveFormsModule,
     CommonModule,
     RouterModule.forChild(routes),
-    NgZorroAntdModule.forRoot(), //引入NZ
-    CKEditorModule
+    NgZorroAntdModule.forRoot()
   ],
   declarations: [
     UserComponent,

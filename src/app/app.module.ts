@@ -48,7 +48,6 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
   providers: [
     HttpService, AppService,
     { provide: Http, useFactory: interceptorFactory, deps: [XHRBackend, RequestOptions]},
-    //hash url
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]

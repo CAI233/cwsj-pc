@@ -11,7 +11,6 @@ import { routes } from './cw-goods.routing';
 import { RouterModule } from '@angular/router';
 
 //富文本编辑器
-import { CKEditorModule } from 'ng2-ckeditor';
 
 @NgModule({
   imports: [
@@ -19,8 +18,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
-    CommonModule,
-    CKEditorModule
+    CommonModule
   ],
   declarations: [CwGoodsListComponent, CwGoodsClassComponent, CwGoodsTagComponent],
   providers: [  //引入NZ

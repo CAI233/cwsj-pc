@@ -29,23 +29,6 @@ export class CwGoodsTagComponent implements OnInit {
     searchText:null
   }
 
-  //ckeditor配置
-  config: any = {
-    width: '100%',
-    toolbar: 'MyToolbar',
-    toolbar_MyToolbar:
-      [
-        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
-        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-        { name: 'tools', items: ['Maximize'] },
-        { name: 'document', items: ['Source'] },
-        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
-        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
-        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-        { name: 'colors', items: ['TextColor', 'BGColor'] },
-      ]
-  }
   constructor(public service: AppService) { }
 
   ngOnInit() {

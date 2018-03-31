@@ -10,9 +10,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";//引入NZ 使
 import { routes } from './cw-prj.routing';
 import { RouterModule } from '@angular/router';
 
-//富文本编辑器
-import { CKEditorModule } from 'ng2-ckeditor';
-
 
 @NgModule({
   imports: [
@@ -20,8 +17,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
-    CommonModule,
-    CKEditorModule
+    CommonModule
   ],
   declarations: [CwPrjClassComponent, CwPrjListComponent],
   providers: [  //引入NZ

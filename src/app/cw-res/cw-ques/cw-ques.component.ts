@@ -35,23 +35,7 @@ export class CwQuesComponent implements OnInit {
   goods_data : any = [];//商品标签
   class_data : any = [];//商品分类
   now_data : any = {};//当前修改新增对象
-  //ckeditor配置
-  config: any = {
-    width: '100%',
-    toolbar: 'MyToolbar',
-    toolbar_MyToolbar:
-      [
-        { name: 'clipboard', items: ['Undo', 'Redo', '-'] },
-        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-        { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-        { name: 'tools', items: ['Maximize'] },
-        { name: 'document', items: ['Source'] },
-        { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', 'RemoveFormat', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-'] },
-        { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Algin', 'Outdent', 'Indent'] },
-        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-        { name: 'colors', items: ['TextColor', 'BGColor'] },
-      ],
-  }
+  
   
   constructor(public service: AppService,public msg: NzMessageService) { }
 
