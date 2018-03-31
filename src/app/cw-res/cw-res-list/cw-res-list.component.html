@@ -229,10 +229,40 @@
             
        </tbody>
      </nz-table>
-
-
-
-
-
   </nz-content>
 </nz-layout>
+<nz-modal [nzVisible]="isVisibleAudio" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="_handleCancelAudio($event)">
+  <ng-template #modalTitle>
+    音频预览
+  </ng-template>
+  <ng-template #modalContent>
+    <audio *ngIf="audioModel" src="{{'http://cw.cjszyun.net'+audioModel.res_url}}" controls="controls" autoplay style="width: 100%;"></audio>
+  </ng-template>
+  <ng-template #modalFooter style="display:none"></ng-template>
+</nz-modal>
+
+<nz-modal [nzVisible]="isVisibleVideo" [nzTitle]="modalTitle1" [nzContent]="modalContent1" [nzFooter]="modalFooter1" (nzOnCancel)="_handleCancelAudio($event)">
+  <ng-template #modalTitle1>
+    视频预览
+  </ng-template>
+  <ng-template #modalContent1>
+    <video *ngIf="videoModel" src="{{'http://cw.cjszyun.net'+videoModel.res_url}}" style="width:100%" controls="controls" autoplay></video>
+  </ng-template>
+  <ng-template #modalFooter1 style="display:none"></ng-template>
+</nz-modal>
+
+<nz-modal [nzVisible]="isVisiblePdf" [nzWidth]="700" [nzTitle]="modalTitle2" [nzContent]="modalContent2" [nzFooter]="modalFooter2" (nzOnCancel)="_handleCancelAudio($event)">
+    <ng-template #modalTitle2>
+      <span *ngIf="pdfModel">第 {{ pdfMinNum +'/' +pdfModel.res_size}}页</span>
+    </ng-template>
+    <ng-template #modalContent2>
+        <div class="pwImgList" *ngIf="pdfModel">
+          <i class="anticon anticon-left" (click)="pdfMinNum1()"></i>
+          <div class="imgList">
+            <img src="{{service.ctxPath+pdfModel.res_analysis_url+'/img'+pdfMinNum+'.png'}}">
+          </div>
+          <i class="anticon anticon-right" (click)="pdfMinNum2()"></i>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter2 style="display:none"></ng-template>
+  </nz-modal>

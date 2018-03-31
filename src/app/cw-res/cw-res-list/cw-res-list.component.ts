@@ -159,6 +159,7 @@ export class CwResListComponent implements OnInit {
   _loadingFile: any = null;
   //文件上传
   _uploadChange(res) {
+    console.log(res.file.status)
     if (res.file.status == 'uploading') {
       if (!this._loadingFile) {
         this._loadingFile = this.service.message.loading('文件正在上传...', { nzDuration: 0 }).messageId;
@@ -169,8 +170,10 @@ export class CwResListComponent implements OnInit {
       this.service.message.remove(this._loadingFile);
       this._uploadDisabled = false;
       if (res.file.status == 'done') {
-        this.service.message.success('文件上传成功!');
-        this._reload(true);
+        setTimeout(sc => {
+          this.service.message.success('文件上传成功!');
+          this._reload(true);
+        }, 2000)
       }
       else {
         this.service.message.error('文件上传失败!');
@@ -221,6 +224,57 @@ export class CwResListComponent implements OnInit {
       this.formBean['res_cat_id'] = null;
       this.formBean['cat_ids'] = null;
       this.formBean['cat_names'] = null;
+    }
+  }
+  //取消
+  _cancelRow(row) {
+    for (let i in this.formBean) {
+      this.formBean[i] = null;
+    }
+  }
+  isVisibleAudio: boolean = false;
+  isVisibleVideo: boolean = false;
+  isVisiblePdf: boolean = false;
+  audioModel: any = null;
+  videoModel: any = null;
+  pdfModel: any = null;
+  pdfMinNum: number = 1;
+  //预览
+  _fwRow(row) {
+    console.log(row)
+    if (row.res_type == '音频') {
+      this.isVisibleAudio = true;
+      this.audioModel = row;
+    }
+    else if (row.res_type == '视频') {
+      this.isVisibleVideo = true;
+      this.videoModel = row;
+    }
+    else {
+      this.isVisiblePdf = true;
+      this.pdfModel = row;
+      this.pdfMinNum = 1;
+    }
+  }
+  //关闭音频
+  _handleCancelAudio(event?) {
+    this.isVisibleAudio = false;
+    this.audioModel = null;
+    this.isVisibleVideo = false;
+    this.videoModel = null;
+    this.isVisiblePdf = false;
+    this.pdfModel = null;
+  }
+  //上一页
+  pdfMinNum1() {
+    if (this.pdfMinNum > 1) {
+      this.pdfMinNum -= 1;
+    }
+  }
+  //上一页
+  pdfMinNum2() {
+    if (this.pdfMinNum < this.pdfModel.res_size) {
+      this.pdfMinNum += 1;
     }
   }
 }
