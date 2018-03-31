@@ -23,6 +23,7 @@ import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
 import { HttpService } from './http.service';
 
+
 export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions) {
   let service = new HttpService(xhrBackend, requestOptions);
   return service;

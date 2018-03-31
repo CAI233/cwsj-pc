@@ -5,7 +5,7 @@ import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 
-
+declare let wangEditor: any
 @Component({
   selector: 'app-cw-ques',
   templateUrl: './cw-ques.component.html',
@@ -31,7 +31,7 @@ export class CwQuesComponent implements OnInit {
   isDetails : boolean = false;//详情
   seeList : boolean = false;//页面确定和取消按钮隐藏
   uploadList : boolean = false;//上传页面
-  selRow : any = {};//试题预览对象
+
   goods_data : any = [];//商品标签
   class_data : any = [];//商品分类
   now_data : any = {};//当前修改新增对象
@@ -93,17 +93,21 @@ export class CwQuesComponent implements OnInit {
     })
   }
 
+
   // 商品分类
   get_class(){
     this.service.post('/api/busiz/goods/cat/tree').then(success => {
       if(success.code==0){
         console.log(success)
         this.class_data = success.data;
+
       }else{
         this.service.message.error(success.message);
       }
     })
   }
+
+
   reload(rest ?){
     if(rest){
       this.load();
@@ -154,9 +158,11 @@ _edit(data){
     this.now_data[i] = data[i];
   }
   this.now_data.label_ids = this.now_data.label_id;
-  this.now_data.cat_ids = JSON.parse(this.now_data.cat_ids)
+  console.log(this.now_data.cat_ids)
+  // this.now_data.cat_ids = JSON.parse(this.now_data.cat_ids)
   console.log(this.now_data)
   console.log(typeof(this.now_data.cat_ids))
+  // this.wangEditor.txt.html('<p>用 JS 设置的内容</p>');
   this.now_data.opContext = `<p >【题干】</p>${this.now_data.title}<p >【答案】</p>${this.now_data.analysis}<p >【解析】</p>${this.now_data.parsing}`;
 }
 
@@ -238,36 +244,24 @@ _submitForm() {
     }
   this.now_data.label_id = this.now_data.label_ids.join(",");
   console.log(this.now_data)
-  this.service.post('/api/busiz/question/save',this.now_data).then(success => {
-    if(success.code==0){
-      this.load();
-      this.isList = false;
-      this.myForm.reset();
-      this.service.message.success(success.message);
-    }else{
-      this.service.message.error(success.message);
-    }
-  })
+  // this.service.post('/api/busiz/question/save',this.now_data).then(success => {
+  //   if(success.code==0){
+  //     this.load();
+  //     this.isList = false;
+  //     this.myForm.reset();
+  //     this.service.message.success(success.message);
+  //   }else{
+  //     this.service.message.error(success.message);
+  //   }
+  // })
 }
 
 
-//预览
-_see(data){
-  this.paperList = true;
-  console.log(data)
-  for(let i in data){
-    this.selRow[i] = data[i]
-  }
-  console.log(this.selRow)
+//查看
+_show(data){
+  data.select = !data.select
 }
 
-
-// 预览关闭
-
-handleCancel($event) {
-  this.paperList = false;
-  // this.myForm.reset();
-}
 
 _checkAll(value) {
   if (value) {
@@ -288,5 +282,16 @@ _refreshStatus() {
   this._indeterminate = (!allChecked) && (!allUnChecked);
 }
 
+ngAfterViewInit(){
+    
+  var editor = new wangEditor('#editor');
+  editor.customConfig.uploadImgShowBase64 = true;
+  editor.create();
+  editor.txt.clear();
+  editor.txt.html('<p>用 JS 设置的内容</p>');
+  editor.txt.append('<p>追加的内容</p>');
+  console.log(editor.txt.html())
+  console.log(editor.txt.text())
+}
 
 }

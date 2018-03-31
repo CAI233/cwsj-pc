@@ -21,7 +21,7 @@ export const routes: Routes = [
   { path: 'cw_tool', loadChildren: './cw-tool/cw-tool.module#CwToolModule' },
   { path: 'cw_train', loadChildren: './cw-train/cw-train.module#CwTrainModule' },
   { path: 'cw_works', loadChildren: './cw-works/cw-works.module#CwWorksModule' },
-
+  { path: 'cw_info', loadChildren: './cw-info/cw-info.module#CwInfoModule' },
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/error', pathMatch: 'full' }
 ];
