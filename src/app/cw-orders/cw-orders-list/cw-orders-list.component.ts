@@ -33,7 +33,11 @@ export class CwOrdersListComponent implements OnInit {
   seeting_res : boolean = false;//是否更新配置
   settingRow : any = {};//配置对象
   seeOrder : boolean = false;//订单详情
+  editRow : any = null;
   seeData : any = {};//详情对象
+  orderData : any = [];//订单商品列表
+  sendNow : any = {};//订单发货对象
+  sendList : boolean = false;
   Row : any = {};
   enditList = null;
   constructor(public service: AppService) { }
@@ -85,7 +89,9 @@ export class CwOrdersListComponent implements OnInit {
       money_off:false,
       province_in:false,
       province_out:false,
-      one_more:false
+      one_more:false,
+      express:false,
+      express_num:false
     })
 
     //加载交易列表
@@ -101,6 +107,8 @@ export class CwOrdersListComponent implements OnInit {
     this.enditList = null;
     this.seeting_res = false;
     this.seeOrder = false;
+    this.editRow = null;
+    this.sendList = false;
     this.myForm.reset();
   }
   
@@ -109,9 +117,101 @@ export class CwOrdersListComponent implements OnInit {
     this._submit_seeting();
   }
 
-  _send(data){
-        this.service.message.error("还没操作"); 
+  // 更新物流--打开页面
+  edit(data){
+    this.editRow = data.order_id;
   }
+  //取消 
+  cancel(data) {
+    this.editRow = null;
+  }
+
+  save(data){
+   if(!data.express){
+      this.service.message.warning('请填快递公司');
+      return false;
+    }
+    if(!data.express_num){
+      this.service.message.warning('请填快递单号');
+      return false;
+    }
+    this.service.post('/api/busiz/order/send',data).then(success => {
+          if(success.code==0){
+            this.load();
+            this.editRow = null;
+            this.myForm.reset();
+            this.service.message.success(success.message);
+          }else{
+            this.service.message.error(success.message);
+          }
+    })
+  }
+
+
+  // 发货
+  _send(data){
+    this.sendList = true;
+    for(let i in data){
+      this.sendNow[i] = data[i]
+    }
+    this.service.post('/api/busiz/order/goods/list',{order_id:this.sendNow.order_id}).then(success => {
+      if(success.code==0){
+        this.orderData = success.data;
+      }else{
+        this.orderData = [];
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
+  //发货保存
+  sendOk($event){
+    this.service.post('/api/busiz/order/send',this.sendNow).then(success => {
+      if(success.code==0){
+        this.load();
+        this.sendList = false;
+            this.myForm.reset();
+            this.service.message.success(success.message);
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
+  //修改订单状态
+  _edit(id,status){
+    this.service.post('/api/busiz/order/status',{order_id:id,order_status:status}).then(success => {
+      if(success.code==0){
+        this.load();
+        this.service.message.success(success.message);
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+
+  } 
+  // // 订单更新
+  // sendOk($event){
+  //   if(!this.sendData.express){
+  //     this.service.message.warning('请填快递公司');
+  //     return false;
+  //   }
+  //   if(!this.sendData.express_num){
+  //     this.service.message.warning('请填快递单号');
+  //     return false;
+  //   }
+  //   this.service.post('/api/busiz/order/send',this.sendData).then(success => {
+  //         if(success.code==0){
+  //           this.load();
+  //           this.sendOrder = false;
+  //           this.myForm.reset();
+  //           this.service.message.success(success.message);
+  //         }else{
+  //           this.service.message.error(success.message);
+  //         }
+  //   })
+  // }
+
 
   // 更新运费配置
   seetingRes(){
@@ -122,19 +222,19 @@ export class CwOrdersListComponent implements OnInit {
   //提交
   _submit_seeting(){
     if(!this.Row.money_off){
-      this.service.message.error('请填写免运费价格');
+      this.service.message.warning('请填写免运费价格');
       return false;
     }
     if(!this.Row.peovince_in){
-      this.service.message.error('请填写省内运费');
+      this.service.message.warning('请填写省内运费');
       return false;
     }
     if(!this.Row.province_out){
-      this.service.message.error('请填写省外运费');
+      this.service.message.warning('请填写省外运费');
       return false;
     }
     if(!this.Row.one_more){
-      this.service.message.error('请填写加件运费');
+      this.service.message.warning('请填写加件运费');
       return false;
     }
     this.service.post('/api/busiz/order/express/setting',this.Row).then(success => {
@@ -176,7 +276,8 @@ export class CwOrdersListComponent implements OnInit {
     for(let i in data){
       this.seeData[i] = data[i];
     }
-
+    console.log(this.editRow);
+    console.log(this.seeData);
   }
 
   // 全选
