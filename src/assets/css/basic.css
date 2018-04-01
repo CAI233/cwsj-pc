@@ -177,3 +177,6 @@ table nz-input{
 .cdk-overlay-container{
     z-index: 100000 !important;
 }
+.ant-card{
+    border: 1px #eee solid;
+}
