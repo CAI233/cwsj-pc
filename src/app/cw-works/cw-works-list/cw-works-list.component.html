@@ -175,21 +175,21 @@
                 <td nz-td>
                   <span>
                     <p>{{data.works_name}}</p>
-                    <p></p>
+                    <p>{{data.works_type}}</p>
                   </span>
                 </td>
                 <td nz-td>
-                  <span>{{data.tag_name}}</span>
+                  <span>{{data.tag_names}}</span>
                 </td>
                 <td nz-td>
                   <span>{{data.real_price}}</span>
                 </td>
                 <td nz-td>
-                  <span [innerHtml]="['草稿','待审核','通过','驳回'][data.audit_status]">
+                  <span [ngStyle]="{'color':['#999','#f90','green','#f00'][data.audit_status-1]}" [innerHtml]="['草稿','待审核','通过','驳回'][data.audit_status-1]">
                   </span>
                 </td>
                 <td nz-td>
-                    <nz-switch [ngModel]="data.status == 1" [nzSize]="'small'" *ngIf="this.service.validataAction('cw_works_list_put')" (click)="statusWorks(data)"></nz-switch>
+                  <nz-switch [ngModel]="data.status == 1" [nzSize]="'small'" *ngIf="this.service.validataAction('cw_works_list_put')" (click)="statusWorks(data)"></nz-switch>
                 </td>
                 <td nz-td>
                   <span>
@@ -216,13 +216,13 @@
                       </a>
                       <ul nz-menu>
                         <li nz-menu-item>
-                          <a (click)="_addAfter(item.parent)">详情</a>
+                          <a (click)="worksDetail()">详情</a>
                         </li>
                         <li nz-menu-item>
-                          <a (click)="_addAfter(item.parent)">通过</a>
+                          <a (click)="auditStatus(data,3)">通过</a>
                         </li>
                         <li nz-menu-item>
-                          <a (click)="_addAfter(item.parent)">驳回</a>
+                          <a (click)="auditStatus(data,4)">驳回</a>
                         </li>
                       </ul>
                     </nz-dropdown>
@@ -240,7 +240,7 @@
         <i class="anticon anticon-cross" (click)="closeTab()"></i>
       </ng-template>
       <nz-content class="main-page-content">
-        <form nz-form [formGroup]="myForm"  class="ditForm">
+        <form nz-form [formGroup]="myForm" class="ditForm">
           <div nz-form-item nz-row style="margin-bottom: 0;">
             <div nz-col [nzSpan]="3">
               <div nz-form-label>
@@ -278,8 +278,7 @@
                   </div>
                   <div nz-form-control nzHasFeedback>
                     <nz-cascader #cat_idss style="display:inline-block" nzChangeOnSelect="true" [nzPlaceHolder]="'请选择分类'" [nzValueProperty]="'cat_id'"
-                      [nzLabelProperty]="'cat_name'" (nzLoad)="loadCat($event)"
-                      [(ngModel)]="formBean.works_cat_idss" formControlName="works_cat_idss">
+                      [nzLabelProperty]="'cat_name'" (nzLoad)="loadCat($event)" [(ngModel)]="formBean.works_cat_idss" formControlName="works_cat_idss">
                     </nz-cascader>
                   </div>
                 </div>
@@ -344,13 +343,135 @@
               <label>作品简介</label>
             </div>
             <div nz-form-control>
-                <div id="editor"></div>
+              <nz-input formControlName="works_remark" [nzRows]="4" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="formBean.works_remark"
+                [nzPlaceHolder]="'请填写作品简介'"></nz-input>
             </div>
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="12" [nzOffset]="6" style="margin-top:30px">
               <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">保存</button>
-              <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">取消</button>
+              <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="handleCancelMiddle()" style="padding:0 30px">取消</button>
+            </div>
+          </div>
+        </form>
+      </nz-content>
+    </nz-tab>
+    <!-- 资源文件 -->
+    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='资源包'">
+      <ng-template #nzTabHeading>
+        资源文件
+      </ng-template>
+      <nz-content class="main-page-content">
+        <form nz-form [formGroup]="myForm1">
+          <div nz-form-item nz-row *ngFor="let control of resourceArray;let i = index">
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label [attr.for]="control.resources_name">资源{{i+1}}</label>
+            </div>
+            <div nz-form-control  nz-col [nzSpan]="20">
+              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.resources_name" nzAllowClear [nzPlaceHolder]="'资源文件'" [(ngModel)]="control.resources_id"
+                nzShowSearch>
+                <nz-option *ngFor="let option of resourceList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
+                </nz-option>
+              </nz-select>
+              <i  style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
+              <button nz-button [nzType]="'primary'" (click)="submitForm1(control,control.resources_name)">
+                  <span>保存</span>
+                </button>
+              <div nz-form-explain *ngIf="getFormControl1(control.resources_name)?.dirty&&getFormControl1(control.resources_name)?.hasError('required')">
+                  请选择资源文件
+                </div>
+            </div>
+         
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
+              <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addField1($event)">
+                <i class="anticon anticon-plus"></i>
+                <span>新增资源</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </nz-content>
+    </nz-tab>
+    <!-- 问答模板 -->
+    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='图书'">
+      <ng-template #nzTabHeading>
+        问答模板
+      </ng-template>
+      <nz-content class="main-page-content">
+      </nz-content>
+    </nz-tab>
+    <!-- 试卷列表 -->
+    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='试题'">
+      <ng-template #nzTabHeading>
+        试卷列表
+      </ng-template>
+      <nz-content class="main-page-content">
+      </nz-content>
+    </nz-tab>
+    <!-- 教育表格 -->
+    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='教育表格'">
+      <ng-template #nzTabHeading>
+        教育表格
+      </ng-template>
+      <nz-content class="main-page-content">
+        <form nz-form [formGroup]="myForm4">
+          <div nz-form-item nz-row *ngFor="let control of questionArray;let i = index">
+            <div nz-form-item nz-row style="margin-bottom:0">
+              <div nz-form-label nz-col [nzSpan]="3">
+                <label>问题{{i+1}}</label>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label [attr.for]="control.question_name">问题</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="20">
+                <nz-input style="width: 60%; margin-right:8px;" [nzSize]="'large'" [nzPlaceHolder]="'请填写问题'" [(ngModel)]="control.question"
+                  [formControlName]="control.question_name" [nzId]="control.order_id">
+                </nz-input>
+                <i class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField4(control,$event)"></i>
+                <div nz-form-explain *ngIf="getFormControl4(control.question_name)?.dirty&&getFormControl4(control.question_name)?.hasError('required')">
+                  请填写问题
+                </div>
+              </div>
+            </div>
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="4">
+                <label [attr.for]="control.answer_name">回答</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="20">
+                <nz-input style="width: 60%; margin-right:8px;" [nzSize]="'large'" [nzPlaceHolder]="'请填写回答'" [(ngModel)]="control.answer"
+                  [formControlName]="control.answer_name" [nzId]="control.order_id">
+                </nz-input>
+              </div>
+            </div>
+            <div nz-form-item nz-row style="margin-bottom: 0;">
+              <div nz-col [nzSpan]="20" [nzOffset]="4">
+                <div nz-col style="width: 60%;">
+                  <div nz-col [nzSpan]="20">
+                    <nz-select [formControlName]="control.resources_id" nzAllowClear [nzPlaceHolder]="'资源文件'" [(ngModel)]="control.resources_id"
+                      nzShowSearch>
+                      <nz-option *ngFor="let option of resourceList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
+                      </nz-option>
+                    </nz-select>
+                  </div>
+                  <div nz-col [nzSpan]="4">
+                    <button style="float:right" nz-button [nzType]="'primary'" (click)="submitForm4(control,control.question_name)">
+                      <span>保存</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
+              <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addField4($event)">
+                <i class="anticon anticon-plus"></i>
+                <span>新增问题</span>
+              </button>
             </div>
           </div>
         </form>
