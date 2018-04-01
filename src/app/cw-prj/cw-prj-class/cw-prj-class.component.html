@@ -42,7 +42,7 @@
                         <td nz-td>图标</td>
                         <td nz-td [innerHtml]="item.cat_remark" ></td>
                         <td nz-td >
-                                <nz-switch [(ngModel)]="item.project_id" (click)="_enabled(item)"></nz-switch>
+                            <nz-switch [nzSize]="'small'" [(ngModel)]="item.project_id" (click)="_enabled(item)"></nz-switch>
                         </td>
                         <td nz-td >
                             <span *ngIf='item.cat_id==0 && item.cat_pid==0'>

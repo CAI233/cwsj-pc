@@ -20,12 +20,9 @@
                         <span>图标</span>
                     </th>
                     <th nz-th [nzWidth]="'10%'">
-                        <span>备注</span>
-                    </th>
-                    <th nz-th [nzWidth]="'10%'">
                         <span>状态</span>
                     </th>
-                    <th nz-th [nzWidth]="'20%'">
+                    <th nz-th >
                         <span>操作</span>
                     </th>
                 </tr>
@@ -40,9 +37,8 @@
                           {{item.cat_name}}
                         </td>
                         <td nz-td>图标</td>
-                        <td nz-td [innerHtml]="item.cat_remark" ></td>
                         <td nz-td >
-                                <nz-switch [(ngModel)]="item.project_id" (click)="_enabled(item)"></nz-switch>
+                            <nz-switch [nzSize]="'small'" [(ngModel)]="item.project_id" (click)="_enabled(item)"></nz-switch>
                         </td>
                         <td nz-td >
                             <span *ngIf='item.cat_id==0 && item.cat_pid==0'>
@@ -105,14 +101,6 @@
                     <nz-input formControlName="order_weight" [nzType]="'number'" [(ngModel)]="selRow.order_weight" [nzPlaceHolder]="'请填写排序'" ></nz-input>
                 </div>
             </div>
-        </div>
-    </div>
-    <div nz-form-item nz-row class="notErrMsg" >
-        <div nz-form-label>
-            <label nz-form-item-required>分类备注</label>
-        </div>
-        <div nz-form-control>
-            <!-- <nz-input formControlName="cat_remark"  [nzRows]="2" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="selRow.cat_remark" [nzPlaceHolder]="'请填写分类备注'"></nz-input> -->
         </div>
     </div>
     

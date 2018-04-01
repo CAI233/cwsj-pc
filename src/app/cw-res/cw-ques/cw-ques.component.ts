@@ -5,7 +5,7 @@ import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 
-declare let wangEditor: any
+declare let wangEditor: any;
 @Component({
   selector: 'app-cw-ques',
   templateUrl: './cw-ques.component.html',
@@ -35,7 +35,7 @@ export class CwQuesComponent implements OnInit {
   goods_data : any = [];//商品标签
   class_data : any = [];//商品分类
   now_data : any = {};//当前修改新增对象
-  
+  now_num :number = 1;
   
   constructor(public service: AppService,public msg: NzMessageService) { }
 
@@ -145,7 +145,11 @@ _enabled(data){
 _add(){
   this.isList = true;
   this.formTitle = '新增试题';
-  this.now_data.opContext = `<p >【题干】</p><p >【答案】</p><p >【解析】</p>`;
+  this.now_num =1;
+  // this.now_data.opContext = `<p >【题干】</p><p >【答案】</p><p >【解析】</p>`;
+  this.ngAfterViewInit();
+    
+  
 
 }
 
@@ -154,16 +158,15 @@ _edit(data){
   this.now_data = {};
   this.isList = true;
   this.formTitle = '修改试题';
+  this.now_num =2;
   for(let i in data){
     this.now_data[i] = data[i];
   }
   this.now_data.label_ids = this.now_data.label_id;
-  console.log(this.now_data.cat_ids)
-  // this.now_data.cat_ids = JSON.parse(this.now_data.cat_ids)
   console.log(this.now_data)
-  console.log(typeof(this.now_data.cat_ids))
-  // this.wangEditor.txt.html('<p>用 JS 设置的内容</p>');
-  this.now_data.opContext = `<p >【题干】</p>${this.now_data.title}<p >【答案】</p>${this.now_data.analysis}<p >【解析】</p>${this.now_data.parsing}`;
+
+  this.ngAfterViewInit();
+  // this.now_data.opContext = `<p >【题干】</p>${this.now_data.title}<p >【答案】</p>${this.now_data.analysis}<p >【解析】</p>${this.now_data.parsing}`;
 }
 
 //删除
@@ -203,7 +206,6 @@ _upload(){
     this._submitUpload();
 }
 _submitUpload(){
-  console.log(this.upload_param)
   if(!this.upload_param.cat_ids || this.upload_param.cat_ids.length==0){
     this.service.message.error('请选择分类');
     return false;
@@ -228,6 +230,7 @@ _submitUpload(){
 
 // 提交
 _submitForm() {
+  this.now_num = 3;
   if(!this.now_data.label_ids){
     this.service.message.error('请选择标签');
     return false;
@@ -243,17 +246,20 @@ _submitForm() {
       this.now_data.cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
     }
   this.now_data.label_id = this.now_data.label_ids.join(",");
-  console.log(this.now_data)
-  // this.service.post('/api/busiz/question/save',this.now_data).then(success => {
-  //   if(success.code==0){
-  //     this.load();
-  //     this.isList = false;
-  //     this.myForm.reset();
-  //     this.service.message.success(success.message);
-  //   }else{
-  //     this.service.message.error(success.message);
-  //   }
-  // })
+  
+  this.now_data.opContext = this.editor.txt.html();
+  console.log(this.now_data);
+  this.service.post('/api/busiz/question/save',this.now_data).then(success => {
+    if(success.code==0){
+      this.load();
+      this.isList = false;
+      this.myForm.reset();
+      this.now_num = 1;
+      this.service.message.success(success.message);
+    }else{
+      this.service.message.error(success.message);
+    }
+  })
 }
 
 
@@ -281,17 +287,23 @@ _refreshStatus() {
   this._allChecked = allChecked;
   this._indeterminate = (!allChecked) && (!allUnChecked);
 }
-
+editor:any
 ngAfterViewInit(){
     
-  var editor = new wangEditor('#editor');
-  editor.customConfig.uploadImgShowBase64 = true;
-  editor.create();
-  editor.txt.clear();
-  editor.txt.html('<p>用 JS 设置的内容</p>');
-  editor.txt.append('<p>追加的内容</p>');
-  console.log(editor.txt.html())
-  console.log(editor.txt.text())
+  this.editor = new wangEditor('#editor');
+  this.editor.customConfig.uploadImgShowBase64 = true;
+  this.editor.create();
+  this.editor.txt.clear();
+  if(this.now_num == 1){
+    this.editor.txt.html('<p >【题干】</p><p >【答案】</p><p >【解析】</p>');
+  }else if(this.now_num == 2){
+    this.editor.txt.html('<p >【题干】</p>'+this.now_data.title+'<p >【答案】</p>'+this.now_data.analysis+'<p >【解析】</p>'+this.now_data.parsing);
+  }
+  
+  // editor.txt.html('<p>用 JS 设置的内容</p>');
+  // editor.txt.append('<p>追加的内容</p>');
+  // console.log(editor.txt.html())
+  // console.log(editor.txt.text())
 }
 
 }
