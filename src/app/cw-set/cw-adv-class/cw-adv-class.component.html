@@ -38,10 +38,13 @@
               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
               </label>
             </th>
+            <th nz-th [nzWidth]="'10%'">
+              <span>分类编码</span>
+            </th>
             <th nz-th [nzWidth]="'20%'">
               <span>分类名称</span>
             </th>
-            <th nz-th [nzWidth]="'30%'">
+            <th nz-th [nzWidth]="'20%'">
               <span>备注</span>
             </th>
             <th nz-th [nzWidth]="'15%'">
@@ -59,6 +62,9 @@
           <tr nz-tbody-tr *ngFor="let data of nzTable.data">
             <td nz-td nzCheckbox>
               <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
+            </td>
+            <td nz-td>
+              <span>{{data.adv_cat_code}}</span>
             </td>
             <td nz-td>
               <span>{{data.adv_cat_name}}</span>
@@ -96,6 +102,14 @@
     <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
       <div nz-form-item nz-row>
         <div nz-form-label>
+          <label>分类编码</label>
+        </div>
+        <div nz-form-control nzHasFeedback>
+          <nz-input formControlName="adv_cat_code" [(ngModel)]="formBean.adv_cat_code"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label>
           <label>分类名称</label>
         </div>
         <div nz-form-control nzHasFeedback>
@@ -116,11 +130,6 @@
         </div>
         <div nz-form-control nzHasFeedback>
           <nz-input [nzType]="'textarea'" [nzRows]="'4'" formControlName="adv_cat_remark" [(ngModel)]="formBean.adv_cat_remark"></nz-input>
-          <nz-input formControlName="adv_cat_code" [(ngModel)]="formBean.adv_cat_code" [nzType]="'hidden'"></nz-input>
-          <nz-input formControlName="adv_cat_id" [(ngModel)]="formBean.adv_cat_id" [nzType]="'hidden'"></nz-input>
-          <nz-input formControlName="create_time" [(ngModel)]="formBean.create_time" [nzType]="'hidden'"></nz-input>
-          <nz-input formControlName="is_delete" [(ngModel)]="formBean.is_delete" [nzType]="'hidden'"></nz-input>
-          <nz-input formControlName="update_time" [(ngModel)]="formBean.update_time" [nzType]="'hidden'"></nz-input>
         </div>
       </div>
 
