@@ -134,20 +134,76 @@ export class CwCodeListComponent implements OnInit {
   formBeanObject: any;
   nzSelectedIndex: number = 0;
   //配置对象
-  _settingBean(data?){
+  _settingBean(data?) {
     this.nzSelectedIndex = 1;
     this.formBeanObject = {};
-    for(let i in data){
+    for (let i in data) {
       this.formBeanObject[i] = data[i];
     }
   }
   //作品列表
   workTableData: any = [];
-  isShowWorkAdd: boolean = false;
-  _addWork(){
-    this.isShowWorkAdd = true;
+  workClassData: any = [];
+  workTagsData: any = [];
+  workTypeData: any = ['问答', '试题', '资源包', '教育表格'];
+  paramWork: any = {
+    works_type: null,
+    cat_id: null,
+    tag_id: null,
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    pages: 0
   }
-  workCancel(e?){
+  isShowWorkAdd: boolean = false;
+  _addWork() {
+    this.isShowWorkAdd = true;
+    this._workTagList();
+    this.service.post('/api/busiz/works/cat/list', {}).then(success => {
+      this.service._toisLeaf(success.data);
+      this.workClassData = success.data;
+    });
+    this.searchWork();
+  }
+  workCancel(e?) {
     this.isShowWorkAdd = false;
+  }
+  _workTagList(e?) {
+    this.service.post('/api/busiz/works/tag/list', {
+      pageNum: 1,
+      pageSize: 10,
+      searchText: e
+    }).then(success => {
+      this.workTagsData = success.data.rows;
+    })
+  }
+  searchWork(e?) {
+    if (e) {
+      if (this.paramWork.cat_ids && this.paramWork.cat_ids.length > 0) {
+        this.paramWork.cat_id = this.paramWork.cat_ids[this.paramWork.cat_ids.length - 1];
+      }
+      this.paramWork.pageNum = 1;
+    }
+    console.log(this.paramWork)
+    this.service.post('/api/busiz/works/list', this.paramWork).then(success => {
+      this.workTableData = success.data.rows;
+      this.paramWork.total = success.data.total;
+      this.paramWork.pageNum = success.data.pageNum;
+      this.paramWork.pages = success.data.pages;
+    })
+  }
+  //二维码加作品
+  addworkInfo(data) {
+    this.service.post('/api/busiz/code/config', {
+      code_id: this.formBeanObject.code_id,
+      works_id: data.works_id
+    }).then(success => {
+      if(success.code == 0){
+        this.service.message.success(success.message);
+      }
+      else{
+        this.service.message.error(success.message);
+      }
+    })
   }
 }

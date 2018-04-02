@@ -81,7 +81,9 @@
 
                 </nz-card>
             </li>
-          <nz-pagination nzShowQuickJumper [nzPageIndex]="param.pageNum" [nzTotal]="param.total" [nzShowTotal]="true" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
+          <nz-pagination nzShowQuickJumper [nzPageIndex]="param.pageNum" 
+          [nzTotal]="param.total" [nzShowTotal]="true" 
+          (nzPageIndexChange)="param.pageNum=$event;load($event)"
            (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)" [nzPageSize]="param.pageSize"></nz-pagination>
         </ul>
       </div>

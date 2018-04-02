@@ -78,7 +78,7 @@
           <nz-card [nzBordered]="false">
             <ng-template #body style="padding:10px">
               <div class="code-img">
-                <img src="http://cjszyun.cn/uploads/20180401150351/1a4fa340500949acaf6c07294be839dc.png">
+                <img src="{{service.ctxPath + data.code_path}}">
               </div>
               <div class="book-info">
                 <h1>{{data.code_name}}</h1>
@@ -106,9 +106,9 @@
                 <p *ngIf="!data.works || data.works.length == 0" class="undata">还未配置任何关联作品</p>
                 <ng-container *ngFor="let item of data.works">
                   <div class="weixin-item">
-                    <div class="cover" style="background-image:url(https://oss.5rs.me/oss/uploadfe/jpg/db24dc12d0406363bd00d52893addac4.jpg?x-oss-process=image/resize,p_100)"></div>
+                    <div class="cover" style="background-image:url({{service.ctxPath+item.works_cover_small}})"></div>
                     <div class="title">
-                      <p>加入国学小课堂，学习经典名篇，培养孩子文化气质,加入国学小课堂，学习经典名篇，培养孩子文化气质</p>
+                      <p>{{item.works_name}}</p>
                     </div>
                   </div>
                 </ng-container>
@@ -119,7 +119,7 @@
 
       </div>
       <div class="list-pagination" *ngIf="param.pages > 1">
-        <nz-pagination [nzPageIndex]="param.pageNum" [nzTotal]="param.total" [nzPageSize]="param.pageSize"></nz-pagination>
+        <nz-pagination [nzPageIndex]="param.pageNum" [nzTotal]="param.total" [nzPageSize]="param.pageSize" (nzPageIndexChange)="param.pageNum=$event;_reload()"></nz-pagination>
       </div>
     </ng-container>
     <ng-container *ngIf="nzSelectedIndex == 1">
@@ -164,8 +164,11 @@
                         <span>作品</span>
                       </th>
                       <th nz-th nzWidth="100px">
-                          <span>排序</span>
-                        </th>
+                        <span>创建时间</span>
+                      </th>
+                      <th nz-th nzWidth="100px">
+                        <span>排序</span>
+                      </th>
                       <th nz-th nzWidth="100px">
                         <span>操作</span>
                       </th>
@@ -175,15 +178,25 @@
                     <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                       <td nz-td>
                         <div class="zp-list">
-                          <div class="zp-cover" style="background-image:url(https://oss.5rs.me/oss/uploadfe/jpg/db24dc12d0406363bd00d52893addac4.jpg?x-oss-process=image/resize,p_100)"></div>
+                          <div class="zp-cover" style="background-image:url({{service.ctxPath+data.works_cover_small}})"></div>
                           <div class="zp-info">
-                            <h1>{{data.name}}</h1>
-                            <p>{{data.type}}</p>
+                            <h1>{{data.works_name}}</h1>
+                            <p style="padding:5px 0;">类型：{{data.works_type}}</p>
+                            <div *ngIf="data.tag_names">
+                              <ng-container *ngFor="let item of data.tag_names.split(',')">
+                                <nz-tag [nzColor]="'blue'">{{item}}</nz-tag>
+                              </ng-container>
+                            </div>
                           </div>
                         </div>
                       </td>
-                      <td nz-td>{{data.address}}</td>
-                      <td nz-td>{{data.address}}</td>
+                      <td nz-td>{{data.create_time}}</td>
+                      <td nz-td>
+                        <a><i class="anticon anticon-arrow-up" style="font-size:20px"></i></a>
+                      </td>
+                      <td nz-td>
+                        <a><i class="anticon anticon-delete" style="font-size:20px"></i></a>
+                      </td>
                     </tr>
                   </tbody>
                 </nz-table>
@@ -270,26 +283,31 @@
   [nzVisible]="isShowWorkAdd" (nzOnCancel)="workCancel($event)" [nzTitle]="'作品列表'" [nzFooter]="false">
 <ng-template #seeContent>
     <div class="m-search" style="margin-bottom:15px;">
-        <nz-select nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'作品分类'" (nzSearchChange)="searchChange($event)" [nzNotFoundContent]="'无法找到'"
-          name="tag_id" [(ngModel)]="paramCol.tag_id" nzShowSearch>
-          <nz-option *ngFor="let option of tagOptions" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
-          </nz-option>
-        </nz-select>
+      
+        <nz-cascader style="width:200px;margin-right:10px;display:inline-block;" 
+          nzChangeOnSelect
+          [nzPlaceHolder]="'作品分类'"
+          [nzOptions]="workClassData"
+          [nzValueProperty]="'cat_id'"
+          [nzLabelProperty]="'cat_name'"
+          [(ngModel)]="paramWork.cat_ids">
+        </nz-cascader>
+
         <nz-select nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'作品标签'" (nzSearchChange)="searchChange($event)" [nzNotFoundContent]="'无法找到'"
-          name="tag_id" [(ngModel)]="paramCol.tag_id" nzShowSearch>
-          <nz-option *ngFor="let option of tagOptions" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
+          name="tag_id" [(ngModel)]="paramWork.tag_id" nzShowSearch>
+          <nz-option *ngFor="let option of workTagsData" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
           </nz-option>
         </nz-select>
         <nz-select nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'作品类型'" 
-          name="tag_id" [(ngModel)]="paramCol.tag_id">
-          <nz-option *ngFor="let option of tagOptions" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
+          name="tag_id" [(ngModel)]="paramWork.works_type">
+          <nz-option *ngFor="let option of workTypeData" [nzLabel]="option" [nzValue]="option">
           </nz-option>
         </nz-select>
-        <button nz-button [nzType]="'primary'">
+        <button nz-button [nzType]="'primary'" (click)="searchWork()">
           <span>筛选</span>
         </button>
     </div>
-    <nz-table #nzTable [nzDataSource]="workTableData" nzIsPagination="false">
+    <nz-table #nzTable [nzDataSource]="workTableData" [nzIsPagination]="false">
         <thead nz-thead>
           <tr>
             <th nz-th>
@@ -306,16 +324,26 @@
               <div class="zp-list">
                 <div class="zp-cover" style="background-image:url(https://oss.5rs.me/oss/uploadfe/jpg/db24dc12d0406363bd00d52893addac4.jpg?x-oss-process=image/resize,p_100)"></div>
                 <div class="zp-info">
-                  <h1>{{data.name}}</h1>
-                  <p>{{data.type}}</p>
+                  <h1>{{data.works_name}}</h1>
+                  <p>类型：{{data.works_type}}</p>
+                  <p>创建时间：{{data.create_time}}</p>
+                  <div *ngIf="data.tag_names">
+                    <ng-container *ngFor="let item of data.tag_names.split(',')">
+                      <nz-tag [nzColor]="'blue'">{{item}}</nz-tag>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </td>
             <td nz-td>
-              <a>添加</a>
+              <a (click)="addworkInfo(data)">添加</a>
             </td>
           </tr>
         </tbody>
       </nz-table>
+      <div style="text-align:center;padding-top:15px;" *ngIf="paramWork.pages > 1">
+        <nz-pagination [nzPageIndex]="paramWork.pageNum" [nzPageSize]="paramWork.pageSize" [nzTotal]="paramWork.total"
+        (nzPageIndexChange)="paramWork.pageNum=$event;searchWork()"></nz-pagination>
+      </div>
 </ng-template>
 </nz-modal>
