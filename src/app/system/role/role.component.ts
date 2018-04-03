@@ -54,9 +54,7 @@ export class RoleComponent implements OnInit {
   showModalMiddle(bean?: any) {
     this.formBean = {};
     if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
       //部门
       if (this.formBean.dept_id) {
         this.formBean.dept_id = parseInt(this.formBean.dept_id);

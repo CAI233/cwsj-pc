@@ -52,9 +52,7 @@ export class CwAdvClassComponent implements OnInit {
   //打开
   showModalMiddle(bean?: any) {
     if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
       this.formTitle = "修改广告分类";
     }
     else {

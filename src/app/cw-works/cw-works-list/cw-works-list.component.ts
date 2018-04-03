@@ -115,9 +115,7 @@ export class CwWorksListComponent implements OnInit {
 
     this.formBean = {};
     if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
       let works_cat_ids_array = this.formBean.works_cat_ids.split(',')
       //部门
       if (works_cat_ids_array) {
@@ -481,14 +479,16 @@ export class CwWorksListComponent implements OnInit {
 
   //创建试卷
   createTestPaper(bean?: any) {
+    if (!this.formBean.works_id) {
+      this.service.message.warning('请先保存作品基本信息');
+      return false;
+    }
     this.testPaperLayer = true;
     this.testFormBean = {
       works_id: this.formBean.works_id
     };
     if (bean) {
-      for (let i in bean) {
-        this.testFormBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
     }
     this.service.post('/api/busiz/res/getlist', {
       pageSize: 1000,

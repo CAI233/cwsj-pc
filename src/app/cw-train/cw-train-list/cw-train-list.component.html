@@ -9,7 +9,7 @@
       </nz-breadcrumb-item>
     </nz-breadcrumb>
   </nz-header>
-  <nz-tabset>
+  <nz-tabset [(nzSelectedIndex)]="selectedIndex">
     <nz-tab>
       <ng-template #nzTabHeading>
         列表
@@ -44,7 +44,7 @@
                   <span>查询</span>
                 </button>
                 <!-- (click)="resetForm()" -->
-                <button nz-button nzType="button" >
+                <button nz-button nzType="button">
                   <span>重置</span>
                 </button>
                 <a style="margin-left:8px;font-size:12px;" (click)="isCollapse=!isCollapse">
@@ -65,15 +65,15 @@
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
-                  <div nz-form-label nz-col [nzSpan]="7">
-                    <label>资源标签</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="15">
-                    <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                      <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
-                    </nz-select>
-                  </div>
+                <div nz-form-label nz-col [nzSpan]="7">
+                  <label>资源标签</label>
                 </div>
+                <div nz-form-control nz-col [nzSpan]="15">
+                  <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
+                    <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
+                  </nz-select>
+                </div>
+              </div>
               <div nz-col [nzSpan]="5">
                 <div nz-form-label nz-col [nzSpan]="8">
                   <label>审核状态</label>
@@ -94,7 +94,7 @@
                   </nz-select>
                 </div>
               </div>
-            
+
             </div>
             <div nz-row nz-form-item>
               <div class="row-actions">
@@ -211,9 +211,10 @@
         </div>
       </nz-content>
     </nz-tab>
-    <nz-tab>
+    <nz-tab *ngIf="isVisibleMiddle">
       <ng-template #nzTabHeading>
-        新增
+        {{formTitle}}
+        <i class="anticon anticon-cross" (click)="closeTab()"></i>
       </ng-template>
       <nz-content class="main-page-content">
         <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
@@ -228,8 +229,8 @@
                     <img *ngIf="formBean.icon" src="{{ service.ctxPath + formBean.icon }}" />
                   </div>
                   <!-- (nzChange)="fileUpload($event)" -->
-                  <nz-upload [nzShowUploadList]="false"  [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
-                    nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
+                  <nz-upload [nzShowUploadList]="false" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'" nzAction="{{service.ctxPath + '/api/system/file/upload'}}"
+                    [nzData]="{type:'admin',token:service.token}">
                     <button nz-button type="button">
                       <i class="anticon anticon-upload"></i>
                       <span>上传</span>
@@ -280,24 +281,41 @@
                     </nz-select>
                   </div>
                 </div>
-                <div nz-col [nzSpan]="8" style="padding-left:10px">
+                <div nz-col [nzSpan]="3" style="padding-left:10px">
                   <div nz-form-label>
-                    <label nz-form-item-required>预计售价</label>
+                    <label nz-form-item-required>预计售价(元)</label>
+                  </div>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-input (ngModelChange)="getPrice()" formControlName="price" [nzType]="'number'" [(ngModel)]="formBean.price"></nz-input>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="2" style="padding-left:10px">
+                  <div nz-form-label>
+                    <label nz-form-item-required>折扣率</label>
+                  </div>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-input (ngModelChange)="getPrice()" formControlName="discount" [nzType]="'number'" [(ngModel)]="formBean.discount"></nz-input>
+                  </div>
+                </div>
+                <div nz-col [nzSpan]="3" style="padding-left:10px">
+                  <div nz-form-label>
+                    <label>实际售价(元)</label>
                   </div>
                   <div nz-form-control>
-                    <nz-input formControlName="phone" [nzType]="'tel'" [(ngModel)]="formBean.phone" [nzPlaceHolder]="'请填写二维码名称'"></nz-input>
+                    <nz-input formControlName="real_price" [nzType]="'text'" [nzDisabled]="true" [(ngModel)]="formBean.real_price"></nz-input>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div nz-form-item nz-row>
-                  <div nz-form-label>
-                    <label nz-form-item-required>视频简介</label>
-                  </div>
-                  <div nz-form-control>
-                    
-                  </div>
+            <div nz-form-label>
+              <label nz-form-item-required>视频简介</label>
+            </div>
+            <div nz-form-control>
+              <nz-input formControlName="works_remark" [nzRows]="4" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="formBean.works_remark"
+                [nzPlaceHolder]="'请填写视频简介'"></nz-input>
+            </div>
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="12" [nzOffset]="6" style="margin-top:30px">
@@ -306,6 +324,42 @@
             </div>
           </div>
           <button style="display:none;">save</button>
+        </form>
+      </nz-content>
+    </nz-tab>
+    <nz-tab *ngIf="isVisibleMiddle">
+      <ng-template #nzTabHeading>
+        视频资源
+      </ng-template>
+      <nz-content  class="main-page-content">
+        <form nz-form [formGroup]="myForm1">
+          <div nz-form-item nz-row *ngFor="let control of resourceArray;let i = index">
+            <div nz-form-label nz-col [nzSpan]="4">
+              <label [attr.for]="control.resources_name">视频{{i+1}}</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="20">
+              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.resources_name" nzAllowClear [nzPlaceHolder]="'资源文件'"
+                [(ngModel)]="control.resources_id" nzShowSearch>
+                <nz-option *ngFor="let option of resourceList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
+                </nz-option>
+              </nz-select>
+              <i style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
+              <button nz-button [nzType]="'primary'" (click)="submitForm1(control,control.resources_name)">
+                <span>保存</span>
+              </button>
+              <div nz-form-explain *ngIf="getFormControl1(control.resources_name)?.dirty&&getFormControl1(control.resources_name)?.hasError('required')">
+                请选择资源文件
+              </div>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
+              <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addField1($event)">
+                <i class="anticon anticon-plus"></i>
+                <span>新增资源</span>
+              </button>
+            </div>
+          </div>
         </form>
       </nz-content>
     </nz-tab>

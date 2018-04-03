@@ -73,9 +73,7 @@ export class CwAdvListComponent implements OnInit {
   showModalMiddle(bean?: any) {
     this.formBean = {};
     if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
       this.formTitle = "修改广告";
     }
     else {

@@ -150,9 +150,7 @@ export class UserComponent implements OnInit {
   showModalMiddle(bean?: any) {
     this.formBean = {}
     if (bean) {
-      for (let i in bean) {
-        this.formBean[i] = bean[i];
-      }
+      this.formBean = {...bean}
       //部门
       if (this.formBean.dept_ids_array) {
         this.formBean.dept_idss = [];
