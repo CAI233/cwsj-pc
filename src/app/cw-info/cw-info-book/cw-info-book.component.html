@@ -126,10 +126,10 @@
               </label>
             </td>
             <td nz-td nz-row>
-                <div nz-col [nzSpan]="6" style="float:left;border:1px #ddd dashed;height:80px;background: #f5f8fa;">
+                <div nz-col [nzSpan]="4" style="float:left;border:1px #ddd dashed;width:72px;height:96px;background: #f5f8fa;">
                     <img src="{{service.ctxPath + data.book_cover_small}}" alt="" style="float:left;width:100%;height:100%;">
                 </div>
-                <div nz-col [nzSpan]="18" style="padding:5px;">
+                <div nz-col [nzSpan]="14" style="padding:5px;">
                     <p><span style="color:#000;margin-right:5px;">图书名称:</span><span [innerHtml]="data.book_name"></span></p>
                     <p><span style="color:#000;margin-right:5px;">作/译者:</span><span [innerHtml]="data.author_name"></span></p>
                     <p><span style="color:#000;margin-right:5px;">出版社:</span><span [innerHtml]="data.publisher"></span></p>
@@ -204,7 +204,7 @@
                                 </div>
                                 <div nz-form-control nz-col [nzSpan]="16">
                                     <nz-cascader style="width:100%" formControlName="book_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="bookClass"
-                                        [(ngModel)]="bookData.cat_ids" (nzSelectionChange)="now_change($event)">
+                                        [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
                                     </nz-cascader>
                                 </div> 
                             </div>
@@ -272,7 +272,7 @@
                                 <label nz-form-item-required>出版时间</label>
                             </div>
                             <div nz-form-control nz-col [nzSpan]="16">
-                                <nz-input [nzType]="'text'" formControlName="publisher_date" [(ngModel)]="bookData.publisher_date" [nzPlaceHolder]="'请输入出版时间'"  [nzSize]="'default'"></nz-input>
+                                <nz-input [nzType]="'text'" formControlName="publish_date" [(ngModel)]="bookData.publish_date" [nzPlaceHolder]="'请输入出版时间'"  [nzSize]="'default'"></nz-input>
                             </div>
                         </div>
                     </div>
@@ -304,7 +304,7 @@
                     </div>
                     <button *ngIf="this.param.book_type==2" nz-button [nzType]="'primary'" (click)="bookOk($event)"><span>下一步</span></button>
                 </nz-tab>
-                <nz-tab *ngIf="this.param.book_type==2" >
+                <nz-tab *ngIf="this.param.book_type==2" [nzDisabled]="true">
                     <ng-template #nzTabHeading>资源列表</ng-template>
                     <div nz-row nz-form-item style="margin-bottom:0;">
                         <div nz-row nz-form-item style="float:right;">
@@ -353,7 +353,6 @@
                     <button nz-button [nzType]="'primary'" (click)="submit($event)"><span>保存</span></button>
                 </nz-tab>
             </nz-tabset>
-
       </form>
   </ng-template>
 </nz-modal>
@@ -393,7 +392,78 @@
         <p nz-row class="see_class"><span nz-col style="float:left;width:5%;">简介:</span><span nz-col [nzSpan]="18">{{bookData.book_remark}}</span></p>
     </div>
     <div>
-        <p class="see_class" style="border-bottom:1px solid #e9e9e9">二维码关联</p>
+        <p class="see_class" *ngIf="param.book_type==1" style="border-bottom:1px solid #e9e9e9">二维码关联</p>
+        <div *ngIf="param.book_type==1">
+            <nz-table #nzTable [nzAjaxData]="bookResource" [nzPageSize]="bookResource.length" [nzIsPagination]="false" *ngIf="bookResource.length>0">
+                <thead nz-thead>
+                    <tr>
+                    <th nz-th><span>二维码</span></th>
+                    <th nz-th><span>二维码名称</span></th>
+                    <th nz-th><span>简介</span></th>
+                    <th nz-th><span>操作</span></th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                        <td>
+                            <div class="code-cover">
+                                <img src="{{service.ctxPath + data.code_path}}">
+                            </div>
+                        </td>
+                        <td>
+                            <span>{{data.code_name}}</span>
+                        </td>
+                        <td>
+                            <span>{{data.remark}}</span>
+                        </td>
+                        <td #dao>
+                            <span ><a (click)="daochu(data)">导出</a></span>
+                        </td>
+                    <!-- <td nz-td>
+                        <span>{{data.res_name}}</span>
+                    </td>
+                    <td nz-td>
+                        <span>{{data.res_size}}页</span>
+                    </td>
+                    <td nz-td>
+                        <span>{{data.res_type}}</span>
+                    </td>
+                    <td nz-td>
+                        <span ><a (click)="bookSee(data)">预览</a></span>
+                    </td> -->
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <p class="see_class" *ngIf="param.book_type==2" style="border-bottom:1px solid #e9e9e9">电子书关联</p>
+        <div *ngIf="param.book_type==2">
+            <nz-table #nzTable [nzAjaxData]="ebookResource" [nzPageSize]="ebookResource.length" [nzIsPagination]="false" *ngIf="ebookResource.length>0">
+                <thead nz-thead>
+                    <tr>
+                    <th nz-th><span>名称</span></th>
+                    <th nz-th><span>大小</span></th>
+                    <th nz-th><span>类型</span></th>
+                    <th nz-th><span>操作</span></th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                    <td nz-td>
+                        <span>{{data.res_name}}</span>
+                    </td>
+                    <td nz-td>
+                        <span>{{data.res_size}}页</span>
+                    </td>
+                    <td nz-td>
+                        <span>{{data.res_type}}</span>
+                    </td>
+                    <td nz-td>
+                        <span ><a (click)="bookSee(data)">预览</a></span>
+                    </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
     </div>
 </ng-template>
 </nz-modal>
@@ -452,6 +522,20 @@
          </nz-table>
 </ng-template>
 </nz-modal>
-
+<nz-modal [nzVisible]="isVisiblePdf" [nzWidth]="700" [nzTitle]="modalTitle2" [nzContent]="modalContent2" [nzFooter]="modalFooter2" (nzOnCancel)="_bookCancel($event)">
+    <ng-template #modalTitle2>
+        <span *ngIf="pdfModel">第 {{ pdfMinNum +'/' +pdfModel.res_size}}页</span>
+    </ng-template>
+    <ng-template #modalContent2>
+        <div class="pwImgList" *ngIf="pdfModel">
+            <i class="anticon anticon-left" (click)="pdfMinNum1()"></i>
+            <div class="imgList">
+            <img src="{{service.ctxPath+pdfModel.res_analysis_url+'/img'+pdfMinNum+'.png'}}">
+            </div>
+            <i class="anticon anticon-right" (click)="pdfMinNum2()"></i>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter2 style="display:none"></ng-template>
+</nz-modal>
 
 
