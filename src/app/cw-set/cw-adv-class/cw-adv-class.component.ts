@@ -37,9 +37,9 @@ export class CwAdvClassComponent implements OnInit {
     this.reload();
     this.myForm = this.service.fb.group({
       adv_cat_name: [null, [this.service.validators.required]],
+      adv_cat_code: [null, [this.service.validators.required]],
       order_weight: [false],
       adv_cat_remark: [false],
-      adv_cat_code: [false],
       adv_cat_id: [false],
       create_time: [false],
       is_delete: [false],

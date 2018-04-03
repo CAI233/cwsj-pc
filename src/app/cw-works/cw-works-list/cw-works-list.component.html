@@ -22,9 +22,9 @@
         <div class="tableListSearch">
           <div class="gutter-example">
             <div nz-row [nzGutter]="8">
-              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '图书'}" (click)="paramCol.works_type='图书'">
+              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '问答'}" (click)="paramCol.works_type='问答'">
                 <i class="anticon anticon-book"></i>
-                <span>图书</span>
+                <span>问答</span>
                 <span class="check">
                   <i class="anticon anticon-check"></i>
                 </span>
@@ -172,11 +172,20 @@
                 <td nz-td nzCheckbox>
                   <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
                 </td>
-                <td nz-td>
-                  <span>
-                    <p>{{data.works_name}}</p>
-                    <p>{{data.works_type}}</p>
-                  </span>
+                <td nz-td nz-row>
+                  <div nz-col [nzSpan]="6" style="float:left;border:1px #ddd dashed;width:60px;height:80px;background: #f5f8fa;">
+                    <img src="{{service.ctxPath + data.works_cover}}" alt="" style="float:left;width:100%;height:100%;">
+                  </div>
+                  <div nz-col [nzSpan]="18" style="padding:5px;">
+                    <p style="margin-bottom:10px;">
+                      <span style="color:#000;margin-right:5px;">作品名称:</span>
+                      <span [innerHtml]="data.works_name"></span>
+                    </p>
+                    <p>
+                      <span style="color:#000;margin-right:5px;">作品类型:</span>
+                      <span [innerHtml]="data.works_type"></span>
+                    </p>
+                  </div>
                 </td>
                 <td nz-td>
                   <span>{{data.tag_names}}</span>
@@ -251,9 +260,9 @@
                   <div class="uimg">
                     <img *ngIf="formBean.works_cover" alt="建议尺寸3:4,800KB以内" src="{{ service.ctxPath + formBean.works_cover }}" />
                   </div>
-                  <!-- (nzChange)="fileUpload($event)" -->
-                  <nz-upload [nzShowUploadList]="false" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'" nzAction="{{service.ctxPath + '/api/system/file/upload'}}"
-                    [nzData]="{type:'admin',token:service.token}">
+
+                  <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
+                    nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
                     <button nz-button type="button">
                       <i class="anticon anticon-upload"></i>
                       <span>上传</span>
@@ -367,21 +376,20 @@
             <div nz-form-label nz-col [nzSpan]="4">
               <label [attr.for]="control.resources_name">资源{{i+1}}</label>
             </div>
-            <div nz-form-control  nz-col [nzSpan]="20">
-              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.resources_name" nzAllowClear [nzPlaceHolder]="'资源文件'" [(ngModel)]="control.resources_id"
-                nzShowSearch>
+            <div nz-form-control nz-col [nzSpan]="20">
+              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.resources_name" nzAllowClear [nzPlaceHolder]="'资源文件'"
+                [(ngModel)]="control.resources_id" nzShowSearch>
                 <nz-option *ngFor="let option of resourceList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
                 </nz-option>
               </nz-select>
-              <i  style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
+              <i style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
               <button nz-button [nzType]="'primary'" (click)="submitForm1(control,control.resources_name)">
-                  <span>保存</span>
-                </button>
+                <span>保存</span>
+              </button>
               <div nz-form-explain *ngIf="getFormControl1(control.resources_name)?.dirty&&getFormControl1(control.resources_name)?.hasError('required')">
-                  请选择资源文件
-                </div>
+                请选择资源文件
+              </div>
             </div>
-         
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
@@ -395,19 +403,89 @@
       </nz-content>
     </nz-tab>
     <!-- 问答模板 -->
-    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='图书'">
+    <!-- <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='问答'">
       <ng-template #nzTabHeading>
         问答模板
       </ng-template>
       <nz-content class="main-page-content">
       </nz-content>
-    </nz-tab>
+    </nz-tab> -->
     <!-- 试卷列表 -->
     <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='试题'">
       <ng-template #nzTabHeading>
         试卷列表
       </ng-template>
       <nz-content class="main-page-content">
+        <div class="tableListSearch">
+          <div nz-row nz-form-item>
+            <div class="row-actions">
+              <button nz-button nzType="primary" (click)="createTestPaper()" *ngIf="this.service.validataAction('cw_works_list_add')">
+                <span>创建试卷</span>
+              </button>
+            </div>
+            <div class="row-questions">
+              <nz-input [nzType]="'search'" [nzPlaceHolder]="'试卷名称'" name="searchText" [(ngModel)]="testParam.searchText" style="width: 200px;"
+                (nzOnSearch)="testReload(true)"></nz-input>
+            </div>
+          </div>
+        </div>
+        <nz-table #testTable [nzAjaxData]="testData" [nzLoading]="_loading" [nzIsPagination]="false">
+          <thead nz-thead>
+            <tr>
+              <th nz-th>
+                <span>试卷名称</span>
+              </th>
+              <th nz-th>
+                <span>试卷分值</span>
+              </th>
+              <th nz-th>
+                <span>答题时长</span>
+              </th>
+              <th nz-th>
+                <span>试卷描述</span>
+              </th>
+              <th nz-th>
+                <span>操作</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of testTable.data">
+              <td nz-td>
+                <span>{{data.test_paper_name}}</span>
+              </td>
+              <td nz-td>
+                <span>{{data.score}}</span>
+              </td>
+              <td nz-td>
+                <span>{{data.answer_time}}</span>
+              </td>
+              <td nz-td>
+                <span>
+                  {{data.remark}}
+                </span>
+              </td>
+              <td nz-td>
+                <!-- 设置题目 -->
+                <ng-container *ngIf="this.service.validataAction('cw_works_list_add')">
+                  <a href="javascript:void(0)" (click)="settingTopic(data)">设置题目</a>
+                  <span nz-table-divider *ngIf="this.service.validataAction('cw_works_list_edit')"></span>
+                </ng-container>
+                <!-- 修改 -->
+                <ng-container *ngIf="this.service.validataAction('cw_works_list_edit')">
+                  <a href="javascript:void(0)" (click)="createTestPaper(data)">修改</a>
+                  <span nz-table-divider *ngIf="this.service.validataAction('cw_works_list_del')"></span>
+                </ng-container>
+                <!-- 删除 -->
+                <ng-container *ngIf="this.service.validataAction('cw_works_list_del')">
+                  <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="testPaperDel(data.id)" [nzPlacement]="'left'">
+                    <a nz-popconfirm>删除</a>
+                  </nz-popconfirm>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
       </nz-content>
     </nz-tab>
     <!-- 教育表格 -->
@@ -477,5 +555,217 @@
         </form>
       </nz-content>
     </nz-tab>
+    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='试题' && setTopic">
+      <ng-template #nzTabHeading>
+        设置题目
+        <i class="anticon anticon-cross" (click)="closeTab2()"></i>
+      </ng-template>
+      <nz-content class="main-page-content">
+        <div class="tableListSearch">
+          <form nz-form>
+            <div nz-row nz-form-item style="text-align:center">
+              <h2>试卷名称 - {{topicParam.paper_name}}</h2>
+            </div>
+            <div nz-row nz-form-item>
+              <!-- <div nz-col [nzSpan]="6">
+                <div nz-form-label nz-col [nzSpan]="6">
+                  <label>题目标签</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                  <nz-select #topicTag name="tag_id" [(ngModel)]="topicParam.tag_id" [nzPlaceHolder]="'请选择'" nzAllowClear>
+                    <nz-option *ngFor="let option of topicTagList" [nzLabel]="option.tag_name" [nzValue]="option.tag_id"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <div nz-form-label nz-col [nzSpan]="6">
+                  <label>题目类型</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                  <nz-select #topicType name="type" [(ngModel)]="topicParam.type" [nzPlaceHolder]="'请选择'" nzAllowClear>
+                    <nz-option *ngFor="let option of topicTypeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+                  </nz-select>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="6">
+                <div nz-form-label nz-col [nzSpan]="6">
+                  <label>题目内容</label>
+                </div>
+                <div nz-form-control nz-col [nzSpan]="16">
+                  <nz-input [nzType]="'text'" name="topicContent" [(ngModel)]="topicParam.topicContent" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
+                </div>
+              </div> -->
+              <div nz-col [nzSpan]="6" style="padding:2px 0;">
+                <!-- <button nz-button nzType="primary" (click)="topicReload()" [nzLoading]="_loading">
+                  <i class="anticon anticon-search"></i>
+                  <span>查询</span>
+                </button>
+                <button nz-button nzType="button" (click)="topicResetForm()">
+                  <span>重置</span>
+                </button> -->
+                <button nz-button nzType="primary" (click)="addTopic()" *ngIf="this.service.validataAction('cw_works_list_add')">
+                  <i class="anticon anticon-plus"></i>
+                  <span>新增试题</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <nz-table #testTable [nzAjaxData]="topicData" [nzLoading]="_loading" [nzIsPagination]="false">
+          <thead nz-thead>
+            <tr>
+              <th nz-th>
+                <span>题目内容</span>
+              </th>
+              <th nz-th>
+                <span>题目标签</span>
+              </th>
+              <th nz-th>
+                <span>题目分值</span>
+              </th>
+              <th nz-th>
+                <span>操作</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of testTable.data">
+              <td nz-td>
+                <span [innerHtml]="data.title"></span>
+              </td>
+              <td nz-td>
+                <span>{{data.tag_names}}</span>
+              </td>
+              <td nz-td>
+                <span>{{data.score}}</span>
+              </td>
+              <td nz-td>
+                <!-- 删除 -->
+                <ng-container *ngIf="this.service.validataAction('cw_works_list_del')">
+                  <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="topicDel(data.rel_id)" [nzPlacement]="'left'">
+                    <a nz-popconfirm>移除</a>
+                  </nz-popconfirm>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-content>
+    </nz-tab>
   </nz-tabset>
 </nz-layout>
+
+<!-- 创建试卷 -->
+<nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent" [nzVisible]="testPaperLayer"
+  [nzWidth]="620" [nzTitle]="formTitle" (nzOnCancel)="handleCancelMiddle2($event)" (nzOnOk)="handleOkMiddle2($event)">
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="myForm2" (ngSubmit)="_submitForm2()" class="ditForm">
+      <div nz-form-item nz-row>
+        <div nz-col [nzSpan]="18">
+          <div nz-form-label nz-form-item-required>
+            <label>试卷名称</label>
+          </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-input formControlName="test_paper_name" [nzType]="'text'" [nzSize]="'large'" [(ngModel)]="testFormBean.test_paper_name"
+              [nzPlaceHolder]="'请填写'"></nz-input>
+          </div>
+        </div>
+        <div nz-col [nzSpan]="6" style="padding-left:10px">
+          <div nz-form-label nz-form-item-required>
+            <label>答题时长(分钟)</label>
+          </div>
+          <div nz-form-control nzHasFeedback>
+            <nz-input formControlName="answer_time" [nzType]="'number'" [nzSize]="'large'" [(ngModel)]="testFormBean.answer_time" [nzPlaceHolder]="'请填写'"></nz-input>
+          </div>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label>
+          <label>作品简介</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="remark" [nzRows]="4" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="testFormBean.remark"
+            [nzPlaceHolder]="'请填写作品简介'"></nz-input>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label>
+          <label>音频文件</label>
+        </div>
+        <div nz-form-control>
+          <nz-select formControlName="resources_id" nzAllowClear [nzPlaceHolder]="'音频文件'" [(ngModel)]="testFormBean.resources_id" nzShowSearch>
+            <nz-option *ngFor="let option of resAudioList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
+            </nz-option>
+          </nz-select>
+          <p>注:此处音频主要适用于英语听力训练,阅读理解等</p>
+        </div>
+      </div>
+
+      <button style="display:none;">save</button>
+    </form>
+
+  </ng-template>
+</nz-modal>
+<!-- 题库列表 -->
+
+  
+  <nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="seeContent" [nzVisible]="isShowAddTopic"
+    [nzWidth]="800" (nzOnCancel)="addTopicCancel($event)" [nzTitle]="'试题列表'" [nzFooter]="false"> 
+    <ng-template #seeContent>
+      <div class="m-search" style="margin-bottom:15px;">
+        <nz-select #addTopicTag nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'试题标签'" (nzSearchChange)="searchChange($event)"
+          [nzNotFoundContent]="'无法找到'" name="add_tag_id" [(ngModel)]="addTopicParam.tag_id" nzShowSearch>
+          <nz-option *ngFor="let option of topicTagList" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
+          </nz-option>
+        </nz-select>
+        <nz-select #addTopicType nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'试题类型'" name="add_type" [(ngModel)]="addTopicParam.type">
+          <nz-option *ngFor="let option of topicTypeList" [nzLabel]="option.name" [nzValue]="option.id">
+          </nz-option>
+        </nz-select>
+        <button nz-button [nzType]="'primary'" (click)="addTopicReload(true)">
+          <span>筛选</span>
+        </button>
+        <button nz-button nzType="button" (click)="addTopicResetForm()">
+          <span>重置</span>
+        </button>
+      </div>
+      <nz-table #nzTopicTable [nzShowTotal]="true" [nzAjaxData]="addTopicData" [nzLoading]="_loading" [nzPageSize]="addTopicParam.pageSize"
+        [nzPageIndex]="addTopicParam.pageNum" [nzTotal]="addTopicParam.total" (nzPageIndexChangeClick)="addTopicParam.pageNum=$event;addTopicReload($event)"
+        (nzPageSizeChange)="addTopicParam.pageNum=1;addTopicParam.pageSize=$event;addTopicReload($event)">
+        <thead nz-thead>
+          <tr>
+            <th nz-th nzWidth="50%">
+              <span>题目名称</span>
+            </th>
+            <th nz-th nzWidth="20">
+              <span>题目标签</span>
+            </th>
+            <th nz-th nzWidth="20">
+              <span>题目类型</span>
+            </th>
+            <th nz-th nzWidth="10%">
+              <span>操作</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody nz-tbody>
+          <tr nz-tbody-tr *ngFor="let data of nzTopicTable.data">
+            <td nz-td>
+              <span [innerHtml]="data.title"></span>
+            </td>
+            <td nz-td>
+              <span [innerHtml]="data.tag_names"></span>
+            </td>
+            <td nz-td>
+              <span [innerHtml]="['单选题','多选题','判断题'][data.type-1]"></span>
+            </td>
+            <td nz-td>
+              <a (click)="submitAddTopic(data.id)">添加</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </ng-template>
+  </nz-modal>

@@ -20,7 +20,7 @@ export class CwWorksClassComponent implements OnInit {
   dataSet = [];
   tableData = [];
   _loading = false;
-  formBean = {
+  formBean: any = {
     cat_id: null,
     cat_name: null,
     enabled: null,
@@ -57,7 +57,7 @@ export class CwWorksClassComponent implements OnInit {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
       if (node.children) {
-        if(this.param.cat_id == node.cat_id)
+        if (this.param.cat_id == node.cat_id)
           this.param.children = node.children;
         for (let i = node.children.length - 1; i >= 0; i--) {
           stack.push({ ...node.children[i], level: node.level + 1, expand: false, parent: node });
@@ -75,22 +75,22 @@ export class CwWorksClassComponent implements OnInit {
   }
   //////////////////tree转化
   //获取资源分类
-  _reload(bool?:any) {
-    if(bool){
+  _reload(bool?: any) {
+    if (bool) {
       this.paramSearch.searchText = this.paramCol.searchText;
     }
     this.service.post('/api/busiz/works/cat/list', {
       searchText: this.paramSearch.searchText
     }).then(success => {
       this.dataSet = [{
-          cat_id: 0,
-          cat_name: '所有分类',
-          children: success.data
-        }];
+        cat_id: 0,
+        cat_name: '所有分类',
+        children: success.data
+      }];
       this.dataSet.forEach(item => {
         this.expandDataCache[item.cat_id] = this.convertTreeToList(item);
       });
-      if(!this.param.cat_id)
+      if (!this.param.cat_id)
         this.param = this.dataSet[0];
     })
   }
@@ -100,7 +100,7 @@ export class CwWorksClassComponent implements OnInit {
       this.service.message.warning('请填写分类名称');
       return false;
     }
-    if(!this.formBean.cat_id){
+    if (!this.formBean.cat_id) {
       this.formBean.cat_pid = this.param.cat_id;
     }
     this.service.post('/api/busiz/works/cat/save', this.formBean).then(success => {
@@ -117,19 +117,15 @@ export class CwWorksClassComponent implements OnInit {
   }
   //取消
   _cancelRow(row) {
-    if (!row.cat_id) {
-      this.param.children.splice(this.param.children.indexOf(row), 1);
-    }
-    for (let i in this.formBean) {
-      this.formBean[i] = null;
-    }
+    this.formBean = {};
+    this._reload();
   }
   //选中
-  _selectItem(row){
+  _selectItem(row) {
     this.param = row;
   }
   //启用/停用
-  _rowEnabled(row){
+  _rowEnabled(row) {
     row.enabled = row.enabled == 1 ? 2 : 1;
     this.formBean = row;
     this._saveRow();
@@ -139,18 +135,18 @@ export class CwWorksClassComponent implements OnInit {
     this.param.children.push(this.formBean);
   }
   //修改
-  _editRow(row){
+  _editRow(row) {
     this.formBean = row;
   }
   //删除
-  _delRow(row){
-    this.service.post('/api/busiz/works/cat/del',{
-      ids:[row.cat_id]
-    }).then(success =>{
-      if(success.code == 0){
+  _delRow(row) {
+    this.service.post('/api/busiz/works/cat/del', {
+      ids: [row.cat_id]
+    }).then(success => {
+      if (success.code == 0) {
         this._reload();
       }
-      else{
+      else {
         this.service.message.error(success.message);
       }
     })
