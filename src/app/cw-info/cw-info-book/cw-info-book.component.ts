@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cw-info-book.component.css']
 })
 export class CwInfoBookComponent implements OnInit {
+  
   myForm: FormGroup;
   _allChecked : boolean = false;
   _indeterminate : boolean = false;
@@ -28,17 +29,19 @@ export class CwInfoBookComponent implements OnInit {
     {id:1,name:"上架"},
     {id:2,name:"下架"}
   ]
+  cat_data : any = null;//分类对象
   bookList = false;//图书新增
   seeList = false;//图书详情
   bookData : any = {};//图书列表
   bookTag : any = [];//标签列表
   bookClass : any = [];//分类列表
+  bookResource : any = [];//已选的图书资源--二维码
   ebookResource : any = [];//已选的电子书资源
   ebookAllResource : any = [];//所有电子书资源
   AllResourceList : boolean = false;//所有电子书资源页面
   AllResource_param : any = {
     pageNum:1,
-    pageSize:10,
+    pageSize:1000,
     res_type:'图书'
   }
   ebookRlist : boolean = false;
@@ -90,11 +93,21 @@ export class CwInfoBookComponent implements OnInit {
     })
   }
 
-  //获取到当前图书的资源列表
-  get_ebookResource(id){
-    this.service.post('/api/busiz/book/res/list',{book_id:id}).then(success => {
+  //获取到当前电子书的资源列表
+  get_ebookResource(){
+    this.service.post('/api/busiz/book/res/list',{book_id:this.bookData.book_id}).then(success => {
       if(success.code==0){
         this.ebookResource = success.data;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  // 获取当前图书的二维码列表
+  get_code(){
+    this.service.post('/api/busiz/book/qrcode/list',{book_id:this.bookData.book_id}).then(success => {
+      if(success.code==0){
+        this.bookResource = success.data;
       }else{
         this.service.message.error(success.message);
       }
@@ -137,7 +150,7 @@ resetForm(){
       book_isbn:false,
       publisher:false,
       author_name:false,
-      publisher_date:false,
+      publish_date:false,
       all_num:false,
       limit_num:false,
       book_remark:false,
@@ -193,7 +206,7 @@ resetForm(){
       this.service.message.warning('请填写作者!');
       return false;
     }
-    if(!this.bookData.publisher_date){
+    if(!this.bookData.publish_date){
       this.service.message.warning('请填写出版时间!');
       return false;
     }
@@ -201,30 +214,22 @@ resetForm(){
       this.service.message.warning('请填写简介!');
       return false;
     }
-    if(this.bookData.cat_ids.length>0){
-      let obj_id = this.bookData.cat_ids[0];
-      let cat_ids = '';
-      if (typeof (obj_id) == 'object') {
-        for(let i in this.bookData.cat_ids){
-          cat_ids += this.bookData.cat_ids[i].cat_id+',';
-        }
-        cat_ids = cat_ids.substring(0,cat_ids.length-1)
-      } else {
-        cat_ids = this.bookData.cat_ids.join(",");
-      }
-      this.bookData.book_cat_ids = cat_ids;
-      this.bookData.cat_ids = cat_ids;
+    if(typeof(this.bookData.tag_ids)=='object'){
+      this.bookData.tag_ids = this.bookData.tag_ids
+    }else{
+      this.bookData.tag_ids = this.bookData.tag_ids.split(",")
     }
-    // this.bookData.tag_ids = this.bookData.tag_ids.split(",")
     
-
     this.service.post('/api/busiz/book/save',this.bookData).then(success => {
       if(success.code==0){
         if(this.param.book_type==2){
           this.ebookRlist = true;
           this.goToindex = 1;
-          console.log(success);
-          this.get_ebookResource(success.data.book_id);
+          console.log(success); 
+          if(success.data){
+            this.bookData.book_id = success.data.book_id;
+          }
+          this.get_ebookResource();
         }else{
           this.bookList = false;
           this.myForm.reset();
@@ -253,12 +258,15 @@ resetForm(){
     if(rest.length>0){
       this.bookData.book_cat_name = '';
       this.bookData.book_cat_names = '';
+      this.bookData.book_cat_ids = '';
       this.bookData.book_cat_id = rest[rest.length-1].cat_id;
       this.bookData.book_cat_name = rest[rest.length-1].cat_name;
       for(let i in rest){
         this.bookData.book_cat_names += rest[i].cat_name+",";
+        this.bookData.book_cat_ids += rest[i].cat_id+",";
       }
       this.bookData.book_cat_names = this.bookData.book_cat_names.substring(0,this.bookData.book_cat_names.length-1);
+      this.bookData.book_cat_ids = this.bookData.book_cat_ids.substring(0,this.bookData.book_cat_ids.length-1);
     }
     console.log(this.bookData)
   }
@@ -285,9 +293,10 @@ resetForm(){
       this.myForm.reset();
     }
     addTo(data){
-      this.service.post('/api/busiz/book/res/save',{book_id:515,res_id:data.res_id,type:'add'}).then(success => {
+      console.log(this.bookData);
+      this.service.post('/api/busiz/book/res/save',{book_id:this.bookData.book_id,res_id:data.res_id,type:'add'}).then(success => {
         if(success.code==0){
-          this.get_ebookResource(this.bookData.book_id);
+          this.get_ebookResource();
             this.service.message.success(success.message);
         }else{
           
@@ -296,9 +305,10 @@ resetForm(){
       })
     }
     delTo(data){
-      this.service.post('/api/busiz/book/res/save',{book_id:515,res_id:data.res_id,type:'del'}).then(success => {
+      console.log(this.bookData);
+      this.service.post('/api/busiz/book/res/save',{book_id:this.bookData.book_id,res_id:data.res_id,type:'del'}).then(success => {
         if(success.code==0){
-          this.get_ebookResource(this.bookData.book_id);
+          this.get_ebookResource();
             this.service.message.success(success.message);
         }else{
           
@@ -306,47 +316,56 @@ resetForm(){
         }
       })
     }
+
+    submit(){
+      this.bookList = false;
+      this.myForm.reset();
+    }
 // ------------------------------------------------------------ 电子书 end----------------
   //查看详情
   _see(data){
+    this.bookData = {};
     this.seeList = true;
-    this.bookData = {...data};
+    for(let i in data){
+      this.bookData[i] = data[i];
+    }
     if(this.param.book_type==1){
-      this.service.post('/api/busiz/book/res/list',{book_id:data.book_id}).then(success => {
-        if(success.code==0){
-          
-          console.log(success)
-        }else{
-          this.service.message.error(success.message);
-        }
-      })
+      //当图书时  获取二维码
+      this.get_code();
+    }else{
+      //当电子书时 获取资源列表
+      this.get_ebookResource();
     }
   } 
   //新增操作
   _add(){
     this.bookData = {};
+    this.bookData.book_type = this.param.book_type;
     this.bookList = true;
-    this.bookData.publisher = "崇文书局";
-    this.bookData.book_type = this.param.book_type
+    this.bookData.publish = "崇文书局";
   }
   // 修改操作
   _edit(data){
-    this.bookData = {...data};
+    console.log(data);
+    this.bookData = {};
+    this.bookData.book_type = this.param.book_type;
     this.bookList = true;
-    this.bookData.cat_ids = [];
+    for(let i in data){
+      this.bookData[i] = data[i];
+    }
+    this.cat_data = [];
+
     let arr_name = this.bookData.book_cat_names.split(",");
     let arr_id = this.bookData.book_cat_ids.split(",");
 
     for(let i in arr_id){
-      this.bookData.cat_ids.push({
+      this.cat_data.push({
         cat_id:arr_id[i],
         cat_name:arr_name[i]
       })
     }
-    // this.bookData.cat_ids = this.bookData.book_cat_ids.split(",");
-   
     console.log(this.bookData);
-    this.get_ebookResource(this.bookData.book_id);
+    
   }
   //删除操作
   del(data){
@@ -376,7 +395,46 @@ resetForm(){
       })
     }
   }
+  isVisiblePdf : boolean = false;
+  pdfMinNum: number = 1;
+  pdfModel: any = null;
+  //关闭音频
+  _bookCancel(event?) {
+   
+    this.isVisiblePdf = false;
+   
+  }
+  // 预览
+  bookSee(row){
+    this.isVisiblePdf = true;
+    this.pdfModel = row;
+    this.pdfMinNum = 1;
+  }
 
+    //上一页
+    pdfMinNum1() {
+      if (this.pdfMinNum > 1) {
+        this.pdfMinNum -= 1;
+      }
+    }
+    //上一页
+    pdfMinNum2() {
+      if (this.pdfMinNum < this.pdfModel.res_size) {
+        this.pdfMinNum += 1;
+      }
+    }
+
+    daochu(data){
+      // let doc = `<iframe style="display: none" src="${this.service.ctxPath}/api/busiz/code/export/ids=${data.code_id}"></iframe>`;
+      let doc = document.createElement('iframe');
+      doc.src = this.service.ctxPath + '/api/busiz/code/export/ids=' + data.code_id;
+      doc.style.display = 'none';
+      // a.href =  this.service.ctxPath + '/api/busiz/code/export/ids=' + data.code_id;
+      // a.target = '_blank';
+      // a.download = '二维码.pdf';
+      document.body.appendChild(doc);
+      // a.click();
+  }
 
   // 全选
   _checkAll(value) {

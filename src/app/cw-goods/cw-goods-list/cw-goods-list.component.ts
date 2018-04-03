@@ -32,7 +32,8 @@ export class CwGoodsListComponent implements OnInit {
   paramCol = {
     searchTime:[null,null]
   }
-
+  allRecourse : any = [];//所有资源
+  ebookRecourse : any = [];//电子书资源
   constructor(public service: AppService) { }
 
   //文件上传
@@ -42,7 +43,7 @@ export class CwGoodsListComponent implements OnInit {
     }
   }
 
-  // 项目列表
+  // 商品列表
   load(reset?){
     if (reset == true) {
       this.param.pageNum = 1;
@@ -61,7 +62,7 @@ export class CwGoodsListComponent implements OnInit {
       }
     })
   }
-
+// 获取分类
   get_class(){
     this.service.post('/api/busiz/goods/cat/tree').then(success => {
       if(success.code==0){
@@ -72,6 +73,7 @@ export class CwGoodsListComponent implements OnInit {
       }
     })
   }
+  // 获取标签
   get_tag(){
     this.service.post('/api/busiz/goods/tag/list',{pageNum:1,pageSize:1000}).then(success => {
       if(success.code==0){
@@ -82,6 +84,7 @@ export class CwGoodsListComponent implements OnInit {
       }
     })
   }
+  // 获取品牌标签
   get_brand(){
     this.service.post('/api/busiz/brand/brandlist').then(success => {
       if(success.code==0){
@@ -91,6 +94,59 @@ export class CwGoodsListComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
+  }
+  // 获取每一种类型的资源
+  get_recourse(){
+    if(this.selRow.goods_type==1 || this.selRow.goods_type==3){
+      let book_type = this.selRow.goods_type ==3 ? 2 : 1;
+      this.service.post('/api/busiz/book/list',{pageNum:1,pageSize:1000,book_type:book_type}).then(success => {
+        if(success.code==0){
+          this.allRecourse = success.data.rows;
+        }else{
+          this.service.message.error(success.message);
+        }
+      })
+      
+    }else{
+      this.service.post('/api/busiz/video/getlist',{pageNum:1,pageSize:1000}).then(success => {
+        if(success.code==0){
+          this.allRecourse = success.data.rows;
+        }else{
+          this.service.message.error(success.message);
+        }
+      })
+    }
+  }
+  //选择资源后显示资源内容
+  nowRecourse : any = {};
+  selected(id ?){
+    if(id){
+      if(this.selRow.goods_type!=2){
+        for(let i in this.allRecourse){
+          if(this.allRecourse[i].book_id== id){
+            this.nowRecourse = {...this.allRecourse[i]};
+            break;
+          }
+        }
+      }else{
+        for(let i in this.allRecourse){
+          if(this.allRecourse[i].video_id== id){
+            this.nowRecourse = {...this.allRecourse[i]}
+            break;
+          }
+        }
+      }
+      if(this.selRow.goods_type==3){
+        // 获取电子书资源
+        this.service.post('/api/busiz/book/res/list',{book_id:this.selRow.res_id}).then(success => {
+          if(success.code==0){
+            this.ebookRecourse = success.data.rows;
+          }else{
+            this.service.message.error(success.message);
+          }
+        })
+      }
+    }
   }
 
   get_tagName(id ?){
@@ -135,23 +191,25 @@ export class CwGoodsListComponent implements OnInit {
     this.isVisibleMiddle = true;
     this.selRow.real_price = 0;
     if(this.selRow.goods_type==1){
-      this.formTitle = '新增纸质图书'
+      this.formTitle = '新增图书商品'
     }else if(this.selRow.goods_type==2){
-      this.formTitle = '新增音视频'
+      this.formTitle = '新增音视频商品'
     }else{
-      this.formTitle = '新增电子书'
+      this.formTitle = '新增电子书商品'
     }
+    // 获取当前类型的资源
+    this.get_recourse();
   }
   // 修改操作
   edit(data){
     console.log(data)
     this.isVisibleMiddle = true;
     if(this.selRow.goods_type==1){
-      this.formTitle = '新增纸质图书'
+      this.formTitle = '修改图书商品'
     }else if(this.selRow.goods_type==2){
-      this.formTitle = '新增音视频'
+      this.formTitle = '修改音视频商品'
     }else{
-      this.formTitle = '新增电子书'
+      this.formTitle = '修改电子书商品'
     }
     this.selRow = {...data};
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
@@ -229,7 +287,8 @@ export class CwGoodsListComponent implements OnInit {
       real_price:false,
       inventory:false,
       limit_buy:false,
-      remark:false
+      remark:false,
+      res_id:false
     })
 
 
