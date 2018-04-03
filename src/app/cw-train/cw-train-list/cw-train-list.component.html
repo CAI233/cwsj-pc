@@ -264,9 +264,9 @@
                     <label nz-form-item-required>视频分类</label>
                   </div>
                   <div nz-form-control nzHasFeedback>
-                    <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
-                      <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
-                        </nz-option> -->
+                    <nz-select formControlName="menu_idss" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择分类'" [(ngModel)]="formBean.menu_idss" [nzNotFoundContent]="'无法找到'">
+                      <nz-option *ngFor="let option of videoCatList" [nzLabel]="option.menu_name" [nzValue]="option.menu_id" [nzDisabled]="option.disabled">
+                        </nz-option>
                     </nz-select>
                   </div>
                 </div>
@@ -331,7 +331,7 @@
       <ng-template #nzTabHeading>
         视频资源
       </ng-template>
-      <nz-content  class="main-page-content">
+      <nz-content class="main-page-content">
         <form nz-form [formGroup]="myForm1">
           <div nz-form-item nz-row *ngFor="let control of resourceArray;let i = index">
             <div nz-form-label nz-col [nzSpan]="4">
@@ -344,9 +344,6 @@
                 </nz-option>
               </nz-select>
               <i style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
-              <button nz-button [nzType]="'primary'" (click)="submitForm1(control,control.resources_name)">
-                <span>保存</span>
-              </button>
               <div nz-form-explain *ngIf="getFormControl1(control.resources_name)?.dirty&&getFormControl1(control.resources_name)?.hasError('required')">
                 请选择资源文件
               </div>
@@ -354,6 +351,9 @@
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
+              <button nz-button [nzType]="'primary'" (click)="submitForm1()">
+                <span>保存</span>
+              </button>
               <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addField1($event)">
                 <i class="anticon anticon-plus"></i>
                 <span>新增资源</span>

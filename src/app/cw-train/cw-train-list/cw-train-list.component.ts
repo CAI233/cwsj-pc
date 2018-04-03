@@ -15,7 +15,8 @@ export class CwTrainListComponent implements OnInit {
   formTitle: string
   isVisibleMiddle: boolean = false;
   selectedIndex: number = 0;
-  resourceList: any[];
+  resourceList: any = [];
+  videoCatList: any = []
   param: any = {
     org_id: null,
     searchText: null,
@@ -43,8 +44,8 @@ export class CwTrainListComponent implements OnInit {
   //表单
   myForm: FormGroup;
   formBean: any = {
-    role_id: null,
-    role_idss: null,
+    menu_id: null,
+    menu_idss: null,
     email: null,
     phone: null,
     vote_role: null,
@@ -66,6 +67,14 @@ export class CwTrainListComponent implements OnInit {
         this.resourceList = success.data.rows
       }
     })
+    //视频分类
+    this.service.post('/api/busiz/videoMenu/gettree', { org_id: this.param.org_id }).then(success => {
+      if (success.code == 0) {
+        this.videoCatList = success.data;
+        this.service._toisLeaf(this.tableData);
+        this._expanData();
+      }
+    })
     this.reload();
     this.myForm = this.service.fb.group({
       org_name: [null, [this.service.validators.required]],
@@ -80,14 +89,84 @@ export class CwTrainListComponent implements OnInit {
       phone: [false],
       vote_role: [false],
       email: [false],
-      role_id: [false],
+      menu_idss: [false],
       price: [false],
       real_price: [false],
       discount: [false],
       works_remark: [false]
     })
   }
+  expandDataCache = {};
+  expandDataCacheCol = {};
+  _expanData() {
+    this.expandDataCacheCol = this.expandDataCache;
+    this.expandDataCache = {};
+    this.tableData.forEach(item => {
+      this.expandDataCache[item.menu_id] = this.convertTreeToList(item);
+    });
+  }
+  collapse(array, data, $event) {
+    if ($event === false) {
+      if (data.children) {
+        data.children.forEach(d => {
+          const target = array.find(a => a.menu_id === d.menu_id);
+          target.expand = false;
+          this.collapse(array, target, false);
+        });
+      } else {
+        return;
+      }
+    }
+  }
+  convertTreeToList(root) {
+    const stack = [], array = [], hashMap = {};
+    stack.push({ ...root, level: 0, expand: true });
+    while (stack.length !== 0) {
+      const node = stack.pop();
+      this.visitNode(node, hashMap, array);
+      const nodeCol = this.expandDataCacheCol[root.menu_id];
+      if (node.children) {
+        for (let i = node.children.length - 1; i >= 0; i--) {
+          let expand = false;
+          if (nodeCol) {
+            let col = null;
+            nodeCol.forEach(mm => {
+              if (mm.menu_id == node.children[i].menu_id)
+                col = mm;
+            })
+            if (col) {
+              expand = col.expand;
+            }
+          }
+          stack.push({ ...node.children[i], level: node.level + 1, expand: expand, parent: node });
+        }
+        //父级tree节点创建
+        if (node.parent) {
+          node.pname = [];
+          if (node.parent.pname) {
+            node.parent.pname.forEach(element => {
+              node.pname.push({
+                menu_id: element.menu_id,
+                menu_name: element.menu_name
+              });
+            });
+          }
+          node.pname.push({
+            menu_id: node.parent.menu_id,
+            menu_name: node.parent.menu_name
+          });
+        }
+      }
+    }
+    return array;
+  }
 
+  visitNode(node, hashMap, array) {
+    if (!hashMap[node.menu_id]) {
+      hashMap[node.menu_id] = true;
+      array.push(node);
+    }
+  }
   loadData(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
       this.service.post('/api/system/region/list/tree', {
@@ -173,23 +252,7 @@ export class CwTrainListComponent implements OnInit {
     }, 50)
 
   }
-  //地址组织处理
-  changeStreeParent(event) {
-    if (event.length == 4) {
-      console.log(event)
-      this.formBean.province = event[0].region_name;
-      this.formBean.province_code = event[0].code;
 
-      this.formBean.city = event[1].region_name;
-      this.formBean.city_code = event[1].code;
-
-      this.formBean.area = event[2].region_name;
-      this.formBean.area_code = event[2].code;
-
-      this.formBean.street = event[3].region_name;
-      this.formBean.street_code = event[3].code;
-    }
-  }
   //提交
   _submitForm() {
     for (const i in this.myForm.controls) {
@@ -342,26 +405,29 @@ export class CwTrainListComponent implements OnInit {
   getFormControl1(name) {
     return this.myForm1.controls[name];
   }
-  submitForm1(data?: any, i?: number) {
+  submitForm1() {
     if (!this.formBean.works_id) {
       this.service.message.warning('请先保存作品基本信息');
       return false;
     }
-    this.myForm1.controls[i].markAsDirty();
-    this.service.post('/api/busiz/works/resources/save', {
-      works_id: this.formBean.works_id,
-      id: data.id,
-      resources_id: data.resources_id,
-    }).then(success => {
-      if (success.code == 0) {
-        if (success.data) {
-          data.id = success.data.id
-        }
-        this.service.message.success("保存成功")
-      } else {
-        this.service.message.error(success.message)
-      }
-    })
+    for (const i in this.myForm1.controls) {
+      this.myForm1.controls[i].markAsDirty();
+    }
+
+    console.log(this.resourceArray)
+    // this.service.post('/api/busiz/works/resources/save', {
+    //   works_id: this.formBean.works_id,
+    //   id: data.id,
+    //   resources_id: data.resources_id,
+    // }).then(success => {
+    //   if (success.code == 0) {
+    //     if (success.data) {
+    //     }
+    //     this.service.message.success("保存成功")
+    //   } else {
+    //     this.service.message.error(success.message)
+    //   }
+    // })
   }
 
   //---------------------------------------------  资源文件 end --------------------------------------------
