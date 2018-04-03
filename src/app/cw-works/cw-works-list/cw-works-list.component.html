@@ -403,13 +403,13 @@
       </nz-content>
     </nz-tab>
     <!-- 问答模板 -->
-    <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='问答'">
+    <!-- <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='问答'">
       <ng-template #nzTabHeading>
         问答模板
       </ng-template>
       <nz-content class="main-page-content">
       </nz-content>
-    </nz-tab>
+    </nz-tab> -->
     <!-- 试卷列表 -->
     <nz-tab *ngIf="isVisibleMiddle && formBean.works_type=='试题'">
       <ng-template #nzTabHeading>
@@ -473,7 +473,7 @@
                 </ng-container>
                 <!-- 修改 -->
                 <ng-container *ngIf="this.service.validataAction('cw_works_list_edit')">
-                  <a href="javascript:void(0)" (click)="showModalMiddle(data)">修改</a>
+                  <a href="javascript:void(0)" (click)="createTestPaper(data)">修改</a>
                   <span nz-table-divider *ngIf="this.service.validataAction('cw_works_list_del')"></span>
                 </ng-container>
                 <!-- 删除 -->
@@ -642,7 +642,7 @@
               <td nz-td>
                 <!-- 删除 -->
                 <ng-container *ngIf="this.service.validataAction('cw_works_list_del')">
-                  <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="topicDel(data.id)" [nzPlacement]="'left'">
+                  <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="topicDel(data.rel_id)" [nzPlacement]="'left'">
                     <a nz-popconfirm>移除</a>
                   </nz-popconfirm>
                 </ng-container>

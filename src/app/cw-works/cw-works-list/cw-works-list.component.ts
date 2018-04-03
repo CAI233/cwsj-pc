@@ -480,8 +480,16 @@ export class CwWorksListComponent implements OnInit {
   }
 
   //创建试卷
-  createTestPaper() {
+  createTestPaper(bean?: any) {
     this.testPaperLayer = true;
+    this.testFormBean = {
+      works_id: this.formBean.works_id
+    };
+    if (bean) {
+      for (let i in bean) {
+        this.testFormBean[i] = bean[i];
+      }
+    }
     this.service.post('/api/busiz/res/getlist', {
       pageSize: 1000,
       pages: 1,
@@ -498,7 +506,9 @@ export class CwWorksListComponent implements OnInit {
       this.myForm2.controls[i].markAsDirty();
     }
     if (this.myForm2.valid) {
+      this._loading = true;
       this.service.post('/api/busiz/works/testpaper/save', this.testFormBean).then(success => {
+        this._loading = false;
         if (success.code == 0) {
           this.testPaperLayer = false;
           this.formClear2();
@@ -513,7 +523,9 @@ export class CwWorksListComponent implements OnInit {
   }
   //试卷删除
   testPaperDel(id) {
+    this._loading = true;
     this.service.post('/api/busiz/works/testpaper/del', { id: id, works_id: this.testParam.works_id }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.testReload();
       } else {
@@ -528,7 +540,9 @@ export class CwWorksListComponent implements OnInit {
     this.topicParam.paper_id = data.id
     this.topicParam.paper_name = data.test_paper_name
     //题目列表
+    this._loading = true;
     this.service.post('/api/busiz/goods/tag/list', { pageNum: 1, pageSize: 1000 }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.topicTagList = success.data.rows;
       } else {
@@ -540,7 +554,9 @@ export class CwWorksListComponent implements OnInit {
 
   //题目列表查询
   topicReload() {
+    this._loading = true;
     this.service.post('/api/busiz/works/question/list', this.topicParam).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.topicData = success.data
       } else {
@@ -556,7 +572,7 @@ export class CwWorksListComponent implements OnInit {
     this.topicTag._lastValue = []
     this.topicType._lastValue = []
   }
-  //题目列表重置
+  //新增题目列表重置
   addTopicResetForm() {
     this.addTopicParam.tag_id = null;
     this.addTopicParam.type = null;
@@ -592,10 +608,12 @@ export class CwWorksListComponent implements OnInit {
   }
   //添加试题
   submitAddTopic(id) {
+    this._loading = true;
     this.service.post('/api/busiz/works/question/save', {
       paper_id: this.topicParam.paper_id,
       question_id: id
     }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.topicReload();
       } else {
@@ -605,7 +623,9 @@ export class CwWorksListComponent implements OnInit {
   }
   //试题删除
   topicDel(id) {
-    this.service.post('/api/busiz/works/question/del', { id: id }).then(success => {
+    this._loading = true;
+    this.service.post('/api/busiz/works/question/del', { rel_id: id }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.topicReload();
       } else {
@@ -637,9 +657,9 @@ export class CwWorksListComponent implements OnInit {
 
   removeField1(i, e: MouseEvent) {
     e.preventDefault();
-    if (this.resourceArray.length > 1) {
+    if (this.resourceArray.length > 0) {
       if (i.id) {
-        this.service.post('/api/busiz/works/form/del', { id: i.id }).then(success => {
+        this.service.post('/api/busiz/works/resources/del', { id: i.id }).then(success => {
           if (success.code == 0) {
             const index = this.resourceArray.indexOf(i);
             this.resourceArray.splice(index, 1);
@@ -709,9 +729,11 @@ export class CwWorksListComponent implements OnInit {
 
   removeField4(i, e: MouseEvent) {
     e.preventDefault();
-    if (this.questionArray.length > 1) {
+    if (this.questionArray.length > 0) {
       if (i.id) {
+        this._loading = true;
         this.service.post('/api/busiz/works/form/del', { id: i.id }).then(success => {
+          this._loading = false;
           if (success.code == 0) {
             const index = this.questionArray.indexOf(i);
             this.questionArray.splice(index, 1);
@@ -741,6 +763,7 @@ export class CwWorksListComponent implements OnInit {
       return false;
     }
     this.myForm4.controls[i].markAsDirty();
+    this._loading = true;
     this.service.post('/api/busiz/works/form/save', {
       works_id: this.formBean.works_id,
       id: data.id,
@@ -748,6 +771,7 @@ export class CwWorksListComponent implements OnInit {
       answer: data.answer,
       resources_id: data.resources_id,
     }).then(success => {
+      this._loading = false;
       if (success.code == 0) {
         this.service.message.success("保存成功")
         if (success.data) {
