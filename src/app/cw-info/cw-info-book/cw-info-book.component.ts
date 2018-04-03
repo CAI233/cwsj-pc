@@ -33,7 +33,14 @@ export class CwInfoBookComponent implements OnInit {
   bookData : any = {};//图书列表
   bookTag : any = [];//标签列表
   bookClass : any = [];//分类列表
-  ebookResource : any = [];//资源列表
+  ebookResource : any = [];//已选的电子书资源
+  ebookAllResource : any = [];//所有电子书资源
+  AllResourceList : boolean = false;//所有电子书资源页面
+  AllResource_param : any = {
+    pageNum:1,
+    pageSize:10,
+    res_type:'图书'
+  }
   ebookRlist : boolean = false;
   constructor(public service: AppService) { }
 
@@ -92,6 +99,8 @@ export class CwInfoBookComponent implements OnInit {
       }
     })
   }
+
+
   // 选项卡切换
   change(reset?){
     console.log(this.selectedIndex)
@@ -142,12 +151,14 @@ resetForm(){
     //加载图书分类列表
     this.get_classList();
 
+    this._getRecouse();
   }
 
   //关闭弹窗
   bookCancel($event) {
     this.bookList = false;
     this.seeList = false;
+    this.AllResourceList = false;
     this.myForm.reset();
   }
   goToindex = 0;
@@ -188,9 +199,22 @@ resetForm(){
       this.service.message.warning('请填写简介!');
       return false;
     }
-    // book_cover book_remark
-
-    this.bookData.book_cat_ids = this.bookData.cat_ids.join(",");
+    if(this.bookData.cat_ids.length>0){
+      let obj_id = this.bookData.cat_ids[0];
+      let cat_ids = '';
+      if (typeof (obj_id) == 'object') {
+        for(let i in this.bookData.cat_ids){
+          cat_ids += this.bookData.cat_ids[i].cat_id+',';
+        }
+        cat_ids = cat_ids.substring(0,cat_ids.length-1)
+      } else {
+        cat_ids = this.bookData.cat_ids.join(",");
+      }
+      this.bookData.book_cat_ids = cat_ids;
+      this.bookData.cat_ids = cat_ids;
+    }
+    // this.bookData.tag_ids = this.bookData.tag_ids.split(",")
+    
 
     this.service.post('/api/busiz/book/save',this.bookData).then(success => {
       if(success.code==0){
@@ -213,7 +237,13 @@ resetForm(){
   }
 
 
-
+  //获取到搜索分类id
+  search_change(rest?){
+    console.log(rest)
+    if(rest.length>0){
+      this.param.book_cat_id = rest[rest.length-1].cat_id;
+    }
+  } 
 
   // 获取到分类id
   now_change(rest?){
@@ -229,6 +259,20 @@ resetForm(){
       this.bookData.book_cat_names = this.bookData.book_cat_names.substring(0,this.bookData.book_cat_names.length-1);
     }
     console.log(this.bookData)
+  }
+  //获取资源库里的电子书的资源列表
+  _getRecouse(){
+    this.AllResourceList = true;
+    // ebookAllResource  AllResource_param
+    this.service.post('/api/busiz/res/getlist',this.AllResource_param).then(success => {
+      if(success.code==0){
+          this.ebookAllResource = success.data.rows;
+          this.service.message.success(success.message);
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+
   }
 
   //查看详情
