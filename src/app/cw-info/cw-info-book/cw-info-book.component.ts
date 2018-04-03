@@ -90,6 +90,7 @@ export class CwInfoBookComponent implements OnInit {
     })
   }
 
+  //获取到当前图书的资源列表
   get_ebookResource(id){
     this.service.post('/api/busiz/book/res/list',{book_id:id}).then(success => {
       if(success.code==0){
@@ -151,7 +152,7 @@ resetForm(){
     //加载图书分类列表
     this.get_classList();
 
-    this._getRecouse();
+    
   }
 
   //关闭弹窗
@@ -166,6 +167,7 @@ resetForm(){
 
   //确定
   bookOk($event) {
+    // this._getRecouse();
     console.log(this.bookData);
     if(!this.bookData.book_name){
       this.service.message.warning('请填写书名!');
@@ -260,6 +262,7 @@ resetForm(){
     }
     console.log(this.bookData)
   }
+// ----------------------------------电子书新增  所有资源--------
   //获取资源库里的电子书的资源列表
   _getRecouse(){
     this.AllResourceList = true;
@@ -267,14 +270,43 @@ resetForm(){
     this.service.post('/api/busiz/res/getlist',this.AllResource_param).then(success => {
       if(success.code==0){
           this.ebookAllResource = success.data.rows;
+          this.AllResource_param.total = success.data.total;
           this.service.message.success(success.message);
       }else{
+        this.ebookAllResource = [];
+        this.AllResource_param.total = 0;
         this.service.message.error(success.message);
       }
     })
-
   }
-
+    //关闭弹窗
+    AllResourceCancel($event) {
+      this.AllResourceList = false;
+      this.myForm.reset();
+    }
+    addTo(data){
+      this.service.post('/api/busiz/book/res/save',{book_id:515,res_id:data.res_id,type:'add'}).then(success => {
+        if(success.code==0){
+          this.get_ebookResource(this.bookData.book_id);
+            this.service.message.success(success.message);
+        }else{
+          
+          this.service.message.error(success.message);
+        }
+      })
+    }
+    delTo(data){
+      this.service.post('/api/busiz/book/res/save',{book_id:515,res_id:data.res_id,type:'del'}).then(success => {
+        if(success.code==0){
+          this.get_ebookResource(this.bookData.book_id);
+            this.service.message.success(success.message);
+        }else{
+          
+          this.service.message.error(success.message);
+        }
+      })
+    }
+// ------------------------------------------------------------ 电子书 end----------------
   //查看详情
   _see(data){
     this.bookData = {};
@@ -321,6 +353,7 @@ resetForm(){
     // this.bookData.cat_ids = this.bookData.book_cat_ids.split(",");
    
     console.log(this.bookData);
+    this.get_ebookResource(this.bookData.book_id);
   }
   //删除操作
   del(data){

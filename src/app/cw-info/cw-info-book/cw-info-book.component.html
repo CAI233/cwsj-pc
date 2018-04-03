@@ -316,7 +316,40 @@
                             </div>
                         </div>
                     </div>
-
+                    <nz-table #nzTable [nzAjaxData]="ebookResource" [nzPageSize]="ebookResource.length" [nzIsPagination]="false">
+                        <thead nz-thead>
+                          <tr>
+                            <th nz-th><span>资源名称</span></th>
+                            <th nz-th><span>格式</span></th>
+                            <th nz-th><span>类型</span></th>
+                            <th nz-th><span>资源大小</span></th>
+                            <th nz-th><span>操作</span></th>
+                          </tr>
+                        </thead>
+                        <tbody nz-tbody>
+                          <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                            <td nz-td>
+                              <span>{{data.res_name}}</span>
+                            </td>
+                            <td nz-td>
+                              <span>{{data.res_format}}</span>
+                            </td>
+                            <td nz-td>
+                                <span>{{data.res_type}}</span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="data.res_type=='图书'">{{data.res_size}}页</span>
+                            </td>
+                            <td nz-td>
+                                <span >
+                                    <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="delTo(data)">
+                                        <a nz-popconfirm>移除</a>
+                                    </nz-popconfirm>
+                                </span>
+                            </td>
+                           </tr>
+                        </tbody>
+                    </nz-table>
                     <button nz-button [nzType]="'primary'" (click)="submit($event)"><span>保存</span></button>
                 </nz-tab>
             </nz-tabset>
@@ -365,7 +398,7 @@
 </ng-template>
 </nz-modal>
 <nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="AllResourceContent"
-[nzVisible]="AllResourceList" (nzOnCancel)="bookCancel($event)" [nzTitle]="'资源列表'" [nzFooter]="false">
+[nzVisible]="AllResourceList" (nzOnCancel)="AllResourceCancel($event)" [nzTitle]="'资源列表'" [nzFooter]="false">
 <ng-template #AllResourceContent>
         <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true"
         [nzAjaxData]="ebookAllResource" 
@@ -381,28 +414,16 @@
                 <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)"></label>
               </th>
               <th nz-th [nzWidth]="'20%'">
-                <span>名称</span>
+                <span>资源名称</span>
               </th>
-              <th nz-th [nzWidth]="'7%'">
-                <span>格式</span>
+              <th nz-th [nzWidth]="'20%'">
+                <span>资源分类</span>
               </th>
-              <th nz-th [nzWidth]="'7%'">
-                <span>大小</span>
+              <th nz-th [nzWidth]="'15%'">
+                <span>资源标签</span>
               </th>
-              <th nz-th [nzWidth]="'7%'">
-                <span>类型</span>
-              </th>
-              <th nz-th [nzWidth]="'9%'">
-                <span>目录</span>
-              </th>
-              <th nz-th [nzWidth]="'10%'">
-                <span>分类</span>
-              </th>
-              <th nz-th [nzWidth]="'10%'">
-                <span>转码</span>
-              </th>
-              <th nz-th [nzWidth]="'10%'">
-                <span>创建时间</span>
+              <th nz-th [nzWidth]="'15%'">
+                <span>上传时间</span>
               </th>
               <th nz-th>
                 <span>操作</span>
@@ -415,7 +436,15 @@
                   <td nz-td nzCheckbox>
                     <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
                   </td>
-                  <!-- <td>{{}}</td> -->
+                  <td nz-td><span>{{data.res_name}}</span></td>
+                  <td nz-td><span>{{data.res_cat_name}}</span></td>
+                  <td nz-td><span>{{data.res_tag_names}}</span></td>
+                  <td nz-td><span>{{data.create_time}}</span></td>
+                    <td nz-td>
+                        <span >
+                            <a (click)="addTo(data)">添加</a>
+                        </span>
+                    </td>
                   </tr>
               </ng-container>
                 
