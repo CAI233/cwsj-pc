@@ -14,7 +14,7 @@
   </nz-header>
   <nz-content class="main-page-content">
     <ng-container *ngIf="formBeanObject">
-      <nz-tabset [(nzSelectedIndex)]="nzSelectedIndex">
+      <nz-tabset [(nzSelectedIndex)]="nzSelectedIndex" (nzSelectedIndexChange)="_nzSelectedIndexChange($event)">
         <nz-tab *ngFor="let tab of tabs">
           <ng-template #nzTabHeading>
             <i [ngClass]="tab.icon"></i>
@@ -163,19 +163,19 @@
                       <th nz-th>
                         <span>作品</span>
                       </th>
-                      <th nz-th nzWidth="100px">
+                      <th nz-th nzWidth="200px">
                         <span>创建时间</span>
                       </th>
-                      <th nz-th nzWidth="100px">
+                      <th nz-th nzWidth="150px">
                         <span>排序</span>
                       </th>
-                      <th nz-th nzWidth="100px">
+                      <th nz-th nzWidth="150px">
                         <span>操作</span>
                       </th>
                     </tr>
                   </thead>
                   <tbody nz-tbody>
-                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data;let idx=index">
                       <td nz-td>
                         <div class="zp-list">
                           <div class="zp-cover" style="background-image:url({{service.ctxPath+data.works_cover_small}})"></div>
@@ -192,10 +192,10 @@
                       </td>
                       <td nz-td>{{data.create_time}}</td>
                       <td nz-td>
-                        <a><i class="anticon anticon-arrow-up" style="font-size:20px"></i></a>
+                        <a (click)="_workOrder(data, idx)"><i class="anticon anticon-arrow-up" style="font-size:20px"></i></a>
                       </td>
                       <td nz-td>
-                        <a><i class="anticon anticon-delete" style="font-size:20px"></i></a>
+                        <a (click)="_workDelete(data)"><i class="anticon anticon-delete" style="font-size:20px"></i></a>
                       </td>
                     </tr>
                   </tbody>
@@ -336,7 +336,8 @@
               </div>
             </td>
             <td nz-td>
-              <a (click)="addworkInfo(data)">添加</a>
+              <span *ngIf="_viladateActionText(data)" style="color:green">已添加</span>
+              <a (click)="addworkInfo(data)" *ngIf="!_viladateActionText(data)">添加</a>
             </td>
           </tr>
         </tbody>

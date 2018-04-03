@@ -124,24 +124,16 @@ export class CwGoodsTagComponent implements OnInit {
   }
   // 品牌修改操作
   edit(data){
-    this.selRow = {};
     this.isVisible = true;
     this.formTitle = '品牌标签修改'
-
-    for(let i in data){
-      this.selRow[i] = data[i]
-    }
+    this.selRow = {...data};
   }
 
   // 商品修改操作
   goods_edit(data){
-    this.goods_selRow = {};
+    this.goods_selRow = {...data};
     this.goods_isVisible = true;
     this.formTitle = '商品标签修改'
-
-    for(let i in data){
-      this.goods_selRow[i] = data[i]
-    }
   }
   //品牌删除操作
   del(data){

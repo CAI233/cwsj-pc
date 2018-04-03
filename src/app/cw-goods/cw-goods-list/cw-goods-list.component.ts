@@ -145,7 +145,6 @@ export class CwGoodsListComponent implements OnInit {
   // 修改操作
   edit(data){
     console.log(data)
-    this.selRow = {};
     this.isVisibleMiddle = true;
     if(this.selRow.goods_type==1){
       this.formTitle = '新增纸质图书'
@@ -154,9 +153,7 @@ export class CwGoodsListComponent implements OnInit {
     }else{
       this.formTitle = '新增电子书'
     }
-    for(let i in data){
-      this.selRow[i] = data[i];
-    }
+    this.selRow = {...data};
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
 
   }

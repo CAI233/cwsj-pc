@@ -42,7 +42,11 @@ export class CwCodeListComponent implements OnInit {
       remark: [false]
     })
   }
-
+  //页签切换
+  _nzSelectedIndexChange(e?){
+    if(e == 0){
+    }
+  }
   //标签搜索
   searchChange(key?) {
     this.service.post('/api/busiz/tag/list', {
@@ -198,12 +202,57 @@ export class CwCodeListComponent implements OnInit {
       code_id: this.formBeanObject.code_id,
       works_id: data.works_id
     }).then(success => {
-      if(success.code == 0){
+      if (success.code == 0) {
         this.service.message.success(success.message);
+        this._updateCodeInfo();
       }
-      else{
+      else {
         this.service.message.error(success.message);
       }
+    })
+  }
+  //更新二维码详情
+  _updateCodeInfo() {
+    //更新详情
+    this.service.post('/api/busiz/code/getcode', {
+      code_id: this.formBeanObject.code_id
+    }).then(success => {
+      for (let i in success.data) {
+        this.formBeanObject[i] = success.data[i];
+      }
+    })
+  }
+  //验证是否存在
+  _viladateActionText(data) {
+    let obj = this.formBeanObject.works.filter(value => value.works_id == data.works_id);
+    return (obj && obj.length > 0) ? true : false;
+  }
+  //排序
+  _workOrder(data, index) {
+    let i = 0;
+    if (index > 0) {
+      i = index - 1;
+
+      let obj = data;
+      let old = this.formBeanObject.works[i];
+      this.formBeanObject.works[i] = obj;
+      this.formBeanObject.works[index] = old;
+      for (let ii = 0; ii < this.formBeanObject.works.length; ii++) {
+        this.service.post('/api/busiz/code/works/order', {
+          code_id: this.formBean.code_id,
+          works_id: this.formBeanObject.works[ii].works_id,
+          order_weight: ii
+        })
+      }
+    }
+  }
+  //删除
+  _workDelete(data) {
+    this.service.post('/api/busiz/code/rmworks', {
+      code_id: this.formBeanObject.code_id,
+      works_id: data.works_id
+    }).then(success => {
+      this._updateCodeInfo();
     })
   }
 }

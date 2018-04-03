@@ -155,13 +155,11 @@ _add(){
 
 // 修改
 _edit(data){
-  this.now_data = {};
+  this.now_data = {...data};
   this.isList = true;
   this.formTitle = '修改试题';
   this.now_num =2;
-  for(let i in data){
-    this.now_data[i] = data[i];
-  }
+  this.now_data = {...data};
   this.now_data.label_ids = this.now_data.label_id;
   console.log(this.now_data)
 

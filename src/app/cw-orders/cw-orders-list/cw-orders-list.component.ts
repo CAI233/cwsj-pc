@@ -151,9 +151,7 @@ export class CwOrdersListComponent implements OnInit {
   // 发货
   _send(data){
     this.sendList = true;
-    for(let i in data){
-      this.sendNow[i] = data[i]
-    }
+    this.sendNow = {...data}
     this.service.post('/api/busiz/order/goods/list',{order_id:this.sendNow.order_id}).then(success => {
       if(success.code==0){
         this.orderData = success.data;
@@ -264,18 +262,14 @@ export class CwOrdersListComponent implements OnInit {
   //交易配置---页面打开
   _setting(){
     this.seetingList = true;
-    for(let i in this.settingRow){
-      this.Row[i] = this.settingRow[i];
-    }
+    this.Row = {...this.settingRow}
   }
 
   
   // 订单页面
   _see(data){
     this.seeOrder = true;
-    for(let i in data){
-      this.seeData[i] = data[i];
-    }
+    this.seeData = {...data};
     console.log(this.editRow);
     console.log(this.seeData);
   }

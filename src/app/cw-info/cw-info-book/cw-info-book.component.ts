@@ -233,12 +233,8 @@ resetForm(){
 
   //查看详情
   _see(data){
-    this.bookData = {};
     this.seeList = true;
-    for(let i in data){
-      this.bookData[i] = data[i];
-    }
-
+    this.bookData = {...data};
     if(this.param.book_type==1){
       this.service.post('/api/busiz/book/res/list',{book_id:data.book_id}).then(success => {
         if(success.code==0){
@@ -259,11 +255,8 @@ resetForm(){
   }
   // 修改操作
   _edit(data){
-    this.bookData = {};
+    this.bookData = {...data};
     this.bookList = true;
-    for(let i in data){
-      this.bookData[i] = data[i];
-    }
     this.bookData.cat_ids = [];
     let arr_name = this.bookData.book_cat_names.split(",");
     let arr_id = this.bookData.book_cat_ids.split(",");

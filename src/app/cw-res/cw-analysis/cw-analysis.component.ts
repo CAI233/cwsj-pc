@@ -85,9 +85,7 @@ export class CwAnalysisComponent implements OnInit {
   //修改任务
   _editRow(data){
     this.isVisibleMiddle = true;
-    for(let i in data){
-      this.formBean[i] = data[i];
-    }
+    this.formBean = {...data};
   }
   //开始解析
   _startRow(data){
