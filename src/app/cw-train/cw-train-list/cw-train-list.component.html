@@ -24,17 +24,9 @@
               <!--列-->
               <div nz-col [nzSpan]="8">
                 <div nz-form-label nz-col [nzSpan]="6">
-                  <label>创建日期</label>
-                </div>
-                <div nz-form-control nz-col [nzSpan]="16">
-                  <nz-rangepicker name="searchTime" [(ngModel)]="paramCol.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
-                </div>
-              </div>
-              <div nz-col [nzSpan]="6">
-                <div nz-form-label nz-col [nzSpan]="7">
                   <label>视频名称</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="15">
+                <div nz-form-control nz-col [nzSpan]="16">
                   <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
                 </div>
               </div>
@@ -43,8 +35,7 @@
                   <i class="anticon anticon-search"></i>
                   <span>查询</span>
                 </button>
-                <!-- (click)="resetForm()" -->
-                <button nz-button nzType="button">
+                <button nz-button nzType="button" (click)="resetForm()">
                   <span>重置</span>
                 </button>
                 <a style="margin-left:8px;font-size:12px;" (click)="isCollapse=!isCollapse">
@@ -56,41 +47,32 @@
             <div nz-row nz-form-item *ngIf="!isCollapse">
               <div nz-col [nzSpan]="8">
                 <div nz-form-label nz-col [nzSpan]="6">
-                  <label>视频分类</label>
+                  <label>审核状态</label>
                 </div>
                 <div nz-form-control nz-col [nzSpan]="16">
-                  <nz-select name="proSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <!-- <nz-option *ngFor="let option of proList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
+                  <nz-select #searchAuditName name="audit_status" [(ngModel)]="paramCol.audit_status" [nzPlaceHolder]="'请选择'" nzAllowClear>
+                    <nz-option *ngFor="let option of auditList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
                   </nz-select>
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
                 <div nz-form-label nz-col [nzSpan]="7">
-                  <label>资源标签</label>
+                  <label>视频分类</label>
                 </div>
                 <div nz-form-control nz-col [nzSpan]="15">
-                  <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
-                  </nz-select>
+                  <nz-cascader #searchCatName [nzPlaceHolder]="'视频分类'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" (nzLoad)="loadCat($event)"
+                    name="cat" nzChangeOnSelect="true" [(ngModel)]="paramCol.video_cat_id">
+                  </nz-cascader>
                 </div>
               </div>
-              <div nz-col [nzSpan]="5">
-                <div nz-form-label nz-col [nzSpan]="8">
-                  <label>审核状态</label>
+              <div nz-col [nzSpan]="6">
+                <div nz-form-label nz-col [nzSpan]="6">
+                  <label>标签</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="15">
-                  <nz-select name="depthSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <!-- <nz-option *ngFor="let option of depthList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
-                  </nz-select>
-                </div>
-              </div>
-              <div nz-col [nzSpan]="5">
-                <div nz-form-label nz-col [nzSpan]="8">
-                  <label>发布状态</label>
-                </div>
-                <div nz-form-control nz-col [nzSpan]="15">
-                  <nz-select name="purposeSelect" [(ngModel)]="paramCol.enabled" [nzPlaceHolder]="'请选择'" nzAllowClear>
-                    <!-- <nz-option *ngFor="let option of purposeList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option> -->
+                <div nz-form-control nz-col [nzSpan]="16">
+                  <nz-select #searchTagName name="tag_id" [nzPlaceHolder]="'请选择'" [(ngModel)]="paramCol.tag_id" [nzNotFoundContent]="'无法找到'">
+                    <nz-option *ngFor="let option of tagList" [nzLabel]="option.tag_name" [nzValue]="option.tag_id" [nzDisabled]="option.disabled">
+                    </nz-option>
                   </nz-select>
                 </div>
               </div>
@@ -98,12 +80,12 @@
             </div>
             <div nz-row nz-form-item>
               <div class="row-actions">
-                <button nz-button nzType="primary" (click)="showModalMiddle()" *ngIf="this.service.validataAction('outfit_add')">
+                <button nz-button nzType="primary" (click)="showModalMiddle()" *ngIf="this.service.validataAction('cw_train_list_add')">
                   <i class="anticon anticon-plus"></i>
                   <span>新增</span>
                 </button>
                 <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
-                  <button nz-popconfirm nz-button nzType="danger" *ngIf="this.service.validataAction('outfit_del')">
+                  <button nz-popconfirm nz-button nzType="danger" *ngIf="this.service.validataAction('cw_train_list_add')">
                     <i class="anticon anticon-delete"></i>
                     <span>删除</span>
                   </button>
@@ -111,9 +93,8 @@
 
               </div>
               <div class="row-questions">
-                <button nz-button nzType="primary" (click)="showModalMiddle()" *ngIf="this.service.validataAction('outfit_add')">
-                  <i class="anticon anticon-eye-o"></i>
-                  <span>审核</span>
+                <button nz-button nzType="primary" (click)="submitAudit()" *ngIf="this.service.validataAction('cw_train_list_add')">
+                  <span>提交审核</span>
                 </button>
               </div>
             </div>
@@ -168,7 +149,7 @@
                   <span>{{data.tag_names}}</span>
                 </td>
                 <td nz-td>
-                  <span>{{data.video_catname}}</span>
+                  <span [innerHtml]="data.video_cat_names.split(',')[data.video_cat_names.split(',').length-1]"></span>
                 </td>
                 <td nz-td>
                   <span [ngStyle]="{'color':['#999','#f90','green','#f00'][data.audit_status-1]}" [innerHtml]="['草稿','待审核','通过','驳回'][data.audit_status-1]">
@@ -180,27 +161,30 @@
                 <td nz-td>
                   <span>
                     <!-- 修改 -->
-                    <ng-container *ngIf="this.service.validataAction('user_edit')">
+                    <ng-container *ngIf="this.service.validataAction('cw_train_list_edit')">
                       <a href="javascript:void(0)" (click)="showModalMiddle(data)">修改</a>
-                      <span nz-table-divider *ngIf="this.service.validataAction('user_del')"></span>
+                      <span nz-table-divider *ngIf="this.service.validataAction('cw_train_list_add')"></span>
                     </ng-container>
                     <!-- 删除 -->
-                    <ng-container *ngIf="this.service.validataAction('user_del')">
+                    <ng-container *ngIf="this.service.validataAction('cw_train_list_add')">
                       <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.video_id)" [nzPlacement]="'left'">
                         <a nz-popconfirm>删除</a>
                       </nz-popconfirm>
-                      <span nz-table-divider *ngIf="this.service.validataAction('resource_add')"></span>
+                      <span nz-table-divider *ngIf="this.service.validataAction('cw_train_list_add')"></span>
                     </ng-container>
-                    <nz-dropdown *ngIf="this.service.validataAction('resource_add')">
+                    <nz-dropdown *ngIf="this.service.validataAction('cw_train_list_add')">
                       <a class="ant-dropdown-link" nz-dropdown>更多操作
                         <i class="anticon anticon-down"></i>
                       </a>
                       <ul nz-menu>
                         <li nz-menu-item>
-                          <a (click)="_addAfter(item.parent)">预览视频</a>
+                          <a (click)="videoDetail()">详情</a>
                         </li>
                         <li nz-menu-item>
-                          <a (click)="_addAfter(item.parent)">详情</a>
+                          <a (click)="auditStatus(data,3)">通过</a>
+                        </li>
+                        <li nz-menu-item>
+                          <a (click)="auditStatus(data,4)">驳回</a>
                         </li>
                       </ul>
                     </nz-dropdown>
@@ -267,8 +251,8 @@
                     <label nz-form-item-required>视频分类</label>
                   </div>
                   <div nz-form-control nzHasFeedback>
-                    <nz-cascader #video_idss [nzPlaceHolder]="'视频分类'" formControlName="video_idss" [nzValueProperty]="'menu_id'" [nzLabelProperty]="'menu_name'"
-                      (nzLoad)="loadCat($event)" name="cat" nzChangeOnSelect="true" [(ngModel)]="formBean.video_idss">
+                    <nz-cascader #video_cat_idss [nzPlaceHolder]="'视频分类'" formControlName="video_cat_idss" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'"
+                      (nzLoad)="loadCat($event)" name="cat" nzChangeOnSelect="true" [(ngModel)]="formBean.video_cat_idss">
                     </nz-cascader>
                   </div>
                 </div>
@@ -325,16 +309,16 @@
         <form nz-form [formGroup]="myForm1">
           <div nz-form-item nz-row *ngFor="let control of resourceArray;let i = index">
             <div nz-form-label nz-col [nzSpan]="4">
-              <label [attr.for]="control.resources_name">视频{{i+1}}</label>
+              <label [attr.for]="control.res_name">视频{{i+1}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="20">
-              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.resources_name" nzAllowClear [nzPlaceHolder]="'资源文件'"
-                [(ngModel)]="control.resources_id" nzShowSearch>
+              <nz-select style="width:60% ;margin-right:8px;" [formControlName]="control.res_name" nzAllowClear [nzPlaceHolder]="'资源文件'"
+                [(ngModel)]="control.res_id" nzShowSearch>
                 <nz-option *ngFor="let option of resourceList" [nzLabel]="option.res_name" [nzValue]="option.res_id">
                 </nz-option>
               </nz-select>
               <i style="margin-right:8px;" class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="removeField1(control,$event)"></i>
-              <div nz-form-explain *ngIf="getFormControl1(control.resources_name)?.dirty&&getFormControl1(control.resources_name)?.hasError('required')">
+              <div nz-form-explain *ngIf="getFormControl1(control.res_name)?.dirty&&getFormControl1(control.res_name)?.hasError('required')">
                 请选择资源文件
               </div>
             </div>

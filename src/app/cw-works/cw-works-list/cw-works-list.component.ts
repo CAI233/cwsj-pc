@@ -230,6 +230,7 @@ export class CwWorksListComponent implements OnInit {
     this.selectedIndex = 3;
   }
   resetForm() {
+    this.paramCol.searchText = null;
     this.paramCol.audit_status = null;
     this.paramCol.cat_id = [];
     this.paramCol.tag_id = null;

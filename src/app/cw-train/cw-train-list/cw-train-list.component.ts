@@ -9,7 +9,10 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 })
 
 export class CwTrainListComponent implements OnInit {
-  @ViewChild("video_idss") video_idss;
+  @ViewChild("video_cat_idss") video_cat_idss;
+  @ViewChild("searchCatName") searchCatName;
+  @ViewChild("searchTagName") searchTagName;
+  @ViewChild("searchAuditName") searchAuditName;
   _allChecked = false;
   _indeterminate = false;
   tableData: any = []; //数据列表
@@ -26,11 +29,24 @@ export class CwTrainListComponent implements OnInit {
     pageNum: 1
   };
   paramCol: any = {
-    dept_id: null,
-    state: null,
-    date: null,
-    searchText: null
+    works_type: null,
+    audit_status: null,
+    tag_id: null,
+    video_cat_id: []
   }
+  auditList: any = [{
+    id: 1,
+    name: '草稿'
+  }, {
+    id: 2,
+    name: '待审核'
+  }, {
+    id: 3,
+    name: '通过'
+  }, {
+    id: 4,
+    name: '驳回'
+  }]
 
   isCollapse: any = true;
   _loading: boolean = true;
@@ -79,7 +95,7 @@ export class CwTrainListComponent implements OnInit {
     this.reload();
     this.myForm = this.service.fb.group({
       video_name: [null, [this.service.validators.required]],
-      video_idss: [null, [this.service.validators.required]],
+      video_cat_idss: [null, [this.service.validators.required]],
       tag_id: [null, [this.service.validators.required]],
       price: [null, [this.service.validators.required]],
       discount: [null, [this.service.validators.required]],
@@ -89,7 +105,7 @@ export class CwTrainListComponent implements OnInit {
   }
   loadCat(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
-      this.service.post('/api/busiz/videoMenu/gettree', {
+      this.service.post('/api/busiz/video/cat/list', {
         code: null
       }).then(success => {
         this.service._toisLeaf(success.data);
@@ -103,12 +119,13 @@ export class CwTrainListComponent implements OnInit {
     this.formBean = {};
     if (bean) {
       this.formBean = { ...bean }
+      let video_cat_ids_array = this.formBean.video_cat_ids.split(',')
       //部门
-      if (this.formBean.dept_id) {
-        this.formBean.dept_id = parseInt(this.formBean.dept_id);
-      }
-      if (this.formBean.org_id) {
-        this.formBean.org_id = parseInt(this.formBean.org_id);
+      if (video_cat_ids_array) {
+        this.formBean.video_cat_idss = [];
+        video_cat_ids_array.forEach((element, index) => {
+          this.formBean.video_cat_idss.push({ cat_id: element, cat_name: this.formBean.video_cat_names.split(',')[index] })
+        });
       }
       this.formBean.tag_id = this.formBean.tag_id.split(',').map(element => parseInt(element))
       this.formTitle = "修改视频";
@@ -122,13 +139,13 @@ export class CwTrainListComponent implements OnInit {
     this.resourceArray = [];
     this.myForm1 = this.service.fb.group({});
     this.service.post('/api/busiz/video/detail', { video_id: this.formBean.video_id }).then(success => {
-      if (success.data && success.data.length > 0) {
-        this.resourceArray = success.data
+      if (success.data.videoResRelList && success.data.videoResRelList.length > 0) {
+        this.resourceArray = success.data.videoResRelList
         this.resourceArray.forEach((element, index) => {
           element.order_id = index
-          element.resources_name = `resources${index}`;
-          element.resources_id = element.resources_id
-          this.myForm1.addControl(element.resources_name, new FormControl(null, this.service.validators.required));
+          element.res_name = `resources${index}`;
+          element.res_id = element.res_id
+          this.myForm1.addControl(element.res_name, new FormControl(null, this.service.validators.required));
         })
       } else {
         this.addField1()
@@ -162,7 +179,15 @@ export class CwTrainListComponent implements OnInit {
     }, 50)
 
   }
-
+  resetForm() {
+    this.paramCol.searchText = null;
+    this.paramCol.audit_status = null;
+    this.paramCol.video_cat_id = [];
+    this.paramCol.tag_id = null;
+    this.searchCatName._lastValue = []
+    this.searchTagName._lastValue = []
+    this.searchAuditName._lastValue = []
+  }
   //提交
   _submitForm() {
     for (const i in this.myForm.controls) {
@@ -174,7 +199,7 @@ export class CwTrainListComponent implements OnInit {
         return false;
       }
       this.formBean.video_ids_array = []
-      this.formBean.video_idss.forEach(element => {
+      this.formBean.video_cat_idss.forEach(element => {
         if (typeof (element) == 'object') {
           this.formBean.video_ids_array.push(element.cat_id);
         }
@@ -184,8 +209,9 @@ export class CwTrainListComponent implements OnInit {
       });
       this.formBean.video_cat_id = this.formBean.video_ids_array[this.formBean.video_ids_array.length - 1];
       this.formBean.video_cat_ids = this.formBean.video_ids_array.join(',');
-      this.formBean.video_cat_names = this.video_idss._displayLabelContext.labels.join(',');
-      this.service.post('//api/busiz/video/save', this.formBean).then(success => {
+      this.formBean.video_cat_names = this.video_cat_idss._displayLabelContext.labels.join(',');
+      // this.formBean.tag_id = this.formBean.tag_id.join(',');
+      this.service.post('/api/busiz/video/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
           this.formClear()
@@ -235,6 +261,12 @@ export class CwTrainListComponent implements OnInit {
     if (reset == true) {
       this.param.pageNum = 1;
       this.param.searchText = this.paramCol.searchText;
+      this.param.audit_status = this.paramCol.audit_status;
+      this.param.tag_id = this.paramCol.tag_id;
+      if (this.paramCol.video_cat_id.length > 0)
+        this.param.video_cat_id = this.paramCol.video_cat_id[this.paramCol.video_cat_id.length - 1];
+      else
+        this.param.video_cat_id = null;
     }
     this._loading = true;
     this.service.post('/api/busiz/video/getlist', this.param).then(success => {
@@ -270,18 +302,39 @@ export class CwTrainListComponent implements OnInit {
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
 
-
-  //状态
-  _enabled(data) {
-    if (this.service.validataAction('cw_train_list_enable')) {
-      data.enabled = data.enabled == 1 ? 2 : 1;
-      this.service.post('/api/system/organization/setEnabled', {
-        ids: [data.org_id],
-        enabled: data.enabled
+  //提交审核
+  submitAudit() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要提交审核的数据!');
+    }
+    else {
+      let ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.video_id) })
+      this.service.post('/api/busiz/video/submitaudit', {
+        ids: ids, mark: 'audit', audit_status: 2
       }).then(success => {
-        this.reload();
+        if (success.code == 0) {
+          this.reload();
+        }
+        else {
+          this.service.message.error(success.message);
+        }
       })
     }
+  }
+  //通过驳回
+  auditStatus(data, status) {
+    this.service.post('/api/busiz/video/audit', { ids: [data.video_id], audit_status: status }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  //详情
+  videoDetail() {
+    window.open('www.baidu.com')
   }
 
   //---------------------------------------------  资源文件 start --------------------------------------------
@@ -295,40 +348,27 @@ export class CwTrainListComponent implements OnInit {
     const control = {
       id: null,
       order_id,
-      resources_name: `resources${order_id}`,
-      resources_id: null,
+      res_name: `res${order_id}`,
+      res_id: null,
     };
     const index = this.resourceArray.push(control);
-    this.myForm1.addControl(this.resourceArray[index - 1].resources_name, new FormControl(null, this.service.validators.required));
+    this.myForm1.addControl(this.resourceArray[index - 1].res_name, new FormControl(null, this.service.validators.required));
   }
 
   removeField1(i, e: MouseEvent) {
     e.preventDefault();
     if (this.resourceArray.length > 0) {
-      if (i.id) {
-        this.service.post('/api/busiz/works/resources/del', { id: i.id }).then(success => {
-          if (success.code == 0) {
-            const index = this.resourceArray.indexOf(i);
-            this.resourceArray.splice(index, 1);
-            this.myForm1.removeControl(i.resources_name);
-            this.service.message.success("删除成功");
-          } else {
-            this.service.message.error(success.message);
-          }
-        })
-      } else {
-        const index = this.resourceArray.indexOf(i);
-        this.resourceArray.splice(index, 1);
-        this.myForm1.removeControl(i.resources_name);
-      }
+      const index = this.resourceArray.indexOf(i);
+      this.resourceArray.splice(index, 1);
+      this.myForm1.removeControl(i.res_name);
     }
   }
   getFormControl1(name) {
     return this.myForm1.controls[name];
   }
   submitForm1() {
-    if (!this.formBean.works_id) {
-      this.service.message.warning('请先保存作品基本信息');
+    if (!this.formBean.video_id) {
+      this.service.message.warning('请先保存视频基本信息');
       return false;
     }
     for (const i in this.myForm1.controls) {
@@ -336,19 +376,20 @@ export class CwTrainListComponent implements OnInit {
     }
 
     console.log(this.resourceArray)
-    // this.service.post('/api/busiz/works/resources/save', {
-    //   works_id: this.formBean.works_id,
-    //   id: data.id,
-    //   resources_id: data.resources_id,
-    // }).then(success => {
-    //   if (success.code == 0) {
-    //     if (success.data) {
-    //     }
-    //     this.service.message.success("保存成功")
-    //   } else {
-    //     this.service.message.error(success.message)
-    //   }
-    // })
+    let res_ids = this.resourceArray.map(element => element.res_id)
+    console.log(res_ids)
+    this._loading = true;
+    this.service.post('/api/busiz/video/config', {
+      video_id: this.formBean.video_id,
+      res_ids: res_ids
+    }).then(success => {
+      this._loading = false;
+      if (success.code == 0) {
+        this.service.message.success("保存成功")
+      } else {
+        this.service.message.error(success.message)
+      }
+    })
   }
 
   //---------------------------------------------  资源文件 end --------------------------------------------
