@@ -13,7 +13,7 @@ export class CwCodeListComponent implements OnInit {
   param: any = {
     pageNum: 1,
     pages: 0,
-    pageSize: 16,
+    pageSize: 8,
     total: 0
   }
   tagOptions: any = [];
