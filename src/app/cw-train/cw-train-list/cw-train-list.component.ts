@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 })
 
 export class CwTrainListComponent implements OnInit {
+  @ViewChild("video_idss") video_idss;
   _allChecked = false;
   _indeterminate = false;
   tableData: any = []; //数据列表
@@ -16,9 +17,9 @@ export class CwTrainListComponent implements OnInit {
   isVisibleMiddle: boolean = false;
   selectedIndex: number = 0;
   resourceList: any = [];
-  videoCatList: any = []
+  videoCatList: any = [];
+  tagList: any = [];
   param: any = {
-    org_id: null,
     searchText: null,
     total: 0,
     pageSize: 10,
@@ -30,33 +31,40 @@ export class CwTrainListComponent implements OnInit {
     date: null,
     searchText: null
   }
-  sortMap = {
-    org_name: null,
-    org_code: null
-  };
+
   isCollapse: any = true;
   _loading: boolean = true;
-  //省 市 区 街 
-  _address: any;
 
   // 实例化一个对象
   constructor(public service: AppService) { }
   //表单
   myForm: FormGroup;
   formBean: any = {
+    video_cover: null,
+    video_name: null,
     menu_id: null,
     menu_idss: null,
-    email: null,
-    phone: null,
-    vote_role: null,
+    tag_id: null,
+    price: null,
+    discount: null,
+    real_price: null,
+    video_remark: null,
   };
+
   //文件上传
   fileUpload(info): void {
     if (info.file.response && info.file.response.code == 0) {
-      this.formBean.icon = info.file.response.data[0].url;
+      this.formBean.video_cover = info.file.response.data[0].url;
     }
   }
   ngOnInit() {
+    //获取商品标签
+    this.service.post('/api/busiz/goods/tag/list', { pageNum: 1, pageSize: 1000 }
+    ).then(success => {
+      if (success.code == 0) {
+        this.tagList = success.data.rows;
+      }
+    })
     //获取资源下拉
     this.service.post('/api/busiz/res/getlist', {
       pageNum: 1,
@@ -67,125 +75,28 @@ export class CwTrainListComponent implements OnInit {
         this.resourceList = success.data.rows
       }
     })
-    //视频分类
-    this.service.post('/api/busiz/videoMenu/gettree', { org_id: this.param.org_id }).then(success => {
-      if (success.code == 0) {
-        this.videoCatList = success.data;
-        this.service._toisLeaf(this.tableData);
-        this._expanData();
-      }
-    })
+
     this.reload();
     this.myForm = this.service.fb.group({
-      org_name: [null, [this.service.validators.required]],
-      org_code: [null, [this.service.validators.required]],
-      streetParent: [null, [this.service.validators.required]],
-      office_address: [null, [this.service.validators.required]],
-      link_man: [null, [this.service.validators.required]],
-      link_mobile: [null, [this.service.validators.required]],
-      auth_date_begin: [null, [this.service.validators.required]],
-      auth_date_end: [null, [this.service.validators.required]],
-      remark: [false],
-      phone: [false],
-      vote_role: [false],
-      email: [false],
-      menu_idss: [false],
-      price: [false],
+      video_name: [null, [this.service.validators.required]],
+      video_idss: [null, [this.service.validators.required]],
+      tag_id: [null, [this.service.validators.required]],
+      price: [null, [this.service.validators.required]],
+      discount: [null, [this.service.validators.required]],
       real_price: [false],
-      discount: [false],
-      works_remark: [false]
+      video_remark: [false],
     })
   }
-  expandDataCache = {};
-  expandDataCacheCol = {};
-  _expanData() {
-    this.expandDataCacheCol = this.expandDataCache;
-    this.expandDataCache = {};
-    this.tableData.forEach(item => {
-      this.expandDataCache[item.menu_id] = this.convertTreeToList(item);
-    });
-  }
-  collapse(array, data, $event) {
-    if ($event === false) {
-      if (data.children) {
-        data.children.forEach(d => {
-          const target = array.find(a => a.menu_id === d.menu_id);
-          target.expand = false;
-          this.collapse(array, target, false);
-        });
-      } else {
-        return;
-      }
-    }
-  }
-  convertTreeToList(root) {
-    const stack = [], array = [], hashMap = {};
-    stack.push({ ...root, level: 0, expand: true });
-    while (stack.length !== 0) {
-      const node = stack.pop();
-      this.visitNode(node, hashMap, array);
-      const nodeCol = this.expandDataCacheCol[root.menu_id];
-      if (node.children) {
-        for (let i = node.children.length - 1; i >= 0; i--) {
-          let expand = false;
-          if (nodeCol) {
-            let col = null;
-            nodeCol.forEach(mm => {
-              if (mm.menu_id == node.children[i].menu_id)
-                col = mm;
-            })
-            if (col) {
-              expand = col.expand;
-            }
-          }
-          stack.push({ ...node.children[i], level: node.level + 1, expand: expand, parent: node });
-        }
-        //父级tree节点创建
-        if (node.parent) {
-          node.pname = [];
-          if (node.parent.pname) {
-            node.parent.pname.forEach(element => {
-              node.pname.push({
-                menu_id: element.menu_id,
-                menu_name: element.menu_name
-              });
-            });
-          }
-          node.pname.push({
-            menu_id: node.parent.menu_id,
-            menu_name: node.parent.menu_name
-          });
-        }
-      }
-    }
-    return array;
-  }
-
-  visitNode(node, hashMap, array) {
-    if (!hashMap[node.menu_id]) {
-      hashMap[node.menu_id] = true;
-      array.push(node);
-    }
-  }
-  loadData(e: { option: any, index: number, resolve: Function, reject: Function }): void {
+  loadCat(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
-      this.service.post('/api/system/region/list/tree', {
+      this.service.post('/api/busiz/videoMenu/gettree', {
         code: null
       }).then(success => {
+        this.service._toisLeaf(success.data);
         e.resolve(success.data);
       })
       return;
     }
-    const option = e.option;
-    option.loading = true;
-    this.service.post('/api/system/region/list/tree', {
-      code: option.code
-    }).then(success => {
-      option.loading = false;
-      if (e.index == 2)
-        success.data.forEach(element => element.isLeaf = true);
-      e.resolve(success.data);
-    })
   }
   //打开
   showModalMiddle(bean?: any) {
@@ -199,12 +110,11 @@ export class CwTrainListComponent implements OnInit {
       if (this.formBean.org_id) {
         this.formBean.org_id = parseInt(this.formBean.org_id);
       }
+      this.formBean.tag_id = this.formBean.tag_id.split(',').map(element => parseInt(element))
       this.formTitle = "修改视频";
     }
     else {
       this.formTitle = "新增视频";
-      this.formBean.auth_date_begin = null;
-      this.formBean.auth_date_end = null;
     }
     this.isVisibleMiddle = true;
     this.selectedIndex = 1;
@@ -259,6 +169,22 @@ export class CwTrainListComponent implements OnInit {
       this.myForm.controls[i].markAsDirty();
     }
     if (this.myForm.valid) {
+      if (!this.formBean.video_cover) {
+        this.service.message.warning('请上传封面');
+        return false;
+      }
+      this.formBean.video_ids_array = []
+      this.formBean.video_idss.forEach(element => {
+        if (typeof (element) == 'object') {
+          this.formBean.video_ids_array.push(element.cat_id);
+        }
+        else {
+          this.formBean.video_ids_array.push(element);
+        }
+      });
+      this.formBean.video_cat_id = this.formBean.video_ids_array[this.formBean.video_ids_array.length - 1];
+      this.formBean.video_cat_ids = this.formBean.video_ids_array.join(',');
+      this.formBean.video_cat_names = this.video_idss._displayLabelContext.labels.join(',');
       this.service.post('//api/busiz/video/save', this.formBean).then(success => {
         if (success.code == 0) {
           this.isVisibleMiddle = false;
@@ -278,8 +204,8 @@ export class CwTrainListComponent implements OnInit {
     }
     else {
       let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.org_id) })
-      this.service.post('/api/busiz/video/delete', {
+      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.video_id) })
+      this.service.post('/api/busiz/video/del', {
         ids: ids, mark: 'del'
       }).then(success => {
         if (success.code == 0) {
@@ -290,6 +216,19 @@ export class CwTrainListComponent implements OnInit {
         }
       })
     }
+  }
+  //删除
+  _delete(id) {
+    this.service.post('/api/busiz/video/del', {
+      ids: [id], mark: 'del'
+    }).then(success => {
+      if (success.code == 0) {
+        this.reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
   }
   //重新查询
   reload(reset?: any) {
@@ -330,25 +269,7 @@ export class CwTrainListComponent implements OnInit {
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
-  //排序
-  sort(name, value) {
-    if (value) {
-      this.param.sort_name = name;
-      this.param.sort_rule = value == 'ascend' ? 'asc' : 'desc';
-    }
-    else {
-      this.param.sort_name = null;
-      this.param.sort_rule = null;
-    }
-    Object.keys(this.sortMap).forEach(key => {
-      if (key !== name) {
-        this.sortMap[key] = null;
-      } else {
-        this.sortMap[key] = value;
-      }
-    });
-    this.reload();
-  }
+
 
   //状态
   _enabled(data) {

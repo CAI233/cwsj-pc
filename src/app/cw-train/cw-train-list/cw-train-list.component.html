@@ -102,10 +102,6 @@
                   <i class="anticon anticon-plus"></i>
                   <span>新增</span>
                 </button>
-                <button nz-button nzType="primary" (click)="editModalMiddle()" *ngIf="this.service.validataAction('outfit_edit')">
-                  <i class="anticon anticon-edit"></i>
-                  <span>修改</span>
-                </button>
                 <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
                   <button nz-popconfirm nz-button nzType="danger" *ngIf="this.service.validataAction('outfit_del')">
                     <i class="anticon anticon-delete"></i>
@@ -133,12 +129,13 @@
                   </label>
                 </th>
                 <th nz-th>
-                  <span>视频信息</span>
-                  <nz-table-sort [(nzValue)]="sortMap.org_code" (nzValueChange)="sort('org_code', $event)"></nz-table-sort>
+                  <span>视频封面</span>
+                </th>
+                <th nz-th>
+                  <span>视频名称</span>
                 </th>
                 <th nz-th>
                   <span>视频标签</span>
-                  <nz-table-sort [(nzValue)]="sortMap.org_name" (nzValueChange)="sort('org_name', $event)"></nz-table-sort>
                 </th>
                 <th nz-th>
                   <span>视频分类</span>
@@ -148,9 +145,6 @@
                 </th>
                 <th nz-th>
                   <span>创建日期</span>
-                </th>
-                <th nz-th>
-                  <span>发布状态</span>
                 </th>
                 <th nz-th>
                   <span>操作</span>
@@ -163,18 +157,25 @@
                   <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
                 </td>
                 <td nz-td>
-                  <span>
-                    <p>视频名称：{{data.name}}</p>
-                    <p>讲师{{data.name}}</p>
+                  <div nz-col [nzSpan]="6" style="float:left;border:1px #ddd dashed;width:60px;height:80px;background: #f5f8fa;">
+                    <img src="{{service.ctxPath + data.video_cover}}" alt="" style="float:left;width:100%;height:100%;">
+                  </div>
+                </td>
+                <td nz-td>
+                  <span>{{data.video_name}}</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.tag_names}}</span>
+                </td>
+                <td nz-td>
+                  <span>{{data.video_catname}}</span>
+                </td>
+                <td nz-td>
+                  <span [ngStyle]="{'color':['#999','#f90','green','#f00'][data.audit_status-1]}" [innerHtml]="['草稿','待审核','通过','驳回'][data.audit_status-1]">
                   </span>
                 </td>
-                <td nz-td>{{data.org_name}}</td>
-                <td nz-td>{{data.province}}{{data.city}}{{data.area}}{{data.street}}{{data.office_address}}</td>
-                <td nz-td>{{data.link_man}}</td>
-                <td nz-td>{{data.link_mobile}}</td>
                 <td nz-td>
-                  <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" [nzDisabled]="!this.service.validataAction('cw_train_list_enable')"
-                    (click)="_enabled(data)"></nz-switch>
+                  <span>{{data.create_time}}</span>
                 </td>
                 <td nz-td>
                   <span>
@@ -185,7 +186,7 @@
                     </ng-container>
                     <!-- 删除 -->
                     <ng-container *ngIf="this.service.validataAction('user_del')">
-                      <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.user_id)" [nzPlacement]="'left'">
+                      <nz-popconfirm [nzTitle]="'确定要删除这条信息吗？'" (nzOnConfirm)="_delete(data.video_id)" [nzPlacement]="'left'">
                         <a nz-popconfirm>删除</a>
                       </nz-popconfirm>
                       <span nz-table-divider *ngIf="this.service.validataAction('resource_add')"></span>
@@ -217,7 +218,7 @@
         <i class="anticon anticon-cross" (click)="closeTab()"></i>
       </ng-template>
       <nz-content class="main-page-content">
-        <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()" class="ditForm">
+        <form nz-form [formGroup]="myForm" class="ditForm">
           <div nz-form-item nz-row>
             <div nz-col [nzSpan]="3">
               <div nz-form-label>
@@ -226,10 +227,9 @@
               <div nz-form-control nzHasFeedback>
                 <div class="userHead">
                   <div class="uimg">
-                    <img *ngIf="formBean.icon" src="{{ service.ctxPath + formBean.icon }}" />
+                    <img *ngIf="formBean.video_cover" src="{{ service.ctxPath + formBean.video_cover }}" />
                   </div>
-                  <!-- (nzChange)="fileUpload($event)" -->
-                  <nz-upload [nzShowUploadList]="false" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'" nzAction="{{service.ctxPath + '/api/system/file/upload'}}"
+                  <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'" nzAction="{{service.ctxPath + '/api/system/file/upload'}}"
                     [nzData]="{type:'admin',token:service.token}">
                     <button nz-button type="button">
                       <i class="anticon anticon-upload"></i>
@@ -245,16 +245,19 @@
                   <div nz-form-label>
                     <label nz-form-item-required>视频名称</label>
                   </div>
-                  <div nz-form-control>
-                    <nz-input formControlName="email" [nzType]="'email'" [(ngModel)]="formBean.email" [nzPlaceHolder]="'请填写出版社名称'"></nz-input>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-input formControlName="video_name" [nzType]="'text'" [(ngModel)]="formBean.video_name" [nzPlaceHolder]="'请填写视频名称'"></nz-input>
                   </div>
                 </div>
-                <div nz-col [nzSpan]="8" style="padding-left:10px">
+                <div nz-col [nzSpan]="14" style="padding-left:10px">
                   <div nz-form-label>
-                    <label nz-form-item-required>讲师</label>
+                    <label nz-form-item-required>标签</label>
                   </div>
-                  <div nz-form-control>
-                    <nz-input formControlName="phone" [nzType]="'tel'" [(ngModel)]="formBean.phone" [nzPlaceHolder]="'请填写二维码名称'"></nz-input>
+                  <div nz-form-control nzHasFeedback>
+                    <nz-select formControlName="tag_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择标签'" [(ngModel)]="formBean.tag_id" [nzNotFoundContent]="'无法找到'">
+                      <nz-option *ngFor="let option of tagList" [nzLabel]="option.tag_name" [nzValue]="option.tag_id" [nzDisabled]="option.disabled">
+                      </nz-option>
+                    </nz-select>
                   </div>
                 </div>
               </div>
@@ -264,21 +267,9 @@
                     <label nz-form-item-required>视频分类</label>
                   </div>
                   <div nz-form-control nzHasFeedback>
-                    <nz-select formControlName="menu_idss" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择分类'" [(ngModel)]="formBean.menu_idss" [nzNotFoundContent]="'无法找到'">
-                      <nz-option *ngFor="let option of videoCatList" [nzLabel]="option.menu_name" [nzValue]="option.menu_id" [nzDisabled]="option.disabled">
-                        </nz-option>
-                    </nz-select>
-                  </div>
-                </div>
-                <div nz-col [nzSpan]="8" style="padding-left:10px">
-                  <div nz-form-label>
-                    <label nz-form-item-required>标签</label>
-                  </div>
-                  <div nz-form-control nzHasFeedback>
-                    <nz-select formControlName="role_id" [nzMode]="'multiple'" [nzPlaceHolder]="'请选择角色'" [(ngModel)]="formBean.role_idss" [nzNotFoundContent]="'无法找到'">
-                      <!-- <nz-option *ngFor="let option of roleList" [nzLabel]="option.role_name" [nzValue]="option.role_id" [nzDisabled]="option.disabled">
-                        </nz-option> -->
-                    </nz-select>
+                    <nz-cascader #video_idss [nzPlaceHolder]="'视频分类'" formControlName="video_idss" [nzValueProperty]="'menu_id'" [nzLabelProperty]="'menu_name'"
+                      (nzLoad)="loadCat($event)" name="cat" nzChangeOnSelect="true" [(ngModel)]="formBean.video_idss">
+                    </nz-cascader>
                   </div>
                 </div>
                 <div nz-col [nzSpan]="3" style="padding-left:10px">
@@ -310,20 +301,19 @@
           </div>
           <div nz-form-item nz-row>
             <div nz-form-label>
-              <label nz-form-item-required>视频简介</label>
+              <label>视频简介</label>
             </div>
             <div nz-form-control>
-              <nz-input formControlName="works_remark" [nzRows]="4" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="formBean.works_remark"
+              <nz-input formControlName="video_remark" [nzRows]="4" [nzType]="'textarea'" [nzSize]="'large'" [(ngModel)]="formBean.video_remark"
                 [nzPlaceHolder]="'请填写视频简介'"></nz-input>
             </div>
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="12" [nzOffset]="6" style="margin-top:30px">
               <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">保存</button>
-              <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="_submitForm()" style="padding:0 30px">取消</button>
+              <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="handleCancelMiddle()" style="padding:0 30px">取消</button>
             </div>
           </div>
-          <button style="display:none;">save</button>
         </form>
       </nz-content>
     </nz-tab>
@@ -351,12 +341,16 @@
           </div>
           <div nz-form-item nz-row>
             <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
-              <button nz-button [nzType]="'primary'" (click)="submitForm1()">
-                <span>保存</span>
-              </button>
               <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addField1($event)">
                 <i class="anticon anticon-plus"></i>
                 <span>新增资源</span>
+              </button>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">
+              <button nz-button [nzType]="'primary'" (click)="submitForm1()">
+                <span>保存</span>
               </button>
             </div>
           </div>
