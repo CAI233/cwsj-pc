@@ -34,6 +34,8 @@ export class CwGoodsListComponent implements OnInit {
   }
   allRecourse : any = [];//所有资源
   ebookRecourse : any = [];//电子书资源
+  nowRecourse : any = {};//资源详情
+  isShow : boolean = false;//商品详情
   constructor(public service: AppService) { }
 
   //文件上传
@@ -118,7 +120,7 @@ export class CwGoodsListComponent implements OnInit {
     }
   }
   //选择资源后显示资源内容
-  nowRecourse : any = {};
+  
   selected(id ?){
     if(id){
       if(this.selRow.goods_type!=2){
@@ -136,17 +138,31 @@ export class CwGoodsListComponent implements OnInit {
           }
         }
       }
+      console.log(this.nowRecourse);
+      // 获取当前电子书的资源列表
       if(this.selRow.goods_type==3){
         // 获取电子书资源
         this.service.post('/api/busiz/book/res/list',{book_id:this.selRow.res_id}).then(success => {
           if(success.code==0){
-            this.ebookRecourse = success.data.rows;
+            this.ebookRecourse = success.data;
+          }else{
+            this.service.message.error(success.message);
+          }
+        })
+      }
+      // 获取当前视频的资源列表
+      if(this.selRow.goods_type==2){
+        // 获取视频资源
+        this.service.post('/api/busiz/video/detail',{video_id:this.selRow.res_id}).then(success => {
+          if(success.code==0){
+            this.ebookRecourse = success.data.videoResRelList;
           }else{
             this.service.message.error(success.message);
           }
         })
       }
     }
+    console.log(this.ebookRecourse)
   }
 
   get_tagName(id ?){
@@ -187,7 +203,10 @@ export class CwGoodsListComponent implements OnInit {
 
   // 新增操作
   add(){
-    console.log(this.selRow.goods_type)
+    console.log(this.selRow.goods_type);
+    this.ebookRecourse = [];//清空资源
+    this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
+
     this.isVisibleMiddle = true;
     this.selRow.real_price = 0;
     if(this.selRow.goods_type==1){
@@ -214,7 +233,23 @@ export class CwGoodsListComponent implements OnInit {
     this.selRow = {...data};
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
 
+    // 获取当前类型的资源
+    this.get_recourse();
+
+    //得到当前资源文件的详情
+    this.selected(this.selRow.res_id);
   }
+
+  _ShowCancel($event){
+    this.isShow = false;
+    this.myForm.reset();
+  }
+  //查看商品详情 
+  show(data){
+    this.isShow = true;
+
+  }
+
   // 删除操作
   del(data){
     this.service.post('/api/busiz/goods/del',{ids:[data.goods_id]}).then(success => {
@@ -244,22 +279,28 @@ export class CwGoodsListComponent implements OnInit {
   // 折后价
   sum(){
     setTimeout(_=>{
+      this.selRow.price = this.selRow.price == null ? 0 : this.selRow.price;
+      this.selRow.discount = this.selRow.discount == null ? 0 : this.selRow.discount;
       this.selRow.real_price = (parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1
     },50)
   }
   //提交
   _submitForm(){
     console.log(this.selRow);
-    if(this.selRow.parent){
-      let class_id = this.selRow.parent[this.selRow.parent.length-1];
+    console.log(this.nowRecourse);
+    if(!this.selRow.res_id){
+      this.service.message.warning('请选择一个文件!');
+      return false;
+    }
+    if(this.selRow.cat_ids){
+      let class_id = this.selRow.cat_ids[this.selRow.cat_ids.length-1];
       if(typeof(class_id)=='object'){
         this.selRow.goods_cat_id = parseInt(class_id.cat_id);
       }else{
         this.selRow.goods_cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
       }
     }
-    this.selRow.goods_tag_ids = this.selRow.goods_tag_ids.split(",");
-    // this.selRow.goods_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length-1]);
+    this.selRow.goods_cover = this.nowRecourse.book_cover_small
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){
           this.load();
@@ -302,6 +343,50 @@ export class CwGoodsListComponent implements OnInit {
     // 加载品牌列表
     this.get_brand();
   }
+
+  //视频资源操作
+  isVisibleVideo: boolean = false;
+  //电子书资源操作
+  isVisiblePdf : boolean = false;
+  pdfMinNum: number = 1;
+  pdfModel: any = null;
+  videoModel : any = null;
+  //关闭音频
+  _bookCancel(event?) {
+    this.isVisiblePdf = false;
+    this.pdfModel = null;
+  }
+  _vedioCancel(event?){
+    this.isVisibleVideo = false;
+    this.videoModel = null;
+  }
+  // 预览
+  bookSee(row){
+    if(this.selRow.goods_type==2){
+      this.isVisibleVideo = true;
+      this.videoModel = row;
+    }
+    if(this.selRow.goods_type==3){
+      this.isVisiblePdf = true;
+      this.pdfModel = row;
+    this.pdfMinNum = 1;
+    }
+    
+  }
+
+    //上一页
+    pdfMinNum1() {
+      if (this.pdfMinNum > 1) {
+        this.pdfMinNum -= 1;
+      }
+    }
+    //上一页
+    pdfMinNum2() {
+      if (this.pdfMinNum < this.pdfModel.res_size) {
+        this.pdfMinNum += 1;
+      }
+    }
+ 
 
   // 全选
   _checkAll(value) {

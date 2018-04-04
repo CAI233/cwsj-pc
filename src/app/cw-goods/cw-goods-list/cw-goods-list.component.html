@@ -182,7 +182,7 @@
                     <div nz-form-control>
                         <!-- <nz-input formControlName="goods_cat_id"  [nzType]="'text'" [(ngModel)]="selRow.goods_name" [nzPlaceHolder]="'请填写图书名称'"></nz-input> -->
                         <nz-cascader style="width:100%" formControlName="goods_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
-                            [(ngModel)]="selRow.parent">
+                            [(ngModel)]="selRow.cat_ids">
                         </nz-cascader>
                     </div>
                 </div>
@@ -210,50 +210,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div nz-form-item nz-row class="notErrMsg" >
-                        <div nz-col [nzSpan]="12" style="padding-right:10px;">
-                            <div nz-form-item nz-row class="notErrMsg" >
-                                <div nz-form-label>
-                                    <label>标准书号</label>
-                                </div>
-                                <div nz-form-control>
-                                    <nz-input formControlName="book_isbn"  [nzType]="'text'" [(ngModel)]="selRow.book_isbn" [nzPlaceHolder]="'请填写标准书号'"></nz-input>
-                                </div>
-                            </div>
-                        </div>
-                        <div nz-col [nzSpan]="12" style="padding-left:10px;">
-                            <div nz-form-item nz-row class="notErrMsg" >
-                                <div nz-form-label>
-                                    <label>出版社</label>
-                                </div>
-                                <div nz-form-control>
-                                    <nz-input formControlName="publisher"  [nzType]="'text'" [(ngModel)]="selRow.publisher" [nzPlaceHolder]="'请填写出版社'"></nz-input>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-                <div nz-form-item nz-row class="notErrMsg" >
-                    <div nz-col [nzSpan]="12" style="padding-right:10px;">
-                        <div nz-form-item nz-row class="notErrMsg" >
-                            <div nz-form-label>
-                                <label>作者/译者</label>
-                            </div>
-                            <div nz-form-control>
-                                <nz-input formControlName="author_name"  [nzType]="'text'" [(ngModel)]="selRow.author_name" [nzPlaceHolder]="'请填写作者/译者'"></nz-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" style="padding-left:10px;">
-                        <div nz-form-item nz-row class="notErrMsg" >
-                            <div nz-form-label>
-                                <label>出版时间</label>
-                            </div>
-                            <div nz-form-control>
-                                <nz-datepicker formControlName="publish_date" [(ngModel)]="selRow.publish_date" [nzPlaceHolder]="'出版时间'" [nzFormat]="'YYYY-MM-DD HH:mm:ss'" style="width:100%;"></nz-datepicker>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <div nz-form-item nz-row class="notErrMsg" >
                     <div nz-col [nzSpan]="8" style="padding-right:10px;">
                         <nz-input formControlName="price"  [nzType]="'text'" (ngModelChange)="sum()" [(ngModel)]="selRow.price" [nzPlaceHolder]="'售价'">
@@ -271,28 +227,6 @@
                         </nz-input>
                     </div>
                 </div>
-                <!-- <div nz-form-item nz-row class="notErrMsg" *ngIf="selRow.goods_type==1">
-                    <div nz-col [nzSpan]="12" style="padding-right:10px;">
-                        <div nz-form-item nz-row class="notErrMsg" >
-                            <div nz-form-label>
-                                <label>库存</label>
-                            </div>
-                            <div nz-form-control>
-                                <nz-input formControlName="inventory"  [nzType]="'text'" [(ngModel)]="selRow.inventory" [nzPlaceHolder]="'请填写库存'"></nz-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div nz-col [nzSpan]="12" style="padding-left:10px;">
-                        <div nz-form-item nz-row class="notErrMsg" >
-                            <div nz-form-label>
-                                <label>限购数</label>
-                            </div>
-                            <div nz-form-control>
-                                    <nz-input formControlName="limit_buy"  [nzType]="'text'" [(ngModel)]="selRow.limit_buy" [nzPlaceHolder]="'请填写限购数'"></nz-input>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
             <div nz-col [nzSpan]="12">
                 <div nz-form-item nz-row class="notErrMsg" style="padding-left:10px;">
@@ -307,29 +241,43 @@
                             <nz-option  *ngFor="let item of allRecourse" [nzLabel]="item.video_name" [nzValue]="item.video_id"></nz-option>
                         </nz-select>   
                     </div>
-                </div>
-                <!-- <div class="Recourse" nz-row>
-                    <div nz-col [nz-span]="12">
-                        <div class="uimg" style="float:left;border:1px #ddd dashed;height:160px;width:100%;margin-bottom:15px; background: #f5f8fa;">
-                            <img *ngIf="selRow.goods_cover" src="{{ service.ctxPath + selRow.goods_cover }}" style="float:left;width:100%;height:100%;"/>
+                </div> 
+                <div nz-form-item nz-row class="notErrMsg" style="padding-left:10px;">
+                    <div nz-col [nzSpan]="8" style="padding:10px 0px;">
+                        <div class="uimg" style="float:left;border:1px #ddd dashed;height:152px;width:114px;background: #f5f8fa;">
+                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover_small }}" style="float:left;width:100%;height:100%;"/>
+                            <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover_small }}" style="float:left;width:100%;height:100%;"/>
                         </div>
                     </div>
-                    <div nz-col [nz-span]="12">
-                        <p nz-row></p>
+                    <div nz-col [nzSpan]="16">
+                        <p nz-row class="re_class">
+                            <span >文件名称:</span>
+                            <span *ngIf="selRow.goods_type!=2">{{nowRecourse.book_name}}</span>
+                            <span *ngIf="selRow.goods_type==2">{{nowRecourse.video_name}}</span>
+                        </p>
+                        <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                            <span >书号:</span>
+                            <span >{{nowRecourse.book_isbn}}</span>
+                        </p>
+                        <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                            <span >出版社:</span>
+                            <span >{{nowRecourse.publisher}}</span>
+                        </p>
+                        <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                            <span >作/译者:</span>
+                            <span >{{nowRecourse.author_name}}</span>
+                        </p>
+                        <p nz-row *ngIf="selRow.goods_type==2" class="re_class">
+                            <span >库存:</span>
+                            <span >{{nowRecourse.inventory}}</span>
+                        </p>
+                        <p nz-row *ngIf="selRow.goods_type==2" class="re_class">
+                            <span >限购量:</span>
+                            <span >{{nowRecourse.limit_buy}}</span>
+                        </p>
                     </div>
-                </div> -->
-                <!-- <div class="userHead" style="text-align:center;float:left;width:100%;padding:25px 50px;">
-                    <div class="uimg" style="float:left;border:1px #ddd dashed;height:160px;width:100%;margin-bottom:15px; background: #f5f8fa;">
-                        <img *ngIf="selRow.goods_cover" src="{{ service.ctxPath + selRow.goods_cover }}" style="float:left;width:100%;height:100%;"/>
-                    </div>
-                    <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
-                        nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
-                        <button nz-button type="button">
-                            <i class="anticon anticon-upload"></i>
-                            <span>上传图书封面</span>
-                        </button>
-                    </nz-upload>
-                </div> -->
+                    
+                </div>
             </div>
         </div>
         <div nz-form-item nz-row>
@@ -341,7 +289,87 @@
                 </nz-input>
             </div>
         </div>
+        <div *ngIf="ebookRecourse.length>0">
+            <nz-table #nzTable [nzAjaxData]="ebookRecourse" [nzPageSize]="ebookRecourse.length" [nzIsPagination]="false" *ngIf="ebookRecourse.length>0">
+                <thead nz-thead>
+                    <tr>
+                    <th nz-th><span>名称</span></th>
+                    <th nz-th *ngIf="selRow.goods_type!=2"><span>大小</span></th>
+                    <th nz-th *ngIf="selRow.goods_type!=2"><span>类型</span></th>
+                    <th nz-th><span>操作</span></th>
+                    </tr>
+                </thead>
+                <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                    <td nz-td>
+                        <span>{{data.res_name}}</span>
+                    </td>
+                    <td nz-td *ngIf="selRow.goods_type!=2">
+                        <span>{{data.res_size}}页</span>
+                    </td>
+                    <td nz-td *ngIf="selRow.goods_type!=2">
+                        <span>{{data.res_type}}</span>
+                    </td>
+                    <td nz-td>
+                        <span ><a (click)="bookSee(data)">预览</a></span>
+                    </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
         <button style="display:none;">save</button>
         </form>
     </ng-template>
   </nz-modal>
+  
+<nz-modal [nzVisible]="isVisibleVideo" [nzTitle]="modalTitle1" [nzContent]="modalContent1" [nzFooter]="modalFooter1" (nzOnCancel)="_vedioCancel($event)">
+    <ng-template #modalTitle1>
+      视频预览
+    </ng-template>
+    <ng-template #modalContent1>
+      <video *ngIf="videoModel" src="{{service.ctxPath+videoModel.res_url}}" style="width:100%" controls="controls" autoplay></video>
+    </ng-template>
+    <ng-template #modalFooter1 style="display:none"></ng-template>
+  </nz-modal>
+  <nz-modal [nzVisible]="isVisiblePdf" [nzWidth]="700" [nzTitle]="modalTitle2" [nzContent]="modalContent2" [nzFooter]="modalFooter2" (nzOnCancel)="_bookCancel($event)">
+    <ng-template #modalTitle2>
+        <span *ngIf="pdfModel">第 {{ pdfMinNum +'/' +pdfModel.res_size}}页</span>
+    </ng-template>
+    <ng-template #modalContent2>
+        <div class="pwImgList" *ngIf="pdfModel">
+            <i class="anticon anticon-left" (click)="pdfMinNum1()"></i>
+            <div class="imgList">
+            <img src="{{service.ctxPath+pdfModel.res_analysis_url+'/img'+pdfMinNum+'.png'}}">
+            </div>
+            <i class="anticon anticon-right" (click)="pdfMinNum2()"></i>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter2 style="display:none"></ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="isShow" [nzWidth]="700" [nzTitle]="'商品详情'" [nzContent]="ShowContent" [nzFooter]="false" (nzOnCancel)="_ShowCancel($event)">
+    <ng-template #ShowContent>
+            <div nz-row class="notErrMsg" style="padding-left:10px;">
+                <div class="show_class">
+                    <span>商品名称:</span><span></span>
+                </div>
+                <div class="show_class" nz-row>
+                    <p nz-col [nzSpan]="12">
+                        <span>商品分类:</span><span></span>
+                    </p>
+                    <p nz-col [nzSpan]="12">
+                        <span>商品类型:</span><span></span>
+                    </p>
+                </div>
+                <!-- <div nz-col [nzSpan]="8" style="padding:10px 0px;">
+                    
+                </div>
+                <div nz-col [nzSpan]="16">
+                </div> -->
+            </div>
+            <div nz-row class="notErrMsg" style="padding-left:10px;">
+        
+            </div>
+    </ng-template>
+    
+    
+</nz-modal>
