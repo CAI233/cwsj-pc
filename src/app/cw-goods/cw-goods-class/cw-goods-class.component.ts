@@ -9,43 +9,40 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cw-goods-class.component.css']
 })
 export class CwGoodsClassComponent implements OnInit {
+  tableData: any = [];
+  tableDataTree: any = [];
+  editRow: any = {};
 
-  data : any = [];
-  _loading : boolean = false;
-  expandDataCache = {};
-  myForm: FormGroup;
-  isVisibleMiddle: boolean = false;
-  formTitle : string;
-  selRow : any = {};
-
+  // 实例化一个对象
   constructor(public service: AppService) { }
 
-
-  load(reset?){
+  ngOnInit() {
+    this.load();
+  }
+  load() {
     this._loading = true;
     this.service.post('/api/busiz/goods/cat/tree').then(success => {
       console.log(success)
+      this.tableData = [{
+        cat_pid: 0,
+        cat_id: 0,
+        cat_name:"商品分类",
+        children: success.data
+      }];
+      this.service._toisLeaf(this.tableData);
+      this._expanData();
       this._loading = false;
-      if(success.code==0){
-        this.data = [{
-          cat_id: 0,
-          cat_pid: 0,
-          cat_name: '根节点',
-          children: success.data
-        }]
-        this.data.forEach(item => {
-          this.expandDataCache[ item.cat_id ] = this.convertTreeToList(item);
-        });
-
-      }else{
-        this.data = [];
-        this.service.message.error(success.message);
-      }
     })
-  
   }
-
-
+  expandDataCache = {};
+  expandDataCacheCol = {};
+  _expanData() {
+    this.expandDataCacheCol = this.expandDataCache;
+    this.expandDataCache = {};
+    this.tableData.forEach(item => {
+      this.expandDataCache[item.cat_id] = this.convertTreeToList(item);
+    });
+  }
   collapse(array, data, $event) {
     if ($event === false) {
       if (data.children) {
@@ -59,104 +56,104 @@ export class CwGoodsClassComponent implements OnInit {
       }
     }
   }
-
   convertTreeToList(root) {
     const stack = [], array = [], hashMap = {};
-    stack.push({ ...root, level: 0, expand: false });
-
+    stack.push({ ...root, level: 0, expand: true });
     while (stack.length !== 0) {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
+      const nodeCol = this.expandDataCacheCol[root.cat_id];
       if (node.children) {
         for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[ i ], level: node.level + 1, expand: false, parent: node });
+          let expand = false;
+          if (nodeCol) {
+            let col = null;
+            nodeCol.forEach(mm => {
+              if (mm.cat_id == node.children[i].cat_id)
+                col = mm;
+            })
+            if (col) {
+              expand = col.expand;
+            }
+          }
+          stack.push({ ...node.children[i], level: node.level + 1, expand: expand, parent: node });
+        }
+        //父级tree节点创建
+        if (node.parent) {
+          node.pname = [];
+          if (node.parent.pname) {
+            node.parent.pname.forEach(element => {
+              node.pname.push({
+                cat_id: element.cat_id,
+                cat_name: element.cat_name
+              });
+            });
+          }
+          node.pname.push({
+            cat_id: node.parent.cat_id,
+            cat_name: node.parent.cat_name
+          });
         }
       }
     }
-
     return array;
   }
 
   visitNode(node, hashMap, array) {
-    if (!hashMap[ node.cat_id ]) {
-      hashMap[ node.cat_id ] = true;
+    if (!hashMap[node.cat_id]) {
+      hashMap[node.cat_id] = true;
       array.push(node);
     }
   }
 
-  //关闭弹窗
-  handleCancelMiddle($event) {
-    this.isVisibleMiddle = false;
-  
-    this.myForm.reset();
-  }
-
-  //确定
-  handleOkMiddle($event) {
-    this._submitForm();
-  }
-
-  _submitForm(){
-    let pid = this.selRow.parent[this.selRow.parent.length - 1];
-    if(typeof(pid) == 'object'){
-      this.selRow.cat_pid = parseInt(this.selRow.parent.cat_id);
-    }else{
-      this.selRow.cat_pid = parseInt(pid)
+  //编辑
+  _editRow(data) {
+    console.log(data)
+    for (let i in data) {
+      this.editRow[i] = data[i];
     }
-    this.selRow.order_weight = parseInt(this.selRow.order_weight);
-    console.log(this.selRow)
-    if(!this.selRow.cat_name){
+    data.disabled = true;
+  }
+  //取消编辑
+  _cancel(data) {
+    this.editRow = {};
+    this.load();
+  }
+  _loading: boolean = false;
+  //保存
+  _saveRow() {
+    if (!this.editRow.cat_name) {
       this.service.message.error('请填写分类名称');
       return false;
     }
-    if(!this.selRow.cat_pid){
-      this.service.message.error('请选择父级分类');
+    if (!this.editRow.pname) {
+      this.service.message.error('请选择父级');
       return false;
     }
-    this.service.post('/api/busiz/goods/cat/save',this.selRow).then(success => {
-        if(success.code==0){
-          this.isVisibleMiddle = false;
-          this.myForm.reset();
-          this.load();
-          this.service.message.success(success.message);
-        }else{
-          this.service.message.error(success.message);
-        }
-    })
-  }
-
-  ngOnInit() {
-    this.myForm = this.service.fb.group({
-      cat_name:false,
-      order_weight:false,
-      cat_pid:false,
-      cat_remark:false
-    })
-    // 加载
-    this.load();
-    
-  }
-
-  // 新增
-  add(){
-    this.selRow = {};
-    this.formTitle = "新增"
-    this.isVisibleMiddle = true;
-  }
-
-  //修改
-  edit(data){
-    this.selRow = {};
-    this.formTitle = "修改"
-    this.isVisibleMiddle = true;
-    for (let i in data) {
-      this.selRow[i] = data[i]
+    else {
+      let cat_pid = this.editRow.pname[this.editRow.pname.length - 1];
+      if (typeof (cat_pid) == 'object') {
+        cat_pid = cat_pid.cat_id;
+      }
+      this.editRow.cat_pid = cat_pid == 0 ? null : cat_pid;
     }
-    console.log(this.selRow.parent.cat_id)
+    this._loading = true;
+    this.editRow.parent = null;
+    this.editRow.children = null;
+    this.service.post('/api/busiz/goods/cat/save', this.editRow).then(success => {
+      if (success.code == 0) {
+        this.editRow = {};
+        this.load();
+      }
+      else {
+        this._loading = false;
+        this.service.message.error(success.message);
+      }
+    })
   }
   //删除
-  del(data){
-    this.service.post('/api/busiz/goods/cat/del',{ids:[data.cat_id]}).then(success => {
+  _delete(data) {
+     this.service.post('/api/busiz/goods/cat/del',{ids:[data.cat_id]}).then(success => {
       if(success.code==0){
         this.load();
         this.service.message.success(success.message);
@@ -164,6 +161,46 @@ export class CwGoodsClassComponent implements OnInit {
         this.service.message.error(success.message);
       }
     })
+  }
+  //新增同级
+  _addAfter(parent: any) {
+    this.editRow = {
+      enabled: 1,
+      address: null,
+      dept_code: null,
+      dept_path: null,
+      cat_id: null,
+      org_id: parent.org_id,
+      pname: parent.pname || [],
+      cat_name: null,
+      disabled: true,
+      isLeaf: true
+    }
+    this.editRow.pname.push({ cat_id: parent.cat_id, cat_name: parent.cat_name })
+    if (!parent.children) parent.children = [];
+    parent.children.push(this.editRow)
+    this._expanData();
+  }
+  //新增子级
+  _addChildren(parent) {
+    console.log(parent)
+    parent.expand = true;
+    this.editRow = {
+      enabled: 1,
+      address: null,
+      dept_code: null,
+      dept_path: null,
+      cat_id: null,
+      org_id: parent.org_id,
+      pname: parent.pname || [],
+      cat_name: null,
+      disabled: true,
+      isLeaf: true
+    }
+    this.editRow.pname.push({ cat_id: parent.cat_id, cat_name: parent.cat_name })
+    if (!parent.children) parent.children = [];
+    parent.children.push(this.editRow);
+    this._expanData();
   }
 
 }

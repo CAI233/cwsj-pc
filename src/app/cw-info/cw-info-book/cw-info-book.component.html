@@ -64,11 +64,11 @@
             <div nz-row nz-form-item style="margin-bottom:0;">
                 <div nz-row nz-form-item>
                     <div class="row-actions">
-                        <button nz-button nzType="primary" type="button" (click)="_add()">
+                        <button nz-button nzType="primary" type="button" (click)="_add()" *ngIf="this.service.validataAction('cw_info_book_add')">
                         <i class="anticon anticon-plus" style="font-size:12px;color:#fff;"></i>
                         <span>新增</span>
                         </button>
-                        <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
+                        <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'" *ngIf="this.service.validataAction('cw_info_book_del')">
                             <button nz-popconfirm nz-button nzType="danger" type="button" *ngIf="this.service.validataAction('role_del')">
                                 <i class="anticon anticon-delete"></i>
                                 <span>删除</span>
@@ -145,7 +145,7 @@
             </td>
             <td nz-td>
                 <!-- <span>{{data.status}}</span> -->
-                <nz-switch [nzSize]="'small'" [ngModel]="data.status == 1" (click)="_enabled(item)"></nz-switch>
+                <nz-switch [nzSize]="'small'" [ngModel]="data.status == 1" (click)="_enabled(item)" [nzDisabled]="!this.service.validataAction('cw_info_book_enabled')"></nz-switch>
             </td>
             <td nz-td>
                 <span>{{['草稿','待审核','通过','驳回'][data.audit_status-1]}}</span>
@@ -167,11 +167,11 @@
                 <span nz-table-divider></span>
               </span> -->
               <span >
-                <a (click)="_edit(data)">修改</a>
+                <a (click)="_edit(data)" *ngIf="this.service.validataAction('cw_info_book_edit')">修改</a>
                 <span nz-table-divider></span>
                 </span>
               <span >
-                  <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
+                  <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)" *ngIf="this.service.validataAction('cw_info_book_del')">
                     <a nz-popconfirm>删除</a>
                   </nz-popconfirm>
               </span>

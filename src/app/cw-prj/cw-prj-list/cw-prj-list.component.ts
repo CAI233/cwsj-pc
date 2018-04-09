@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+declare let wangEditor: any;
 @Component({
   selector: 'app-cw-prj-list',
   templateUrl: './cw-prj-list.component.html',
@@ -116,12 +117,12 @@ export class CwPrjListComponent implements OnInit {
 
   //项目分类列表
   get_list() {
-    this.service.post('/api/busiz/cat/Cooperation/gettree').then(success => {
+    this.service.post('/api/busiz/cat/Cooperation/list').then(success => {
       if (success.code == 0) {
         this.listData = this.data = [{
           cat_id: 0,
           cat_pid: 0,
-          cat_name: '根节点',
+          cat_name: '信息分类',
           children: success.data
         }]
       } else {
@@ -188,6 +189,8 @@ export class CwPrjListComponent implements OnInit {
       this.selRow[i] = data[i]
     }
 
+    this.ngAfterViewInit();
+
   }
 
   // 查看
@@ -240,6 +243,7 @@ export class CwPrjListComponent implements OnInit {
   // 提交
   _submitForm() {
     console.log(this.selRow)
+    this.selRow.remark = this.editor.txt.html();
     this.selRow.project_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length - 1])
     this.service.post('/api/busiz/cooproject/save', this.selRow).then(success => {
       if (success.code == 0) {
@@ -265,6 +269,25 @@ export class CwPrjListComponent implements OnInit {
     return m.getFullYear() + '-' + M + '-' + D;
   }
 
+  editor:any
+ngAfterViewInit(){
+    
+  this.editor = new wangEditor('#editor');
+  this.editor.customConfig.uploadImgShowBase64 = true;
+  this.editor.create();
+  this.editor.txt.clear();
+  this.editor.txt.html(this.selRow.remark)
+  // if(this.now_num == 1){
+  //   this.editor.txt.html('<p >【题干】</p><p >【答案】</p><p >【解析】</p>');
+  // }else if(this.now_num == 2){
+  //   this.editor.txt.html('<p >【题干】</p>'+this.now_data.title+'<p >【答案】</p>'+this.now_data.analysis+'<p >【解析】</p>'+this.now_data.parsing);
+  // }
+  
+  // editor.txt.html('<p>用 JS 设置的内容</p>');
+  // editor.txt.append('<p>追加的内容</p>');
+  // console.log(editor.txt.html())
+  // console.log(editor.txt.text())
+}
 
 
 

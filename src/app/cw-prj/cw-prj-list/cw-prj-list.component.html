@@ -26,9 +26,6 @@
                   <label>合作分类</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="14">
-                  <!-- <nz-select style="width:100%;"  name="project_cat_id" [(ngModel)]="param.project_cat_id" [nzPlaceHolder]="'请选择合作分类'" nzShowSearch>
-                    <nz-option *ngFor="let item of listData" [nzLabel]="item.cat_name" [nzValue]="item.cat_id" ></nz-option>
-                  </nz-select> -->
                 <nz-cascader style="width:100%" name="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="listData"
                     [(ngModel)]="param.parent">
                 </nz-cascader>
@@ -183,7 +180,7 @@
           <label nz-form-item-required>合作详情</label>
         </div>
         <div nz-form-control>
-            
+            <div id="editor"></div>
         </div>
     </div>
     <button style="display:none;">save</button>

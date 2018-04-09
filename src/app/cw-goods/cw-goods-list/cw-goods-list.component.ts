@@ -36,6 +36,7 @@ export class CwGoodsListComponent implements OnInit {
   ebookRecourse : any = [];//电子书资源
   nowRecourse : any = {};//资源详情
   isShow : boolean = false;//商品详情
+  showData : any = {};//商品详情展示对象
   constructor(public service: AppService) { }
 
   //文件上传
@@ -99,11 +100,16 @@ export class CwGoodsListComponent implements OnInit {
   }
   // 获取每一种类型的资源
   get_recourse(){
+    console.log(this.selRow.goods_type)
     if(this.selRow.goods_type==1 || this.selRow.goods_type==3){
       let book_type = this.selRow.goods_type ==3 ? 2 : 1;
       this.service.post('/api/busiz/book/list',{pageNum:1,pageSize:1000,book_type:book_type}).then(success => {
         if(success.code==0){
           this.allRecourse = success.data.rows;
+          if(this.selRow.res_id){
+            //得到当前资源文件的详情
+            this.selected(this.selRow.res_id);
+          }
         }else{
           this.service.message.error(success.message);
         }
@@ -113,11 +119,16 @@ export class CwGoodsListComponent implements OnInit {
       this.service.post('/api/busiz/video/getlist',{pageNum:1,pageSize:1000}).then(success => {
         if(success.code==0){
           this.allRecourse = success.data.rows;
+          if(this.selRow.res_id){
+            //得到当前资源文件的详情
+            this.selected(this.selRow.res_id);
+          }
         }else{
           this.service.message.error(success.message);
         }
       })
     }
+    
   }
   //选择资源后显示资源内容
   
@@ -139,30 +150,32 @@ export class CwGoodsListComponent implements OnInit {
         }
       }
       console.log(this.nowRecourse);
-      // 获取当前电子书的资源列表
-      if(this.selRow.goods_type==3){
-        // 获取电子书资源
-        this.service.post('/api/busiz/book/res/list',{book_id:this.selRow.res_id}).then(success => {
-          if(success.code==0){
-            this.ebookRecourse = success.data;
-          }else{
-            this.service.message.error(success.message);
-          }
-        })
+      // 在查看详情时不需要带出资源
+      if(!this.showData.res_id){
+        // 获取当前电子书的资源列表
+        if(this.selRow.goods_type==3){
+          // 获取电子书资源
+          this.service.post('/api/busiz/book/res/list',{book_id:this.selRow.res_id}).then(success => {
+            if(success.code==0){
+              this.ebookRecourse = success.data;
+            }else{
+              this.service.message.error(success.message);
+            }
+          })
+        }
+        // 获取当前视频的资源列表
+        if(this.selRow.goods_type==2){
+          // 获取视频资源
+          this.service.post('/api/busiz/video/detail',{video_id:this.selRow.res_id}).then(success => {
+            if(success.code==0){
+              this.ebookRecourse = success.data.videoResRelList;
+            }else{
+              this.service.message.error(success.message);
+            }
+          })
+        }
+        }
       }
-      // 获取当前视频的资源列表
-      if(this.selRow.goods_type==2){
-        // 获取视频资源
-        this.service.post('/api/busiz/video/detail',{video_id:this.selRow.res_id}).then(success => {
-          if(success.code==0){
-            this.ebookRecourse = success.data.videoResRelList;
-          }else{
-            this.service.message.error(success.message);
-          }
-        })
-      }
-    }
-    console.log(this.ebookRecourse)
   }
 
   get_tagName(id ?){
@@ -236,8 +249,7 @@ export class CwGoodsListComponent implements OnInit {
     // 获取当前类型的资源
     this.get_recourse();
 
-    //得到当前资源文件的详情
-    this.selected(this.selRow.res_id);
+    
   }
 
   _ShowCancel($event){
@@ -247,6 +259,13 @@ export class CwGoodsListComponent implements OnInit {
   //查看商品详情 
   show(data){
     this.isShow = true;
+    this.nowRecourse = {};
+    this.showData = {...data};
+    
+    // 得到当前商品的资源
+    this.selRow.goods_type = this.showData.goods_type;
+    this.selRow.res_id = this.showData.res_id;
+    this.get_recourse();
 
   }
 
@@ -264,15 +283,17 @@ export class CwGoodsListComponent implements OnInit {
 
   //上架状态
   _enabled(data ?){
-    let status = data.enabled == 1 ? 2 : 1 ;
-    this.service.post('/api/busiz/goods/shelves',{ids:[data.goods_id],enabled:status}).then(success => {
-      if(success.code==0){
-        this.load();
-        this.service.message.success(success.message);
-      }else{
-        this.service.message.error(success.message);
-      }
-  })
+    if(this.service.validataAction('cw_goods_list_put')){
+      let status = data.enabled == 1 ? 2 : 1 ;
+      this.service.post('/api/busiz/goods/shelves',{ids:[data.goods_id],enabled:status}).then(success => {
+        if(success.code==0){
+          this.load();
+          this.service.message.success(success.message);
+        }else{
+          this.service.message.error(success.message);
+        }
+    })
+    }
   }
 
 

@@ -41,11 +41,11 @@
                       <span nz-table-divider></span>
                       <span style="margin-left:10px;"><i style="font-size:14px;color:#000;margin-right:5px;">使用次数:</i>{{item.number}}</span>
                       <span nz-table-divider></span>
-                      <span style="margin-left:10px;"><i style="font-size:14px;color:#000;margin-right:5px;">发布状态:</i>{{['已发布','未发布'][item.enabled-1]}}</span>
+                      <!-- <span style="margin-left:10px;"><i style="font-size:14px;color:#000;margin-right:5px;">发布状态:</i>{{['已发布','未发布'][item.enabled-1]}}</span> -->
                   </ng-template>
                   <ng-template #extra>
                     <span *ngIf="this.service.validataAction('cw_ques_enable')">
-                      <a (click)="_enabled(item)">发布</a>
+                      <a (click)="_enabled(item)"><span>{{['未','已'][item.enabled-1]}}发布</span></a>
                       <!-- <a (click)="_see(item)">预览</a> -->
                       <span nz-table-divider></span>
                     </span>

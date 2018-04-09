@@ -33,3 +33,11 @@
 .pwImgList .imgList img{
     width: 100%;
 }
+.show_class{
+    padding: 5px 10px;
+    font-size:14px;
+    color:#000;
+}
+.show_class span:nth-child(1){
+    margin-right:10px;
+}

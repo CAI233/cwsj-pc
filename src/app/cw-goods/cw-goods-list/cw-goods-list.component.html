@@ -135,7 +135,7 @@
                   <span>{{data.price}}</span>
               </td>
               <td nz-td>
-                  <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" (click)="_enabled(data)"></nz-switch>
+                  <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('cw_goods_list_put')"></nz-switch>
               </td>
               <td nz-td>
                   <span>{{get_tagName(data.goods_brand_id)}}</span>
@@ -348,26 +348,68 @@
 </nz-modal>
 <nz-modal [nzVisible]="isShow" [nzWidth]="700" [nzTitle]="'商品详情'" [nzContent]="ShowContent" [nzFooter]="false" (nzOnCancel)="_ShowCancel($event)">
     <ng-template #ShowContent>
-            <div nz-row class="notErrMsg" style="padding-left:10px;">
+            <div nz-row class="notErrMsg" >
                 <div class="show_class">
-                    <span>商品名称:</span><span></span>
+                    <span>商品名称:</span><span>{{showData.goods_name}}</span>
                 </div>
                 <div class="show_class" nz-row>
                     <p nz-col [nzSpan]="12">
-                        <span>商品分类:</span><span></span>
+                        <span>商品分类:</span><span>{{showData.goods_cat_id}}</span>
                     </p>
                     <p nz-col [nzSpan]="12">
-                        <span>商品类型:</span><span></span>
+                        <span>商品类型:</span><span>{{['实体书','音视频','电子书'][showData.goods_type-1]}}</span>
                     </p>
                 </div>
-                <!-- <div nz-col [nzSpan]="8" style="padding:10px 0px;">
-                    
+                <div class="show_class">
+                    <span>商品标签:</span><span>{{showData.tag_names}}</span>
                 </div>
-                <div nz-col [nzSpan]="16">
-                </div> -->
+                <div class="show_class" nz-row>
+                    <p nz-col [nzSpan]="12">
+                        <span>品牌标签:</span><span>{{showData.tag_names}}</span>
+                    </p>
+                    <p nz-col [nzSpan]="12">
+                        <span>审核状态:</span><span>{{['已审核','未审核'][showData.enabled-1]}}</span>
+                    </p>
+                </div>
+                <div class="show_class">
+                    <span>商品简介:</span><span>{{showData.remark}}</span>
+                </div>
             </div>
-            <div nz-row class="notErrMsg" style="padding-left:10px;">
-        
+            <hr *ngIf="nowRecourse.book_id"  />
+            <div nz-form-item nz-row class="notErrMsg" style="padding-left:10px;" *ngIf="nowRecourse.book_id">
+                <div nz-col style="padding:10px 0px;float:left;">
+                    <div class="uimg" style="float:left;border:1px #ddd dashed;height:152px;width:114px;background: #f5f8fa;">
+                        <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover_small }}" style="float:left;width:100%;height:100%;"/>
+                        <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover_small }}" style="float:left;width:100%;height:100%;"/>
+                    </div>
+                </div>
+                <div nz-col [nzSpan]="16" style="padding:10px;">
+                    <p nz-row class="re_class">
+                        <span >图书名称:</span>
+                        <span *ngIf="selRow.goods_type!=2">{{nowRecourse.book_name}}</span>
+                        <span *ngIf="selRow.goods_type==2">{{nowRecourse.video_name}}</span>
+                    </p>
+                    <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                        <span >书号:</span>
+                        <span >{{nowRecourse.book_isbn}}</span>
+                    </p>
+                    <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                        <span >出版社:</span>
+                        <span >{{nowRecourse.publisher}}</span>
+                    </p>
+                    <p nz-row *ngIf="selRow.goods_type!=2" class="re_class">
+                        <span >作/译者:</span>
+                        <span >{{nowRecourse.author_name}}</span>
+                    </p>
+                    <p nz-row *ngIf="selRow.goods_type==2" class="re_class">
+                        <span >库存:</span>
+                        <span >{{nowRecourse.inventory}}</span>
+                    </p>
+                    <p nz-row *ngIf="selRow.goods_type==2" class="re_class">
+                        <span >限购量:</span>
+                        <span >{{nowRecourse.limit_buy}}</span>
+                    </p>
+                </div>
             </div>
     </ng-template>
     
