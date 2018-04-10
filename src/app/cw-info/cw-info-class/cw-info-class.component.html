@@ -63,9 +63,9 @@
                 <th nz-th [nzWidth]="'20%'">
                   <span>创建时间</span>
                 </th>
-                <th nz-th [nzWidth]="'25%'">
+                <!-- <th nz-th [nzWidth]="'25%'">
                   <span>状态</span>
-                </th>
+                </th> -->
                 <th nz-th [nzWidth]="'30%'">
                   <span>操作</span>
                 </th>
@@ -86,7 +86,7 @@
                     <tr nz-tbody-tr *ngIf="formBean.cat_id != data.cat_id">
                         <td>{{data.cat_name}}</td>
                         <td>{{data.create_time}}</td>
-                        <td>
+                        <!-- <td>
                             <span *ngIf="this.service.validataAction('cw_info_class_enable')" >
                                 <nz-switch [ngModel]="data.enabled == 1" [nzSize]="'small'" (click)="_rowEnabled(data)"></nz-switch>
                             </span>
@@ -94,7 +94,7 @@
                                 <label *ngIf="data.enabled == 1" style="color:green">启用</label>
                                 <label *ngIf="data.enabled != 1">停用</label>
                             </span>
-                        </td>
+                        </td> -->
                         <td>
                           <ng-container *ngIf="this.service.validataAction('cw_info_class_edit')" >
                               <a (click)="_editRow(data)">修改</a>

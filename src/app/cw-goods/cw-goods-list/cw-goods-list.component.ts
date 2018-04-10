@@ -22,12 +22,12 @@ export class CwGoodsListComponent implements OnInit {
   param : any = {
     pageNum:1,
     pageSize:10,
-    goods_type:null,//商品名称
-    tag_id:null,//标签id
-    cat_id:null,//分类id
-    enabled:null,//上架状态
-    start_time:null,
-    end_time:null
+    // goods_type:null,//商品名称
+    // tag_id:null,//标签id
+    // cat_id:null,//分类id
+    // enabled:null,//上架状态
+    // start_time:null,
+    // end_time:null
   }
   paramCol = {
     searchTime:[null,null]
@@ -147,7 +147,6 @@ export class CwGoodsListComponent implements OnInit {
           }
         }
       }
-      console.log(this.nowRecourse);
       // 在查看详情时不需要带出资源
       if(!this.showData.res_id){
         // 获取当前电子书的资源列表
@@ -192,15 +191,30 @@ export class CwGoodsListComponent implements OnInit {
   reload(reset?){
     if(reset){
 
+      if(this.paramCol.searchTime[0]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[0]);
+      if(this.paramCol.searchTime[1]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[1]);
+      this.load();
+    //   if(this.paramCol.searchTime)
     }
 
   }
   // 重置
   resetForm(){
-
+    this.param = {
+      pageNum:1,
+      pageSize:10
+    }
+    this.paramCol.searchTime = [null,null];
+    this.load();
     
   }
 
+  now_change(rest?){
+    if(rest){
+      console.log(rest);
+      this.param.cat_id = rest[rest.length-1].cat_id;
+    }
+  }
 
   //关闭弹窗
   handleCancelMiddle($event) {
@@ -244,7 +258,6 @@ export class CwGoodsListComponent implements OnInit {
     }
     this.selRow = {...data};
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
-
     // 获取当前类型的资源
     this.get_recourse();
   }
@@ -424,5 +437,17 @@ export class CwGoodsListComponent implements OnInit {
     const allUnChecked = this.data.every(value => value.disabled || !value.checked);
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
+
+  timeOut(d) {
+    let m = new Date(d);
+    let M, D, H, mm, ss;
+    M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
+    D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
+    //   H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+    //   mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+    //   ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+    // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
+    return m.getFullYear() + '-' + M + '-' + D;
   }
 }

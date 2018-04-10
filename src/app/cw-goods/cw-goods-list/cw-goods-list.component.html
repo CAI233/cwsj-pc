@@ -29,7 +29,7 @@
                       <nz-option *ngFor="let item of listData" [nzLabel]="item.cat_name" [nzValue]="item.cat_id" ></nz-option>
                     </nz-select> -->
                   <nz-cascader style="width:100%" name="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
-                      [(ngModel)]="param.parent">
+                      [(ngModel)]="param.cat_ids" (nzSelectionChange)="now_change($event)">
                   </nz-cascader>
                 </div>
             </div>
@@ -47,7 +47,7 @@
               <div class="row-actions">
                     <nz-dropdown>
                         <a class="ant-dropdown-link" nz-dropdown>
-                            <button nz-button nzType="primary" *ngIf="this.service.validataAction('cw_prj_list_add')">
+                            <button nz-button nzType="primary" *ngIf="this.service.validataAction('cw_goods_list_add')">
                                 <i class="anticon anticon-plus"></i>
                                 <span>新增</span>
                             </button>

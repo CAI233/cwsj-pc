@@ -42,7 +42,7 @@
             <div class="tableListSearch">
               <div nz-row nz-form-item>
                 <div class="row-actions">
-                  <button nz-button nzType="primary" *ngIf="!_isShow && this.service.validataAction('cw_info_class_add')" (click)="_cwResClassAdd()">
+                  <button nz-button nzType="primary" *ngIf="!_isShow && this.service.validataAction('cw_train_class_add')" (click)="_cwResClassAdd()">
                     <i class="anticon anticon-plus"></i>
                     <span>新建分类</span>
                   </button>
@@ -96,11 +96,11 @@
                               </span>
                           </td> -->
                           <td>
-                            <ng-container *ngIf="this.service.validataAction('cw_info_class_edit')" >
+                            <ng-container *ngIf="this.service.validataAction('cw_train_class_edit')" >
                                 <a (click)="_editRow(data)">修改</a>
-                                <span nz-table-divider *ngIf="this.service.validataAction('cw_info_class_del')" ></span>
+                                <span nz-table-divider *ngIf="this.service.validataAction('cw_train_class_del')" ></span>
                             </ng-container>
-                            <ng-container *ngIf="this.service.validataAction('cw_info_class_del')" >
+                            <ng-container *ngIf="this.service.validataAction('cw_train_class_del')" >
                               <nz-popconfirm [nzTitle]="'确定要删除这个分类吗？'" (nzOnConfirm)="_delRow(data)" [nzPlacement]="'left'">
                                   <a nz-popconfirm>删除</a>
                               </nz-popconfirm>
