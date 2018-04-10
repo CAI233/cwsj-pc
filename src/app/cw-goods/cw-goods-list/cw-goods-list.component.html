@@ -29,7 +29,7 @@
                       <nz-option *ngFor="let item of listData" [nzLabel]="item.cat_name" [nzValue]="item.cat_id" ></nz-option>
                     </nz-select> -->
                   <nz-cascader style="width:100%" name="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
-                      [(ngModel)]="param.cat_ids" (nzSelectionChange)="now_change($event)">
+                      [(ngModel)]="param.cat_ids" >
                   </nz-cascader>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                   </div>
               </td>
               <td nz-td>
-                  <span>{{data.goods_cat_id}}</span>
+                  <span>{{data.cat_name}}</span>
               </td>
               <td nz-td>
                   <span>{{data.tag_names}}</span>
@@ -176,14 +176,28 @@
                     </div>
                 </div>
                 <div nz-form-item nz-row class="notErrMsg" >
-                    <div nz-form-label>
-                        <label nz-form-item-required>商品分类</label>
+                    <div nz-col [nzSpan]="12" style="padding-right:10px;">
+                        <div nz-form-label>
+                            <label nz-form-item-required>商品分类</label>
+                        </div>
+                        <div nz-form-control>
+                            <!-- <nz-input formControlName="goods_cat_id"  [nzType]="'text'" [(ngModel)]="selRow.goods_name" [nzPlaceHolder]="'请填写图书名称'"></nz-input> -->
+                            <nz-cascader style="width:100%" formControlName="goods_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
+                                [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
+                            </nz-cascader>
+                        </div>
                     </div>
-                    <div nz-form-control>
-                        <!-- <nz-input formControlName="goods_cat_id"  [nzType]="'text'" [(ngModel)]="selRow.goods_name" [nzPlaceHolder]="'请填写图书名称'"></nz-input> -->
-                        <nz-cascader style="width:100%" formControlName="goods_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
-                            [(ngModel)]="selRow.cat_ids">
-                        </nz-cascader>
+                    <div nz-col [nzSpan]="12" style="padding-left:10px;">
+                        <div nz-form-item nz-row class="notErrMsg" >
+                            <div nz-form-label>
+                                <label nz-form-item-required>品牌标签</label>
+                            </div>
+                            <div nz-form-control>
+                                <nz-select style="width:100%;" formControlName="goods_brand_id" [nzPlaceHolder]="'请选择'" [(ngModel)]="selRow.goods_brand_id" [nzNotFoundContent]="'无法找到'" nzShowSearch>
+                                    <nz-option *ngFor="let item of brandData" [nzLabel]="item.brand_name" [nzValue]="item.brand_id"></nz-option>
+                                </nz-select>   
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div nz-form-item nz-row class="notErrMsg" >

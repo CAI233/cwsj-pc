@@ -119,12 +119,15 @@ export class CwTrainClassComponent implements OnInit {
   }
   //取消
   _cancelRow(row) {
-    if (!row.cat_id) {
-      this.param.children.splice(this.param.children.indexOf(row), 1);
-    }
-    for (let i in this.formBean) {
-      this.formBean[i] = null;
-    }
+    this.formBean = {
+      cat_id: null,
+      cat_name: null,
+      enabled: null,
+      order_weight: null,
+      create_time: null,
+      cat_pid: null
+    };
+    this._reload();
   }
   //选中
   _selectItem(row) {
@@ -138,9 +141,19 @@ export class CwTrainClassComponent implements OnInit {
   }
   //启用/停用
   _rowEnabled(row) {
-    row.enabled = row.enabled == 1 ? 2 : 1;
-    this.formBean = row;
-    this._saveRow();
+    // row.enabled = row.enabled == 1 ? 2 : 1;
+    // this.formBean = row;
+    // this._saveRow();
+    this.service.post('/api/busiz/video/cat/enabled', {
+      cat_id:row.cat_id
+    }).then(success => {
+      if (success.code == 0) {
+        this._reload();
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
   }
   //新增
   _cwResClassAdd() {

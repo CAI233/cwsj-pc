@@ -10,13 +10,13 @@
     </nz-breadcrumb>
   </nz-header>
   <nz-content class="main-page-content" style="padding-top: 20px;">
-    <div class="cont">
+    <!-- <div class="cont">
       <div nz-row >
         <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
             <label ><em style="color:red;">*</em>邮件配置:</label>
         </div>
         <div nz-col [nzSpan]="14">
-            <!-- <nz-input [nzType]="'text'" [(ngModel)]="dsfsd" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input> -->
+          
             <nz-select style="width:100%;" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="con_id" (ngModelChange)="selected(con_id)">
                 <nz-option *ngFor="let item of email_con" [nzLabel]="item.account" [nzValue]="item.mail_setting_id"></nz-option>
             </nz-select>
@@ -57,7 +57,7 @@
       <div nz-row style="text-align:center;" *ngIf="this.service.validataAction('cw_email_send_new')">
           <button nz-button [nzType]="'primary'" (click)="save($event)"><span>保存</span></button>
       </div>
-    </div>
+    </div> -->
     
   </nz-content>
 </nz-layout>

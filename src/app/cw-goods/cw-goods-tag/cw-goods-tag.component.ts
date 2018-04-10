@@ -8,8 +8,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CwGoodsTagComponent implements OnInit {
   _loading : boolean = false;
-  _allChecked : boolean = false;
-  _indeterminate : boolean = false;
   isVisible : boolean = false;
   goods_isVisible : boolean = false;
   formTitle : string;
@@ -28,6 +26,8 @@ export class CwGoodsTagComponent implements OnInit {
     pageSize:10,
     searchText:null
   }
+
+  edRow : any = null;
 
   constructor(public service: AppService) { }
 
@@ -124,17 +124,24 @@ export class CwGoodsTagComponent implements OnInit {
   }
   // 品牌修改操作
   edit(data){
-    this.isVisible = true;
-    this.formTitle = '品牌标签修改'
     this.selRow = {...data};
+    this.edRow = this.selRow.brand_id;
+  }
+  // 品牌取消
+  _cancel(){
+    this.edRow = null;
   }
 
   // 商品修改操作
   goods_edit(data){
     this.goods_selRow = {...data};
-    this.goods_isVisible = true;
-    this.formTitle = '商品标签修改'
+    this.edRow = this.goods_selRow.tag_id
   }
+  // 商品取消
+  goods_cancel(){
+    this.edRow = null;
+  }
+  
   //品牌删除操作
   del(data){
     this.service.post('/api/busiz/brand/del',{ids:[data.brand_id]}).then(success => {
@@ -157,26 +164,8 @@ export class CwGoodsTagComponent implements OnInit {
       }
     })
   }
-
-
-  //关闭弹窗
-  handleCancel($event) {
-    this.isVisible = false;
-    this.goods_isVisible = false
-    this.myForm.reset();
-  }
-
-  //品牌确定
-  handleOk($event) {
-    this._submitForm();
-  }
-  //商品确定
-  goods_handleOk($event) {
-    this.goods_submitForm();
-  }
-
   //品牌提交
-  _submitForm(){
+  _saveRow(){
     if(!this.selRow.brand_code){
       this.service.message.error('请填写品牌编码');
       return false;
@@ -188,8 +177,7 @@ export class CwGoodsTagComponent implements OnInit {
     this.service.post('/api/busiz/brand/save',this.selRow).then(success => {
         if(success.code==0){
           this.load();
-          this.isVisible = false;
-          this.myForm.reset();
+          this.edRow = null;
           this.service.message.success(success.message);
         }else{
           this.service.message.error(success.message);
@@ -197,7 +185,7 @@ export class CwGoodsTagComponent implements OnInit {
     })
   }  
   //商品提交
-  goods_submitForm(){
+  goods_saveRow(){
     if(!this.goods_selRow.tag_name){
       this.service.message.error('请填写商品名称');
       return false;
@@ -205,33 +193,11 @@ export class CwGoodsTagComponent implements OnInit {
     this.service.post('/api/busiz/goods/tag/save',{tag_name:this.goods_selRow.tag_name}).then(success => {
         if(success.code==0){
           this.goods_load();
-          this.goods_isVisible = false;
-          this.myForm.reset();
+          this.edRow = null;
           this.service.message.success(success.message);
         }else{
           this.service.message.error(success.message);
         }
     })
   }  
-
-  // 全选
-  _checkAll(value) {
-    if (value) {
-      this.data.forEach(data => {
-        if (!data.disabled) {
-          data.checked = true;
-        }
-      });
-    } else {
-      this.data.forEach(data => data.checked = false);
-    }
-    this._refreshStatus();
-  }
-  _refreshStatus() {
-    const allChecked = this.data.every(value => value.disabled || value.checked);
-    const allUnChecked = this.data.every(value => value.disabled || !value.checked);
-    this._allChecked = allChecked;
-    this._indeterminate = (!allChecked) && (!allUnChecked);
-  }
-
 }

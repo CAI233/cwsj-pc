@@ -31,6 +31,7 @@ export class CwPrjListComponent implements OnInit {
     searchTime: []
   }
   selRow: any = {};
+  cat_data : any = null;
   constructor(public service: AppService) { }
 
 
@@ -88,6 +89,24 @@ export class CwPrjListComponent implements OnInit {
     this.get_list();
   }
 
+  now_change(rest?){
+    if(rest.length>0){
+      console.log(rest);
+      
+      this.selRow.project_cat_id = rest[rest.length-1].cat_id;
+      this.selRow.project_cat_name = rest[rest.length-1].cat_name;
+      this.selRow.project_cat_ids = '';
+      this.selRow.project_cat_names = '';
+      for(let i in rest){
+        this.selRow.project_cat_ids += rest[i].cat_id+',';
+        this.selRow.project_cat_names += rest[i].cat_name+',';
+      }
+      this.selRow.project_cat_ids = this.selRow.project_cat_ids.substring(0,this.selRow.project_cat_ids.length-1);
+      this.selRow.project_cat_names = this.selRow.project_cat_names.substring(0,this.selRow.project_cat_names.length-1);
+
+      // this.param.cat_id = rest[rest.length-1].cat_id;
+    }
+  }
 
   // 项目列表
   load(reset?) {
@@ -111,7 +130,7 @@ export class CwPrjListComponent implements OnInit {
   //文件上传
   fileUpload(info): void {
     if (info.file.response && info.file.response.code == 0) {
-      this.selRow.icon = info.file.response.data[0].url;
+      this.selRow.project_cover = info.file.response.data[0].url;
     }
   }
 
@@ -119,12 +138,7 @@ export class CwPrjListComponent implements OnInit {
   get_list() {
     this.service.post('/api/busiz/cat/Cooperation/list').then(success => {
       if (success.code == 0) {
-        this.listData = this.data = [{
-          cat_id: 0,
-          cat_pid: 0,
-          cat_name: '信息分类',
-          children: success.data
-        }]
+        this.listData = this.data = success.data
       } else {
         this.service.message.error(success.message);
       }
@@ -180,13 +194,25 @@ export class CwPrjListComponent implements OnInit {
 
   //修改
   edit(data) {
-    console.log(data);
+    
     this.selRow = {};
     this.formTitle = "修改"
     this.isVisibleMiddle = true;
 
     for (let i in data) {
       this.selRow[i] = data[i]
+    }
+    this.cat_data = [];
+
+    console.log(this.selRow);
+    let arr_name = this.selRow.project_cat_names.split(",");
+    let arr_id = this.selRow.project_cat_ids.split(",");
+
+    for(let i in arr_id){
+      this.cat_data.push({
+        cat_id:arr_id[i],
+        cat_name:arr_name[i]
+      })
     }
 
     this.ngAfterViewInit();
@@ -244,7 +270,7 @@ export class CwPrjListComponent implements OnInit {
   _submitForm() {
     console.log(this.selRow)
     this.selRow.remark = this.editor.txt.html();
-    this.selRow.project_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length - 1])
+    // this.selRow.project_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length - 1])
     this.service.post('/api/busiz/cooproject/save', this.selRow).then(success => {
       if (success.code == 0) {
         this.isVisibleMiddle = false;

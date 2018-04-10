@@ -29,6 +29,13 @@ export class CwInfoBookComponent implements OnInit {
     {id:1,name:"上架"},
     {id:2,name:"下架"}
   ]
+  // 1：草稿，2：待审核，3：审核通过，4：审核不通过
+  auilt : any = [
+    {id:1,name:'草稿'},
+    {id:2,name:'待审核'},
+    {id:3,name:'审核通过'},
+    {id:4,name:'审核不通过'},
+  ]
   cat_data : any = null;//分类对象
   bookList = false;//图书新增
   seeList = false;//图书详情
@@ -129,9 +136,25 @@ export class CwInfoBookComponent implements OnInit {
       this.load();
     }
   }
-//重置
-resetForm(){
+  //重置
+  resetForm(){
 
+  }
+  // // 提交审核
+  // _addAfter(data,id){
+  //   this.service.post('/api/busiz/goods/audit',{ids:[data.book_id],audit_status:id}).then(success => {
+  //     if(success.code==0){
+  //       this.load();
+  //     }else{
+  //       this.service.message.error(success.message);
+  //     }
+  //   })
+  // }
+// 上架状态
+_enabled(data){
+  data.status = data.status == 1 ? 2 : 1;
+  this.bookData = {...data}
+  this.bookOk();
 }
 
   //文件上传
@@ -179,7 +202,7 @@ resetForm(){
   //电子书下一步操作
 
   //确定
-  bookOk($event) {
+  bookOk($event?) {
     // this._getRecouse();
     console.log(this.bookData);
     if(!this.bookData.book_name){

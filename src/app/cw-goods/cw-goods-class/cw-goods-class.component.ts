@@ -120,12 +120,15 @@ export class CwGoodsClassComponent implements OnInit {
   }
   //取消
   _cancelRow(row) {
-    if (!row.cat_id) {
-      this.param.children.splice(this.param.children.indexOf(row), 1);
-    }
-    for (let i in this.formBean) {
-      this.formBean[i] = null;
-    }
+    this.formBean = {
+      cat_id: null,
+      cat_name: null,
+      enabled: null,
+      order_weight: null,
+      create_time: null,
+      cat_pid: null
+    };
+    this._reload();
   }
   //选中
   _selectItem(row) {
@@ -150,6 +153,7 @@ export class CwGoodsClassComponent implements OnInit {
   //修改
   _editRow(row) {
     this.formBean = row;
+    console.log(this.formBean)
   }
   //删除
   _delRow(row) {

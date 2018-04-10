@@ -132,7 +132,7 @@
         <div nz-col [nzSpan]="12">
             <div class="userHead">
                 <div class="uimg">
-                    <img *ngIf="selRow.icon" src="{{ service.ctxPath + selRow.icon }}" />
+                    <img *ngIf="selRow.project_cover" src="{{ service.ctxPath + selRow.project_cover }}" />
                 </div>
                 <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
                     nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
@@ -158,7 +158,7 @@
                 </div>
                 <div nz-form-control >
                     <nz-cascader style="width:100%" formControlName="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="listData"
-                        [(ngModel)]="selRow.parent">
+                        [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
                     </nz-cascader>
                     <!-- <nz-select style="width:100%;" formControlName="project_cat_id" [(ngModel)]="selRow.project_cat_id" [nzPlaceHolder]="'请选择合作分类'" nzShowSearch>
                       <nz-option *ngFor="let item of listData" [nzLabel]="item.cat_name" [nzValue]="item.cat_id" ></nz-option>

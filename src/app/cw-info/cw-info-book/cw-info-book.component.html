@@ -145,7 +145,7 @@
             </td>
             <td nz-td>
                 <!-- <span>{{data.status}}</span> -->
-                <nz-switch [nzSize]="'small'" [ngModel]="data.status == 1" (click)="_enabled(item)" [nzDisabled]="!this.service.validataAction('cw_info_book_enabled')"></nz-switch>
+                <nz-switch [nzSize]="'small'" [ngModel]="data.status == 1" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('cw_info_book_enabled')"></nz-switch>
             </td>
             <td nz-td>
                 <span>{{['草稿','待审核','通过','驳回'][data.audit_status-1]}}</span>

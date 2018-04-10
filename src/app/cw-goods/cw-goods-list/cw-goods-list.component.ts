@@ -22,12 +22,6 @@ export class CwGoodsListComponent implements OnInit {
   param : any = {
     pageNum:1,
     pageSize:10,
-    // goods_type:null,//商品名称
-    // tag_id:null,//标签id
-    // cat_id:null,//分类id
-    // enabled:null,//上架状态
-    // start_time:null,
-    // end_time:null
   }
   paramCol = {
     searchTime:[null,null]
@@ -37,6 +31,8 @@ export class CwGoodsListComponent implements OnInit {
   nowRecourse : any = {};//资源详情
   isShow : boolean = false;//商品详情
   showData : any = {};//商品详情展示对象
+
+  cat_data : any = null;
   constructor(public service: AppService) { }
 
   //文件上传
@@ -191,10 +187,12 @@ export class CwGoodsListComponent implements OnInit {
   reload(reset?){
     if(reset){
 
+      if(this.param.cat_ids && this.param.cat_ids.length>0){
+        this.param.cat_id = this.param.cat_ids[this.param.cat_ids.length-1];
+      }
       if(this.paramCol.searchTime[0]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[0]);
       if(this.paramCol.searchTime[1]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[1]);
       this.load();
-    //   if(this.paramCol.searchTime)
     }
 
   }
@@ -204,15 +202,26 @@ export class CwGoodsListComponent implements OnInit {
       pageNum:1,
       pageSize:10
     }
+
     this.paramCol.searchTime = [null,null];
     this.load();
     
   }
 
   now_change(rest?){
-    if(rest){
+    if(rest.length>0){
       console.log(rest);
-      this.param.cat_id = rest[rest.length-1].cat_id;
+      
+      this.selRow.goods_cat_id = rest[rest.length-1].cat_id;
+      this.selRow.goods_cat_name = rest[rest.length-1].cat_name;
+      this.selRow.goods_cat_ids = '';
+      this.selRow.goods_cat_names = '';
+      for(let i in rest){
+        this.selRow.goods_cat_ids += rest[i].cat_id+',';
+        this.selRow.goods_cat_names += rest[i].cat_name+',';
+      }
+      this.selRow.goods_cat_ids = this.selRow.goods_cat_ids.substring(0,this.selRow.goods_cat_ids.length-1);
+      this.selRow.goods_cat_names = this.selRow.goods_cat_names.substring(0,this.selRow.goods_cat_names.length-1);
     }
   }
 
@@ -258,6 +267,17 @@ export class CwGoodsListComponent implements OnInit {
     }
     this.selRow = {...data};
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
+    this.cat_data = [];
+
+    let arr_name = this.selRow.goods_cat_names.split(",");
+    let arr_id = this.selRow.goods_cat_ids.split(",");
+
+    for(let i in arr_id){
+      this.cat_data.push({
+        cat_id:arr_id[i],
+        cat_name:arr_name[i]
+      })
+    }
     // 获取当前类型的资源
     this.get_recourse();
   }
@@ -349,6 +369,7 @@ export class CwGoodsListComponent implements OnInit {
       goods_name: false,
       goods_cat_id:false,
       goods_tag_ids:false,
+      goods_brand_id:false,
       key_word:false,
       book_isbn:false,
       publisher:false,

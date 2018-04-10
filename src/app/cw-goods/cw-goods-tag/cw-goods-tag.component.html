@@ -35,10 +35,6 @@
                       (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
                     <thead nz-thead>
                         <tr>
-                          <th nz-th nzCheckbox>
-                            <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
-                            </label>
-                          </th>
                           <th nz-th [nzWidth]="'10%'">
                               <span>品牌编码</span>
                           </th>
@@ -58,32 +54,43 @@
                     </thead>
                     <tbody nz-tbody>
                         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
-                            <td nz-td nzCheckbox>
-                              <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
-                              </label>
-                            </td>
                             <td nz-td>
-                                <span>{{data.brand_code}}</span>
+                                <span *ngIf="edRow != data.brand_id">{{data.brand_code}}</span>
+                                <span *ngIf="edRow == data.brand_id">
+                                    <nz-input [nzType]="'text'" name="brand_code" [(ngModel)]="selRow.brand_code"></nz-input>
+                                </span>
                             </td>
                             <td nz-td nz-row>
-                                <span>{{data.brand_name}}</span>
+                                <span *ngIf="edRow != data.brand_id">{{data.brand_name}}</span>
+                                <span *ngIf="edRow == data.brand_id">
+                                    <nz-input [nzType]="'text'" name="brand_name" [(ngModel)]="selRow.brand_name"></nz-input>
+                                </span>
                             </td>
                             <td nz-td>
-                                <span>{{data.create_time}}</span>
+                                <span *ngIf="edRow != data.brand_id">{{data.create_time}}</span>
+                                <span *ngIf="edRow == data.brand_id">{{selRow.create_time}}</span>
                             </td>
                             <td nz-td>
-                                <span [innerHtml]="data.remark"></span>
+                                <span [innerHtml]="data.remark" *ngIf="edRow != data.brand_id"></span>
+                                <span *ngIf="edRow == data.brand_id">
+                                    <nz-input [nzType]="'text'" name="brand_name" [(ngModel)]="selRow.remark"></nz-input>
+                                </span>
                             </td>
                             <td nz-td>
-                              <span *ngIf="this.service.validataAction('cw_goods_tag_edit')">
+                              <span *ngIf="edRow != data.brand_id && this.service.validataAction('cw_goods_tag_edit')">
                                 <a (click)="edit(data)">修改</a>
                                 <span nz-table-divider></span>
                               </span>
-                              <span *ngIf="this.service.validataAction('cw_goods_tag_del')">
+                              <span *ngIf="edRow != data.brand_id && this.service.validataAction('cw_goods_tag_del')">
                                   <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                                     <a nz-popconfirm>删除</a>
                                   </nz-popconfirm>
                               </span>
+                              <span *ngIf="edRow == data.brand_id">
+                                    <a (click)="_saveRow()">保存</a>
+                                    <span nz-table-divider></span>
+                                    <a (click)="_cancel()">取消</a>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -112,17 +119,12 @@
                       (nzPageSizeChange)="goods_param.pageNum=1;goods_param.pageSize=$event;goods_load($event)">
                     <thead nz-thead>
                         <tr>
-                          <th nz-th nzCheckbox>
-                            <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
-                            </label>
-                          </th>
                           <th nz-th [nzWidth]="'50%'">
                               <span>标签名称</span>
                           </th>
                           <th nz-th [nzWidth]="'10%'">
                               <span>创建时间</span>
                           </th>
-                        
                           <th nz-th>
                               <span>操作</span>
                           </th>
@@ -130,26 +132,31 @@
                         </thead>
                         <tbody nz-tbody>
                           <tr nz-tbody-tr *ngFor="let data of goods_nzTable.data">
-                            <td nz-td nzCheckbox>
-                              <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
-                              </label>
+                            <td nz-td>
+                                <span *ngIf="edRow != data.tag_id">{{data.tag_name}}</span>
+                                <span *ngIf="edRow == data.tag_id">
+                                    <nz-input [nzType]="'text'" name="cat_name" [(ngModel)]="goods_selRow.tag_name"></nz-input>
+                                </span>
                             </td>
                             <td nz-td>
-                                <span>{{data.tag_name}}</span>
+                                <span *ngIf="edRow != data.tag_id">{{data.create_time}}</span>
+                                <span *ngIf="edRow == data.tag_id">{{goods_selRow.create_time}}</span>
                             </td>
                             <td nz-td>
-                                <span>{{data.create_time}}</span>
-                            </td>
-                            <td nz-td>
-                              <span *ngIf="this.service.validataAction('cw_goods_tag_edit')">
+                              <span *ngIf="edRow != data.tag_id && this.service.validataAction('cw_goods_tag_edit')">
                                 <a (click)="goods_edit(data)">修改</a>
                                 <span nz-table-divider></span>
                               </span>
-                              <span *ngIf="this.service.validataAction('cw_goods_tag_del')">
+                              <span *ngIf="edRow != data.tag_id && this.service.validataAction('cw_goods_tag_del')">
                                   <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="goods_del(data)">
                                     <a nz-popconfirm>删除</a>
                                   </nz-popconfirm>
                               </span>
+                              <span *ngIf="edRow == data.tag_id">
+                                    <a (click)="goods_saveRow()">保存</a>
+                                    <span nz-table-divider></span>
+                                    <a (click)="goods_cancel()">取消</a>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -158,47 +165,3 @@
         </nz-tabset>
   </nz-content>
 </nz-layout>
-<nz-modal [nzVisible]="isVisible" [nzTitle]="formTitle" [nzContent]="modalContent" (nzOnCancel)="handleCancel($event)" (nzOnOk)="handleOk($event)">
-    <ng-template #modalContent>
-        <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
-            <div nz-form-item nz-row class="notErrMsg" >
-                <div nz-form-label>
-                    <label nz-form-item-required>品牌编码</label>
-                </div>
-                <div nz-form-control>
-                    <nz-input formControlName="brand_code"  [nzType]="'text'" [(ngModel)]="selRow.brand_code" [nzPlaceHolder]="'请填写品牌编码'"></nz-input>
-                </div>
-            </div>
-            <div nz-form-item nz-row class="notErrMsg" >
-                <div nz-form-label>
-                    <label nz-form-item-required>品牌名称</label>
-                </div>
-                <div nz-form-control>
-                    <nz-input formControlName="brand_name"  [nzType]="'text'" [(ngModel)]="selRow.brand_name" [nzPlaceHolder]="'请填写品牌名称'"></nz-input>
-                </div>
-            </div>
-            <div nz-form-item nz-row class="notErrMsg" >
-                <div nz-form-label>
-                    <label nz-form-item-required>品牌标签备注</label>
-                </div>
-                <div nz-form-control>
-                    <nz-input formControlName="remark" [nzRows]="2" [nzType]="'textarea'" [(ngModel)]="selRow.remark" [nzPlaceHolder]="'品牌标签备注'" [nzSize]="'large'"></nz-input>
-                </div>
-            </div>
-        </form>
-    </ng-template>
-  </nz-modal>
-  <nz-modal [nzVisible]="goods_isVisible" [nzTitle]="formTitle" [nzContent]="goods_modalContent" (nzOnCancel)="handleCancel($event)" (nzOnOk)="goods_handleOk($event)">
-    <ng-template #goods_modalContent>
-        <form nz-form [formGroup]="myForm" (ngSubmit)="goods_submitForm()">
-            <div nz-form-item nz-row class="notErrMsg" >
-                <div nz-form-label>
-                    <label nz-form-item-required>商品名称</label>
-                </div>
-                <div nz-form-control>
-                    <nz-input formControlName="tag_name"  [nzType]="'text'" [(ngModel)]="goods_selRow.tag_name" [nzPlaceHolder]="'请填写商品名称'"></nz-input>
-                </div>
-            </div>
-        </form>
-    </ng-template>
-    </nz-modal>
