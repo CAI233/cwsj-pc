@@ -9,40 +9,36 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cw-goods-class.component.css']
 })
 export class CwGoodsClassComponent implements OnInit {
-  tableData: any = [];
-  tableDataTree: any = [];
-  editRow: any = {};
-
-  // 实例化一个对象
+  param: any = {
+    cat_id: null,
+    children: []
+  }
+  paramCol: any = {
+    searchText: null
+  }
+  paramSearch: any = {
+    searchText: null
+  }
+  dataSet = [];
+  tableData = [];
+  _loading = false;
+  _isShow = false;
+  formBean = {
+    cat_id: null,
+    cat_name: null,
+    enabled: null,
+    order_weight: null,
+    create_time: null,
+    cat_pid: null
+  };
+  expandDataCache = {};
   constructor(public service: AppService) { }
 
   ngOnInit() {
-    this.load();
+    this._reload();
   }
-  load() {
-    this._loading = true;
-    this.service.post('/api/busiz/goods/cat/tree').then(success => {
-      console.log(success)
-      this.tableData = [{
-        cat_pid: 0,
-        cat_id: 0,
-        cat_name:"商品分类",
-        children: success.data
-      }];
-      this.service._toisLeaf(this.tableData);
-      this._expanData();
-      this._loading = false;
-    })
-  }
-  expandDataCache = {};
-  expandDataCacheCol = {};
-  _expanData() {
-    this.expandDataCacheCol = this.expandDataCache;
-    this.expandDataCache = {};
-    this.tableData.forEach(item => {
-      this.expandDataCache[item.cat_id] = this.convertTreeToList(item);
-    });
-  }
+
+  //////////////////tree转化
   collapse(array, data, $event) {
     if ($event === false) {
       if (data.children) {
@@ -59,148 +55,113 @@ export class CwGoodsClassComponent implements OnInit {
   convertTreeToList(root) {
     const stack = [], array = [], hashMap = {};
     stack.push({ ...root, level: 0, expand: true });
+
     while (stack.length !== 0) {
       const node = stack.pop();
       this.visitNode(node, hashMap, array);
-      const nodeCol = this.expandDataCacheCol[root.cat_id];
       if (node.children) {
+        if (this.param.cat_id == node.cat_id)
+          this.param.children = node.children;
         for (let i = node.children.length - 1; i >= 0; i--) {
-          let expand = false;
-          if (nodeCol) {
-            let col = null;
-            nodeCol.forEach(mm => {
-              if (mm.cat_id == node.children[i].cat_id)
-                col = mm;
-            })
-            if (col) {
-              expand = col.expand;
-            }
-          }
-          stack.push({ ...node.children[i], level: node.level + 1, expand: expand, parent: node });
-        }
-        //父级tree节点创建
-        if (node.parent) {
-          node.pname = [];
-          if (node.parent.pname) {
-            node.parent.pname.forEach(element => {
-              node.pname.push({
-                cat_id: element.cat_id,
-                cat_name: element.cat_name
-              });
-            });
-          }
-          node.pname.push({
-            cat_id: node.parent.cat_id,
-            cat_name: node.parent.cat_name
-          });
+          stack.push({ ...node.children[i], level: node.level + 1, expand: false, parent: node });
         }
       }
     }
+
     return array;
   }
-
   visitNode(node, hashMap, array) {
     if (!hashMap[node.cat_id]) {
       hashMap[node.cat_id] = true;
       array.push(node);
     }
   }
-
-  //编辑
-  _editRow(data) {
-    console.log(data)
-    for (let i in data) {
-      this.editRow[i] = data[i];
+  //////////////////tree转化
+  //获取资源分类
+  _reload(bool?: any) {
+    if (bool) {
+      this.paramSearch.searchText = this.paramCol.searchText;
     }
-    data.disabled = true;
+    this.service.post('/api/busiz/goods/cat/tree', {
+      searchText: this.paramSearch.searchText
+    }).then(success => {
+      this.dataSet = [{
+        cat_id: 0,
+        cat_name: '所有分类',
+        children: success.data
+      }];
+      this.dataSet.forEach(item => {
+        this.expandDataCache[item.cat_id] = this.convertTreeToList(item);
+      });
+      if (!this.param.cat_id)
+        this.param = this.dataSet[0];
+    })
   }
-  //取消编辑
-  _cancel(data) {
-    this.editRow = {};
-    this.load();
-  }
-  _loading: boolean = false;
   //保存
   _saveRow() {
-    if (!this.editRow.cat_name) {
-      this.service.message.error('请填写分类名称');
+    if (!this.formBean.cat_name) {
+      this.service.message.warning('请填写分类名称');
       return false;
     }
-    if (!this.editRow.pname) {
-      this.service.message.error('请选择父级');
-      return false;
+    if (!this.formBean.cat_id) {
+      this.formBean.cat_pid = this.param.cat_id;
     }
-    else {
-      let cat_pid = this.editRow.pname[this.editRow.pname.length - 1];
-      if (typeof (cat_pid) == 'object') {
-        cat_pid = cat_pid.cat_id;
-      }
-      this.editRow.cat_pid = cat_pid == 0 ? null : cat_pid;
-    }
-    this._loading = true;
-    this.editRow.parent = null;
-    this.editRow.children = null;
-    this.service.post('/api/busiz/goods/cat/save', this.editRow).then(success => {
+    this.service.post('/api/busiz/goods/cat/save', this.formBean).then(success => {
       if (success.code == 0) {
-        this.editRow = {};
-        this.load();
+        for (let i in this.formBean) {
+          this.formBean[i] = null;
+        }
+        this._reload();
       }
       else {
-        this._loading = false;
         this.service.message.error(success.message);
       }
     })
+  }
+  //取消
+  _cancelRow(row) {
+    if (!row.cat_id) {
+      this.param.children.splice(this.param.children.indexOf(row), 1);
+    }
+    for (let i in this.formBean) {
+      this.formBean[i] = null;
+    }
+  }
+  //选中
+  _selectItem(row) {
+    console.log(row)
+    this.param = row;
+    if(row.level==2){
+      this._isShow = true;
+    }else{
+      this._isShow = false;
+    }
+  }
+  //启用/停用
+  _rowEnabled(row) {
+    row.enabled = row.enabled == 1 ? 2 : 1;
+    this.formBean = row;
+    this._saveRow();
+  }
+  //新增
+  _cwResClassAdd() {
+    this.param.children.push(this.formBean);
+  }
+  //修改
+  _editRow(row) {
+    this.formBean = row;
   }
   //删除
-  _delete(data) {
-     this.service.post('/api/busiz/goods/cat/del',{ids:[data.cat_id]}).then(success => {
-      if(success.code==0){
-        this.load();
-        this.service.message.success(success.message);
-      }else{
+  _delRow(row) {
+    this.service.post('/api/busiz/goods/cat/del', {
+      ids: [row.cat_id]
+    }).then(success => {
+      if (success.code == 0) {
+        this._reload();
+      }
+      else {
         this.service.message.error(success.message);
       }
     })
   }
-  //新增同级
-  _addAfter(parent: any) {
-    this.editRow = {
-      enabled: 1,
-      address: null,
-      dept_code: null,
-      dept_path: null,
-      cat_id: null,
-      org_id: parent.org_id,
-      pname: parent.pname || [],
-      cat_name: null,
-      disabled: true,
-      isLeaf: true
-    }
-    this.editRow.pname.push({ cat_id: parent.cat_id, cat_name: parent.cat_name })
-    if (!parent.children) parent.children = [];
-    parent.children.push(this.editRow)
-    this._expanData();
-  }
-  //新增子级
-  _addChildren(parent) {
-    console.log(parent)
-    parent.expand = true;
-    this.editRow = {
-      enabled: 1,
-      address: null,
-      dept_code: null,
-      dept_path: null,
-      cat_id: null,
-      org_id: parent.org_id,
-      pname: parent.pname || [],
-      cat_name: null,
-      disabled: true,
-      isLeaf: true
-    }
-    this.editRow.pname.push({ cat_id: parent.cat_id, cat_name: parent.cat_name })
-    if (!parent.children) parent.children = [];
-    parent.children.push(this.editRow);
-    this._expanData();
-  }
-
 }

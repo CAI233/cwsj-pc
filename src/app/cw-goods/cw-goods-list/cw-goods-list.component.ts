@@ -71,7 +71,6 @@ export class CwGoodsListComponent implements OnInit {
       if(success.code==0){
         this.classData = success.data;
       }else{
-        console.log('商品分类····error')
         this.service.message.error(success.message);
       }
     })
@@ -82,7 +81,6 @@ export class CwGoodsListComponent implements OnInit {
       if(success.code==0){
         this.tagData = success.data.rows;
       }else{
-        
         this.service.message.error(success.message);
       }
     })
@@ -199,6 +197,7 @@ export class CwGoodsListComponent implements OnInit {
   }
   // 重置
   resetForm(){
+
     
   }
 
@@ -248,8 +247,6 @@ export class CwGoodsListComponent implements OnInit {
 
     // 获取当前类型的资源
     this.get_recourse();
-
-    
   }
 
   _ShowCancel($event){
