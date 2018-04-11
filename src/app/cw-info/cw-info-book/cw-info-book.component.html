@@ -161,11 +161,22 @@
               <!-- <span >
                 <a (click)="_join(data)">进入管理</a>
                 <span nz-table-divider></span>
-              </span>
-              <span >
+              </span>-->
+              <!-- <span >
                 <a (click)="_audit(data)">提交审核</a>
                 <span nz-table-divider></span>
-              </span> -->
+              </span>  -->
+              <nz-dropdown *ngIf="this.service.validataAction('resource_add')">
+                <a class="ant-dropdown-link" nz-dropdown>审核
+                    <i class="anticon anticon-down"></i>
+                    <span nz-table-divider></span>
+                </a>
+                <ul nz-menu>
+                    <li nz-menu-item *ngFor="let item of auilt">
+                        <a (click)="_audit(data,item.id)">{{item.name}}</a>
+                    </li>
+                </ul>
+            </nz-dropdown>
               <span >
                 <a (click)="_edit(data)" *ngIf="this.service.validataAction('cw_info_book_edit')">修改</a>
                 <span nz-table-divider></span>
@@ -254,7 +265,7 @@
                                 <label nz-form-item-required>出版社</label>
                             </div>
                             <div nz-form-control nz-col [nzSpan]="16">
-                                <nz-input [nzType]="'text'" formControlName="publisher" [nzDisabled]="true" [(ngModel)]="bookData.publisher"  [nzSize]="'default'"></nz-input>
+                                <nz-input [nzType]="'text'" formControlName="publish" [nzDisabled]="true" [(ngModel)]="bookData.publish"  [nzSize]="'default'"></nz-input>
                             </div>
                         </div>
                     </div>

@@ -140,21 +140,34 @@ export class CwInfoBookComponent implements OnInit {
   resetForm(){
 
   }
-  // // 提交审核
-  // _addAfter(data,id){
-  //   this.service.post('/api/busiz/goods/audit',{ids:[data.book_id],audit_status:id}).then(success => {
-  //     if(success.code==0){
-  //       this.load();
-  //     }else{
-  //       this.service.message.error(success.message);
-  //     }
-  //   })
-  // }
+  // 提交审核
+  _audit(data,id){
+
+    this.bookData = {...data}
+    this.bookData.audit_status = id;
+    this.bookData.book_type = this.param.book_type;
+    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
+    this.service.post('/api/busiz/book/save',this.bookData).then(success => {
+      if(success.code==0){
+            this.load();
+          }else{
+            this.service.message.error(success.message);
+          }
+    })
+  }
 // 上架状态
 _enabled(data){
   data.status = data.status == 1 ? 2 : 1;
   this.bookData = {...data}
-  this.bookOk();
+  this.bookData.book_type = this.param.book_type;
+  this.bookData.tag_ids = this.bookData.tag_ids.split(",");
+  this.service.post('/api/busiz/book/save',this.bookData).then(success => {
+    if(success.code==0){
+      this.load();
+    }else{
+      this.service.message.error(success.message);
+    }
+  })
 }
 
   //文件上传
@@ -171,7 +184,7 @@ _enabled(data){
       tag_ids:false,
       key_word:false,
       book_isbn:false,
-      publisher:false,
+      publish:false,
       author_name:false,
       publish_date:false,
       all_num:false,
