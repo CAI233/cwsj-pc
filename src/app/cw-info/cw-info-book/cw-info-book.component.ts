@@ -152,6 +152,7 @@ export class CwInfoBookComponent implements OnInit {
             this.load();
           }else{
             this.service.message.error(success.message);
+            this.load();
           }
     })
   }
@@ -166,6 +167,7 @@ _enabled(data){
       this.load();
     }else{
       this.service.message.error(success.message);
+      this.load();
     }
   })
 }
