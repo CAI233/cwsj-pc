@@ -186,7 +186,7 @@ _enabled(data){
       tag_ids:false,
       key_word:false,
       book_isbn:false,
-      publish:false,
+      publisher:false,
       author_name:false,
       publish_date:false,
       all_num:false,
@@ -380,7 +380,7 @@ _enabled(data){
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
     this.bookList = true;
-    this.bookData.publish = "崇文书局";
+    this.bookData.publisher = "崇文书局";
   }
   // 修改操作
   _edit(data){
@@ -392,7 +392,6 @@ _enabled(data){
       this.bookData[i] = data[i];
     }
     this.cat_data = [];
-    this.bookData.publish = this.bookData.publisher
 
     let arr_name = this.bookData.book_cat_names.split(",");
     let arr_id = this.bookData.book_cat_ids.split(",");
@@ -466,9 +465,9 @@ _enabled(data){
     daochu(data){
       // let doc = `<iframe style="display: none" src="${this.service.ctxPath}/api/busiz/code/export/ids=${data.code_id}"></iframe>`;
       let doc = document.createElement('iframe');
-      doc.src = this.service.ctxPath + '/api/busiz/code/export/ids=' + data.code_id;
+      doc.src = this.service.ctxPath + '/api/busiz/code/export?ids=' + data.code_id;
       doc.style.display = 'none';
-      // a.href =  this.service.ctxPath + '/api/busiz/code/export/ids=' + data.code_id;
+      // a.href =  this.service.ctxPath + '/api/busiz/code/export?ids=' + data.code_id;
       // a.target = '_blank';
       // a.download = '二维码.pdf';
       document.body.appendChild(doc);

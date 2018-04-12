@@ -106,7 +106,7 @@
                 <p *ngIf="!data.works || data.works.length == 0" class="undata">还未配置任何关联作品</p>
                 <ng-container *ngFor="let item of data.works">
                   <div class="weixin-item">
-                    <div class="cover" style="background-image:url({{service.ctxPath+item.works_cover_small}})"></div>
+                    <div class="cover" [ngStyle]="{'background':'url('+service.ctxPath+item.works_cover_small+') no-repeat center','background-size': 'contain'}"></div>
                     <div class="title">
                       <p>{{item.works_name}}</p>
                     </div>
@@ -135,7 +135,7 @@
               <p>简介：{{formBeanObject.remark}}</p>
               <p>创建时间：{{formBeanObject.create_time}}</p>
               <div>
-                  <button nz-button [nzType]="'primary'" [nzSize]="size">
+                  <button nz-button [nzType]="'primary'" [nzSize]="size" (click)="daochu(formBeanObject.code_id)">
                       <i class="anticon anticon-download"></i><span>下载二维码</span>
                     </button>
               </div>
@@ -157,7 +157,8 @@
           <nz-tab>
             <ng-template #nzTabHeading>作品列表</ng-template>
             <div>
-                <nz-table #nzTable [nzDataSource]="formBeanObject.works" nzIsPagination="false">
+                <!-- [nzDataSource]="formBeanObject.works" -->
+                <nz-table #nzTable [nzAjaxData]="formBeanObject.works"  nzIsPagination="false" *ngIf="formBeanObject.works.length>0">
                   <thead nz-thead>
                     <tr>
                       <th nz-th>
@@ -178,7 +179,7 @@
                     <tr nz-tbody-tr *ngFor="let data of nzTable.data;let idx=index">
                       <td nz-td>
                         <div class="zp-list">
-                          <div class="zp-cover" style="background-image:url({{service.ctxPath+data.works_cover_small}})"></div>
+                          <div class="zp-cover"  [ngStyle]="{'background':'url('+service.ctxPath+data.works_cover_small+') no-repeat center','background-size': 'contain'}"></div>
                           <div class="zp-info">
                             <h1>{{data.works_name}}</h1>
                             <p style="padding:5px 0;">类型：{{data.works_type}}</p>

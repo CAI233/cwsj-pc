@@ -139,11 +139,21 @@ export class CwCodeListComponent implements OnInit {
   nzSelectedIndex: number = 0;
   //配置对象
   _settingBean(data?) {
+    console.log(data);
     this.nzSelectedIndex = 1;
     this.formBeanObject = {};
     for (let i in data) {
       this.formBeanObject[i] = data[i];
     }
+    this.formBeanObject.works = [];
+    this.service.post('/api/busiz/code/workslist', {pageNum:1,pageSize:10,code_id:this.formBeanObject.code_id}).then(success => {
+      if(success.code==0){
+        this.formBeanObject.works = success.data.rows;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+
   }
   //作品列表
   workTableData: any = [];
@@ -255,4 +265,18 @@ export class CwCodeListComponent implements OnInit {
       this._updateCodeInfo();
     })
   }
+
+  daochu(id){
+    let nowid = id.toString();
+    // let doc = `<iframe style="display: none" src="${this.service.ctxPath}/api/busiz/code/export/ids=${data.code_id}"></iframe>`;
+    let doc = document.createElement('iframe');
+    doc.src = this.service.ctxPath + '/api/busiz/code/export?ids=' + nowid;
+    doc.style.display = 'none';
+    // a.href =  this.service.ctxPath + '/api/busiz/code/export/ids=' + data.code_id;
+    // a.target = '_blank';
+    // a.download = '二维码.pdf';
+    document.body.appendChild(doc);
+    // a.click();
+}
+
 }
