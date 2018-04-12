@@ -78,7 +78,7 @@
             </div> -->
           </td>
           <td nz-td>
-              <span>{{data.nick_name}}</span>
+              <span>{{base64decoder(data.member_name)}}</span>
           </td>
           <td nz-td>
               <span>{{['男','女'][data.sex-1]}}</span>

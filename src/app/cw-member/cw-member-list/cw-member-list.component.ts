@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare const Buffer
 @Component({
   selector: 'app-cw-member-list',
   templateUrl: './cw-member-list.component.html',
@@ -64,10 +65,10 @@ export class CwMemberListComponent implements OnInit {
     this.load();
   }
   //base64解码 
-  // base64decoder(Context):any{
-  //   let newChange  = new Buffer(Context,'base64').toString();
-  //   return newChange
-  // }
+  base64decoder(Context):any{
+    let newChange  = new Buffer(Context,'base64').toString();
+    return newChange
+  }
  
   
 // 全选
