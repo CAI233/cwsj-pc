@@ -259,8 +259,8 @@
                 <div nz-form-item nz-row class="notErrMsg" style="padding-left:10px;">
                     <div nz-col [nzSpan]="8" style="padding:10px 0px;">
                         <div class="uimg" style="float:left;border:1px #ddd dashed;height:152px;width:114px;background: #f5f8fa;">
-                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover_small }}" style="float:left;width:100%;height:100%;"/>
-                            <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover_small }}" style="float:left;width:100%;height:100%;"/>
+                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.goods_cover }}" style="float:left;width:100%;height:100%;"/>
+                            <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover }}" style="float:left;width:100%;height:100%;"/>
                         </div>
                     </div>
                     <div nz-col [nzSpan]="16">

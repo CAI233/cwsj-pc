@@ -351,6 +351,14 @@ export class CwGoodsListComponent implements OnInit {
         this.selRow.goods_cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
       }
     }
+    if(this.selRow.tag_ids){
+      // goods_tag_ids
+      if(typeof(this.selRow.tag_ids)!='object'){
+        this.selRow.goods_tag_ids = this.selRow.tag_ids.split(",");
+      }else{
+        this.selRow.goods_tag_ids = this.selRow.tag_ids
+      }
+    }
     this.selRow.goods_cover = this.nowRecourse.book_cover_small
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){

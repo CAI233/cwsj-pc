@@ -392,6 +392,7 @@ _enabled(data){
       this.bookData[i] = data[i];
     }
     this.cat_data = [];
+    this.bookData.publish = this.bookData.publisher
 
     let arr_name = this.bookData.book_cat_names.split(",");
     let arr_id = this.bookData.book_cat_ids.split(",");

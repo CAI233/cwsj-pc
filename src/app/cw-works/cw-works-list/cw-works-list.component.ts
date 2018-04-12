@@ -90,6 +90,10 @@ export class CwWorksListComponent implements OnInit {
       resources_id: [false],
       remark: [false],
     })
+
+    this.service.post('/api/busiz/works/resources/list', { works_id:31}).then(success => {
+        console.log(success)
+    })
   }
   loadCat(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
