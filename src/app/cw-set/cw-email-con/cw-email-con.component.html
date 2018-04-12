@@ -101,6 +101,10 @@
                   <a nz-popconfirm>取消</a>
                 </nz-popconfirm>
             </span>
+            <span *ngIf="editRow!=data.mail_setting_id && this.service.validataAction('cw_email_con_edit')">
+                <a (click)="send(data)">测试邮箱</a>
+                <span nz-table-divider></span>
+              </span>
             <span *ngIf="editRow!=data.mail_setting_id && this.service.validataAction('cw_email_con_del')">
                 <nz-popconfirm [nzTitle]="'确定删除吗?'" (nzOnConfirm)="del(data)">
                   <a nz-popconfirm>删除</a>
@@ -112,4 +116,15 @@
       </nz-table>
   </nz-content>
 </nz-layout>
-
+<nz-modal [nzVisible]="sendVisible" [nzTitle]="'发送邮件'" [nzContent]="modalContent" (nzOnCancel)="sendCancel($event)" (nzOnOk)="sendOk($event)">
+    <ng-template #modalContent>
+        <div nz-row >
+            <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+                <label ><em style="color:red;">*</em>发送邮件地址:</label>
+            </div>
+            <div nz-col [nzSpan]="14">
+                <nz-input [nzType]="'email'" [(ngModel)]="sendTo.email_addr" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
+            </div>
+          </div>
+    </ng-template>
+  </nz-modal>

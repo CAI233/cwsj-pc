@@ -55,14 +55,21 @@ export class CwMemberListComponent implements OnInit {
 
 
   ngOnInit() {
-
-
-
+  
+    // let name = '5pmTRmVuZ/CfkJEgICAgICAgwrLigbDCueKBuA==';
+    
+    // console.log(this.base64decoder(name));
+    
     //加载会员列表
     this.load();
   }
-
-
+  //base64解码 
+  // base64decoder(Context):any{
+  //   let newChange  = new Buffer(Context,'base64').toString();
+  //   return newChange
+  // }
+ 
+  
 // 全选
   _checkAll(value) {
     if (value) {

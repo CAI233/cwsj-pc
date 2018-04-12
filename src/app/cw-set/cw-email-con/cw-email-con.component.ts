@@ -23,6 +23,8 @@ export class CwEmailConComponent implements OnInit {
 
   new_tempEditObject : any = {};
 
+  sendVisible : boolean = false;
+  sendTo : any = {};
   constructor(public service: AppService) { }
 
   ngOnInit() {
@@ -111,6 +113,32 @@ export class CwEmailConComponent implements OnInit {
         this.load();
       })
     }
+  }
+  sendCancel($event){
+    this.sendVisible = false;
+  }
+  sendOk($event){
+    const EMAIL_REGEXP = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+    if (!this.sendTo.email_addr) {
+      this.service.message.warning('请填写邮箱发送地址!');
+      return false;
+    } else if (!EMAIL_REGEXP.test(this.sendTo.email_addr)) {
+      this.service.message.warning('请填写正确的邮箱地址!');
+      return false;
+    }
+    this.service.post('/api/system/mailsetting/sendmail',this.sendTo).then(success => {
+      if(success.code==0){
+        this.sendVisible = false;
+        this.load();
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  // 测试发送邮件
+  send(data){
+    this.sendVisible = true;
+    this.sendTo.mail_setting_id = data.mail_setting_id;
   }
 
     //保存
