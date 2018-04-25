@@ -133,6 +133,19 @@ export class CwWinComponent implements OnInit {
       }
     } 
 
+    _enabled(data){
+        data.enabled = data.enabled==1 ? 2 :1;
+        this.service.post('/api/busiz/window/save',data).then(success => {
+        if(success.code==0){
+          this.load();
+          
+          this.service.message.success(success.message);
+        }else{
+          this.service.message.error(success.message);
+        }
+      })
+
+    }
 
 
   //查询

@@ -54,7 +54,7 @@
                         </a>
                         <ul nz-menu>
                             <li nz-menu-item>
-                            <a rel="noopener noreferrer" (click)="selRow.goods_type=1;add()" >纸质图书</a>
+                            <a rel="noopener noreferrer" (click)="selRow.goods_type=1;add()" >图书</a>
                             </li>
                             <li nz-menu-item>
                             <a rel="noopener noreferrer" (click)="selRow.goods_type=2;add()">音视频</a>
@@ -122,7 +122,7 @@
                   </div>
                   <div nz-col [nzSpan]="14" style="padding:10px;">
                       <p>商品名称:<span [innerHtml]="data.goods_name"></span></p>
-                      <p>商品类型:<span [innerHtml]="['实体书','音视频','电子书'][data.goods_type-1]"></span></p>
+                      <p>商品类型:<span [innerHtml]="['图书','音视频','电子书'][data.goods_type-1]"></span></p>
                   </div>
               </td>
               <td nz-td>
@@ -259,7 +259,7 @@
                 <div nz-form-item nz-row class="notErrMsg" style="padding-left:10px;">
                     <div nz-col [nzSpan]="8" style="padding:10px 0px;">
                         <div class="uimg" style="float:left;border:1px #ddd dashed;height:152px;width:114px;background: #f5f8fa;">
-                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.goods_cover }}" style="float:left;width:100%;height:100%;"/>
+                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover }}" style="float:left;width:100%;height:100%;"/>
                             <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover }}" style="float:left;width:100%;height:100%;"/>
                         </div>
                     </div>

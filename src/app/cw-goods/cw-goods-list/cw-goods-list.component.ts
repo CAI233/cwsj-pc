@@ -143,6 +143,7 @@ export class CwGoodsListComponent implements OnInit {
           }
         }
       }
+      console.log(this.nowRecourse)
       // 在查看详情时不需要带出资源
       if(!this.showData.res_id){
         // 获取当前电子书的资源列表
@@ -359,7 +360,7 @@ export class CwGoodsListComponent implements OnInit {
         this.selRow.goods_tag_ids = this.selRow.tag_ids
       }
     }
-    this.selRow.goods_cover = this.nowRecourse.book_cover_small
+    this.selRow.goods_cover = this.nowRecourse.book_cover == null ? this.nowRecourse.video_cover : this.nowRecourse.book_cover;
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){
           this.load();

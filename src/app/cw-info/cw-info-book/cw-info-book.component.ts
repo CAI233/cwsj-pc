@@ -462,10 +462,17 @@ _enabled(data){
       }
     }
 
-    daochu(data){
+    daochu(){
+      // bookResource
+      let ids = ''
+      for(let i in this.bookResource){
+        console.log(i)
+        ids +=this.bookResource[i].code_id+',';
+      }
+      ids = ids.substring(0,ids.length-1);
       // let doc = `<iframe style="display: none" src="${this.service.ctxPath}/api/busiz/code/export/ids=${data.code_id}"></iframe>`;
       let doc = document.createElement('iframe');
-      doc.src = this.service.ctxPath + '/api/busiz/code/export?ids=' + data.code_id;
+      doc.src = this.service.ctxPath + '/api/busiz/code/export?ids=' + ids;
       doc.style.display = 'none';
       // a.href =  this.service.ctxPath + '/api/busiz/code/export?ids=' + data.code_id;
       // a.target = '_blank';

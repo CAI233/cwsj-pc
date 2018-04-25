@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ViewChild} from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -9,7 +9,7 @@ declare let wangEditor: any;
   styleUrls: ['./cw-prj-list.component.css']
 })
 export class CwPrjListComponent implements OnInit {
-  
+  @ViewChild("dept_idss") dept_idss;
   data: any = [];
   listData: any = [];
   _allChecked: boolean = false;
@@ -60,6 +60,7 @@ export class CwPrjListComponent implements OnInit {
     this.isVisibleMiddle = false;
     this.isShow = false;
     this.myForm.reset();
+    this.dept_idss._lastValue = [];
   }
 
   //确定
@@ -90,9 +91,9 @@ export class CwPrjListComponent implements OnInit {
   }
 
   now_change(rest?){
-    if(rest.length>0){
-      console.log(rest);
-      
+    console.log(rest)
+    if(rest && rest.length>0){
+
       this.selRow.project_cat_id = rest[rest.length-1].cat_id;
       this.selRow.project_cat_name = rest[rest.length-1].cat_name;
       this.selRow.project_cat_ids = '';
@@ -130,7 +131,9 @@ export class CwPrjListComponent implements OnInit {
   //文件上传
   fileUpload(info): void {
     if (info.file.response && info.file.response.code == 0) {
+      console.log(info.file.response)
       this.selRow.project_cover = info.file.response.data[0].url;
+      console.log(this.selRow.project_cover)
     }
   }
 
@@ -188,8 +191,7 @@ export class CwPrjListComponent implements OnInit {
     this.selRow = {};
     this.formTitle = "新增";
     this.isVisibleMiddle = true;
-
-
+    this.editor.txt.html('');
   }
 
   //修改
@@ -276,13 +278,13 @@ export class CwPrjListComponent implements OnInit {
         this.isVisibleMiddle = false;
         this.myForm.reset();
         this.load();
+        this.dept_idss._lastValue = [];
         this.service.message.success(success.message);
       } else {
         this.service.message.error(success.message);
       }
     })
   }
-
   timeout(d) {
     let m = new Date(d);
     let M, D, H, mm, ss;

@@ -13,7 +13,15 @@ export class CwGoodsTagComponent implements OnInit {
   formTitle : string;
   myForm: FormGroup;
   data : any = [];//品牌列表
+  nowList : any = {
+    brand_code:null,
+    brand_id:null,
+    brand_name:null,
+    create_time:null,
+    remark:null 
+  }
   goods_data : any = []; //商品列表
+  nowGlist : any ={create_time:null,is_delete:null,tag_id:null,tag_name:null,update_time:null}
   selRow : any = {};
   goods_selRow : any = {};
   param : any = {
@@ -113,23 +121,23 @@ export class CwGoodsTagComponent implements OnInit {
   //品牌新增操作
   add(){
     this.selRow = {};
-    this.isVisible = true;
-    this.formTitle = '品牌标签新增'
+    this.data.push(this.nowList);
   }
   //商品新增操作 
   goods_add(){
     this.goods_selRow = {};
-    this.goods_isVisible = true;
-    this.formTitle = '商品标签新增'
+    this.goods_data.push(this.nowGlist)
   }
   // 品牌修改操作
   edit(data){
     this.selRow = {...data};
+    
     this.edRow = this.selRow.brand_id;
   }
   // 品牌取消
   _cancel(){
     this.edRow = null;
+    this.load();
   }
 
   // 商品修改操作
@@ -140,6 +148,7 @@ export class CwGoodsTagComponent implements OnInit {
   // 商品取消
   goods_cancel(){
     this.edRow = null;
+    this.goods_load();
   }
   
   //品牌删除操作
@@ -190,7 +199,7 @@ export class CwGoodsTagComponent implements OnInit {
       this.service.message.error('请填写商品名称');
       return false;
     }
-    this.service.post('/api/busiz/goods/tag/save',{tag_name:this.goods_selRow.tag_name}).then(success => {
+    this.service.post('/api/busiz/goods/tag/save',this.goods_selRow).then(success => {
         if(success.code==0){
           this.goods_load();
           this.edRow = null;

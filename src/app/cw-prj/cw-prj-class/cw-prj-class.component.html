@@ -57,14 +57,17 @@
             <nz-table #nzTable [nzIsPagination]="false" [nzAjaxData]="param.children" [nzLoading]="_loading">
               <thead nz-thead>
                 <tr>
-                  <th nz-th [nzWidth]="'25%'">
+                  <th nz-th [nzWidth]="'15%'">
                     <span>名称</span>
                   </th>
-                  <th nz-th [nzWidth]="'20%'">
+                  <th nz-th [nzWidth]="'15%'">
                     <span>创建时间</span>
                   </th>
-                  <th nz-th [nzWidth]="'25%'">
+                  <th nz-th [nzWidth]="'10%'">
                     <span>状态</span>
+                  </th>
+                  <th nz-th [nzWidth]="'25%'">
+                    <span>备注</span>
                   </th>
                   <th nz-th [nzWidth]="'30%'">
                     <span>操作</span>
@@ -77,6 +80,7 @@
                           <td><nz-input [nzType]="'text'" name="cat_name" [(ngModel)]="formBean.cat_name"></nz-input></td>
                           <td>{{data.create_time}}</td>
                           <td></td>
+                          <td><nz-input [nzType]="'text'" name="cat_remark" [(ngModel)]="formBean.cat_remark"></nz-input></td>
                           <td>
                               <a (click)="_saveRow()">保存</a>
                               <span nz-table-divider></span>
@@ -94,6 +98,9 @@
                                   <label *ngIf="data.enabled == 1" style="color:green">启用</label>
                                   <label *ngIf="data.enabled != 1">停用</label>
                               </span>
+                          </td>
+                          <td>
+                            <span>{{data.cat_remark}}</span>
                           </td>
                           <td>
                             <ng-container *ngIf="this.service.validataAction('cw_prj_class_edit')" >

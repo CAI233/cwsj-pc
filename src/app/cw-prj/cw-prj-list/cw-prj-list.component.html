@@ -95,7 +95,7 @@
                 <span>{{data.project_name}}</span>
             </td>
             <td nz-td>
-                <span>{{data.project_cat_id}}</span>
+                <span>{{data.project_cat_names}}</span>
             </td>
             <td nz-td>
                 <span>{{data.create_time}}</span>
@@ -157,7 +157,7 @@
                     <label nz-form-item-required>合作分类</label>
                 </div>
                 <div nz-form-control >
-                    <nz-cascader style="width:100%" formControlName="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="listData"
+                    <nz-cascader #dept_idss style="width:100%" formControlName="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="listData"
                         [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
                     </nz-cascader>
                     <!-- <nz-select style="width:100%;" formControlName="project_cat_id" [(ngModel)]="selRow.project_cat_id" [nzPlaceHolder]="'请选择合作分类'" nzShowSearch>
