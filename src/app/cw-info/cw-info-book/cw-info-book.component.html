@@ -60,7 +60,7 @@
                     </nz-select>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div nz-row nz-form-item style="margin-bottom:0;">
                 <div nz-row nz-form-item>
                     <div class="row-actions">
@@ -207,7 +207,7 @@
                                 </div>
                                 <div nz-form-control nz-col [nzSpan]="16">
                                     <nz-input [nzType]="'text'" formControlName="book_name" [(ngModel)]="bookData.book_name" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                                </div> 
+                                </div>
                             </div>
                             <div nz-form-item nz-row style="margin-bottom:10px;">
                                 <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -217,7 +217,7 @@
                                     <nz-cascader style="width:100%" formControlName="book_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="bookClass"
                                         [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
                                     </nz-cascader>
-                                </div> 
+                                </div>
                             </div>
                             <div nz-form-item nz-row style="margin-bottom:10px;">
                                 <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -227,7 +227,7 @@
                                     <nz-select style="width:100%;" formControlName="tag_ids" (nzSearchChange)="get_tagList($event)" [nzMode]="'multiple'" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="bookData.tag_ids" nzShowSearch>
                                         <nz-option *ngFor="let item of bookTag" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
                                     </nz-select>
-                                </div> 
+                                </div>
                             </div>
                             <div nz-form-item nz-row style="margin-bottom:10px;">
                                 <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -235,7 +235,7 @@
                                 </div>
                                 <div nz-form-control nz-col [nzSpan]="16">
                                     <nz-input [nzType]="'text'" formControlName="key_word" [(ngModel)]="bookData.key_word" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                         <div nz-col [nzSpan]="12" style="text-align:center;padding:0px 90px">
@@ -246,7 +246,7 @@
                                 nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
                                 <button nz-button type="button">
                                     <i class="anticon anticon-upload"></i>
-                                    <span>上传头像</span>
+                                    <span>上传封面</span>
                                 </button>
                             </nz-upload>
                         </div>
@@ -258,7 +258,7 @@
                             </div>
                             <div nz-form-control nz-col [nzSpan]="16">
                                 <nz-input [nzType]="'text'" formControlName="book_isbn" [(ngModel)]="bookData.book_isbn" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                            </div> 
+                            </div>
                         </div>
                         <div nz-col [nzSpan]="12">
                             <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -276,7 +276,7 @@
                             </div>
                             <div nz-form-control nz-col [nzSpan]="16">
                                 <nz-input [nzType]="'text'" formControlName="author_name" [(ngModel)]="bookData.author_name" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                            </div> 
+                            </div>
                         </div>
                         <div nz-col [nzSpan]="12">
                             <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -294,7 +294,7 @@
                             </div>
                             <div nz-form-control nz-col [nzSpan]="16">
                                 <nz-input [nzType]="'text'" formControlName="all_num" [(ngModel)]="bookData.all_num" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                            </div> 
+                            </div>
                         </div>
                         <div nz-col [nzSpan]="12">
                             <div nz-form-label nz-col style="float:left;" [nzSpan]="8">
@@ -311,7 +311,7 @@
                         </div>
                         <div nz-form-control >
                             <nz-input [nzType]="'textarea'" [nzRows]="3" formControlName="book_remark" [(ngModel)]="bookData.book_remark" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
-                        </div> 
+                        </div>
                     </div>
                     <button *ngIf="this.param.book_type==2" nz-button [nzType]="'primary'" (click)="bookOk($event)"><span>下一步</span></button>
                 </nz-tab>
@@ -482,11 +482,11 @@
 [nzVisible]="AllResourceList" (nzOnCancel)="AllResourceCancel($event)" [nzTitle]="'资源列表'" [nzFooter]="false">
 <ng-template #AllResourceContent>
         <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true"
-        [nzAjaxData]="ebookAllResource" 
-        [nzLoading]="_loading" 
+        [nzAjaxData]="ebookAllResource"
+        [nzLoading]="_loading"
         [nzPageSize]="AllResource_param.pageSize"
-        [nzPageIndex]="AllResource_param.pageNum" 
-        [nzTotal]="AllResource_param.total" 
+        [nzPageIndex]="AllResource_param.pageNum"
+        [nzTotal]="AllResource_param.total"
         (nzPageIndexChangeClick)="AllResource_param.pageNum=$event;_reload()"
         (nzPageSizeChange)="AllResource_param.AllResource_param=1;param.pageSize=$event;_reload()">
            <thead nz-thead>
@@ -528,7 +528,7 @@
                     </td>
                   </tr>
               </ng-container>
-                
+
            </tbody>
          </nz-table>
 </ng-template>

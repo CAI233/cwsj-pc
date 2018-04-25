@@ -39,8 +39,8 @@
                   <nz-rangepicker name="searchTime" [(ngModel)]="paramCol.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
               </div>
           </div>
-        </div> 
-        
+        </div>
+
         <div nz-row nz-form-item>
             <div class="row-actions">
                 <button nz-button nzType="primary" (click)="add()" *ngIf="this.service.validataAction('cw_prj_list_add')">
@@ -138,7 +138,7 @@
                     nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
                     <button nz-button type="button">
                         <i class="anticon anticon-upload"></i>
-                        <span>上传头像</span>
+                        <span>上传封面</span>
                     </button>
                 </nz-upload>
             </div>
@@ -203,7 +203,7 @@
                         <div nz-form-control>
                             <p [innerHtml]="selRow.project_name"></p>
                         </div>
-                    </div> 
+                    </div>
                     <div nz-form-item nz-row style="padding:0 10px;margin-bottom:10px;">
                         <div nz-form-label>
                             <label style="font-size:16px;font-weight:bold;">合作分类</label>
@@ -211,7 +211,7 @@
                         <div nz-form-control>
                             <p [innerHtml]="selRow.project_cat_id"></p>
                         </div>
-                    </div> 
+                    </div>
                     <div nz-form-item nz-row style="padding:0 10px;margin-bottom:10px;">
                         <div nz-form-label>
                             <label style="font-size:16px;font-weight:bold;">合作单位</label>
@@ -219,7 +219,7 @@
                         <div nz-form-control>
                             <p [innerHtml]="selRow.org"></p>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <div nz-form-item nz-row style="padding:0 10px;float: left;width:100%;">
                     <div nz-form-label>
@@ -228,7 +228,7 @@
                     <div nz-form-control>
                         <p [innerHtml]="selRow.remark"></p>
                     </div>
-                </div> 
+                </div>
             </ng-template>
         </nz-card>
 </ng-template>

@@ -436,10 +436,10 @@
                 <span>试卷名称</span>
               </th>
               <th nz-th>
-                <span>试卷分值</span>
+                <span>试卷分值(分)</span>
               </th>
               <th nz-th>
-                <span>答题时长</span>
+                <span>答题时长(分钟)</span>
               </th>
               <th nz-th>
                 <span>试卷描述</span>
@@ -710,9 +710,9 @@
 </nz-modal>
 <!-- 题库列表 -->
 
-  
+
   <nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="seeContent" [nzVisible]="isShowAddTopic"
-    [nzWidth]="800" (nzOnCancel)="addTopicCancel($event)" [nzTitle]="'试题列表'" [nzFooter]="false"> 
+    [nzWidth]="800" (nzOnCancel)="addTopicCancel($event)" [nzTitle]="'试题列表'" [nzFooter]="false">
     <ng-template #seeContent>
       <div class="m-search" style="margin-bottom:15px;">
         <nz-select #addTopicTag nzAllowClear style="width:200px;margin-right:10px;" [nzPlaceHolder]="'试题标签'" (nzSearchChange)="searchChange($event)"
