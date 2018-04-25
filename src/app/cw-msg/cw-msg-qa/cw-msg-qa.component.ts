@@ -131,9 +131,27 @@ export class CwMsgQaComponent implements OnInit {
       // create_time:false
     })
     this.load();
-
-  
   }
+
+    // 全选
+    _checkAll(value) {
+      if (value) {
+        this.data.forEach(data => {
+          if (!data.disabled) {
+            data.checked = true;
+          }
+        });
+      } else {
+        this.data.forEach(data => data.checked = false);
+      }
+      this._refreshStatus();
+    }
+    _refreshStatus() {
+      const allChecked = this.data.every(value => value.disabled || value.checked);
+      const allUnChecked = this.data.every(value => value.disabled || !value.checked);
+      this._allChecked = allChecked;
+      this._indeterminate = (!allChecked) && (!allUnChecked);
+    }
 
   editor:any
   ngAfterViewInit(){
