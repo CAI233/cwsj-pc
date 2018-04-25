@@ -138,7 +138,7 @@ export class CwQuesClassComponent implements OnInit {
   }
   //新增
   _cwResClassAdd() {
-    this.param.children.push(this.formBean);
+    this.param.children.unshift(this.formBean);
   }
   //修改
   _editRow(row) {
