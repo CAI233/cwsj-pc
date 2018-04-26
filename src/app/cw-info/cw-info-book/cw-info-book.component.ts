@@ -11,6 +11,7 @@ export class CwInfoBookComponent implements OnInit {
   myForm: FormGroup;
   _allChecked : boolean = false;
   _indeterminate : boolean = false;
+  isCollapse : boolean = true;
   param : any = {
     pageNum:1,
     pageSize:10,
@@ -132,7 +133,8 @@ export class CwInfoBookComponent implements OnInit {
   //查询
   reload(rest?){
     if(rest){
-      console.log(this.param)
+      console.log(this.param);
+
       this.load();
     }
   }
