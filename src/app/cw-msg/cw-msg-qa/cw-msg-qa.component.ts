@@ -160,7 +160,7 @@ export class CwMsgQaComponent implements OnInit {
     this.editor.customConfig.uploadImgShowBase64 = true;
     this.editor.create();
     this.editor.txt.clear();
-    this.editor.txt.html(this.selRow.remark)
+    this.editor.txt.html()
    
   }
 

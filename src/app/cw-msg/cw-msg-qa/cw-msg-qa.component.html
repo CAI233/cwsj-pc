@@ -155,11 +155,11 @@
           </div>
           <div nz-col [nzSpan]="24">
               <div nz-form-label >
-                  <label>回答</label>
-                </div>
-                <div nz-form-control >
-                    <div id="editor"></div>
-                </div>
+                <label>回答</label>
+              </div>
+              <div nz-form-control >
+                  <div id="editor"></div>
+              </div>
           </div>
           <div style="clear:both;"></div>
       </div>
@@ -167,9 +167,9 @@
 
 </ng-template>
 </nz-modal>
-<nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
+<nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="SanswerContent"
 [nzVisible]="isSanswer" (nzOnCancel)="SanswerCancel($event)"  [nzTitle]="'问答预览'" [nzFooter]="false">
-<ng-template #modalContent>
+<ng-template #SanswerContent>
  
       <div nz-row nz-form-item>
           <div nz-col [nzSpan]="12">
