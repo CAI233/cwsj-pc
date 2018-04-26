@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,7 +12,7 @@ declare let wangEditor: any;
   styleUrls: ['./cw-ques.component.css']
 })
 export class CwQuesComponent implements OnInit {
-
+  @ViewChild("cat_idss") cat_idss;
   _allChecked = false;
   _indeterminate = false;
   param :any = {
@@ -36,7 +36,7 @@ export class CwQuesComponent implements OnInit {
   class_data : any = [];//商品分类
   now_data : any = {};//当前修改新增对象
   now_num :number = 1;
-  
+  cat_ids : any = null;
   constructor(public service: AppService,public msg: NzMessageService) { }
 
   ngOnInit() {
@@ -58,7 +58,7 @@ export class CwQuesComponent implements OnInit {
 
     //加载商品标签
     this.get_goods();
-    // 加载商品分类
+    // 加载试题分类
     this.get_class();
   }
 
@@ -94,9 +94,9 @@ export class CwQuesComponent implements OnInit {
   }
 
 
-  // 商品分类
+  // 试题分类
   get_class(){
-    this.service.post('/api/busiz/goods/cat/tree').then(success => {
+    this.service.post('/api/busiz/book/cat/list').then(success => {
       if(success.code==0){
         console.log(success)
         this.class_data = success.data;
@@ -114,9 +114,29 @@ export class CwQuesComponent implements OnInit {
     }
   }
 
+  _change(rest?){
+    console.log(rest)
+    if(rest && rest.length>0){
+
+      this.now_data.cat_id = rest[rest.length-1].cat_id;
+      this.now_data.cat_name = rest[rest.length-1].cat_name;
+      this.now_data.cat_ids = '';
+      this.now_data.cat_names = '';
+      for(let i in rest){
+        this.now_data.cat_ids += rest[i].cat_id+",";
+        this.now_data.cat_names += rest[i].cat_name+",";
+      }
+      this.now_data.cat_ids = this.now_data.cat_ids.substring(0,this.now_data.cat_ids.length-1)
+      this.now_data.cat_names = this.now_data.cat_names.substring(0,this.now_data.cat_names.length-1);
+    }
+
+
+  }
+
   //关闭弹窗
 handleCancelMiddle($event) {
   this.isList = false;
+  this.cat_idss._lastValue = [];
   this.myForm.reset();
 }
 
@@ -139,18 +159,14 @@ _enabled(data){
       }
     })
   }
-
 }
 //新增
 _add(){
   this.isList = true;
   this.formTitle = '新增试题';
+  this.cat_idss._lastValue = [];
   this.now_num =1;
-  // this.now_data.opContext = `<p >【题干】</p><p >【答案】</p><p >【解析】</p>`;
   this.ngAfterViewInit();
-    
-  
-
 }
 
 // 修改
@@ -160,11 +176,19 @@ _edit(data){
   this.formTitle = '修改试题';
   this.now_num =2;
   this.now_data = {...data};
-  this.now_data.label_ids = this.now_data.label_id;
-  console.log(this.now_data)
+  this.now_data.label_ids = this.now_data.label_id
+  console.log(this.now_data);
+  let a = this.now_data.cat_ids.split(",");
+  let b = this.now_data.cat_names.split(",");
+  this.cat_ids = [];
+  for(let i in a){
+    this.cat_ids.push({
+      cat_id:a[i],
+      cat_name:b[i]
+    })
+  }
 
   this.ngAfterViewInit();
-  // this.now_data.opContext = `<p >【题干】</p>${this.now_data.title}<p >【答案】</p>${this.now_data.analysis}<p >【解析】</p>${this.now_data.parsing}`;
 }
 
 //删除
@@ -212,8 +236,7 @@ _submitUpload(){
     this.service.message.error('请选择标签');
     return false;
   }
-  this.upload_param.label_id = this.upload_param.label_ids.join(",");
-  this.upload_param.cat_id = this.upload_param.cat_ids[this.upload_param.cat_ids.length-1];
+  // this.upload_param.label_id = this.upload_param.label_ids.split(",");
   this.service.post('/api/busiz/question/save/file',this.upload_param).then(success => {
     if(success.code==0){
       this.load();
@@ -237,14 +260,11 @@ _submitForm() {
     this.service.message.error('请选择分类');
     return false;
   }
-  let class_id = this.now_data.cat_ids[this.now_data.cat_ids.length-1];
-    if(typeof(class_id)=='object'){
-      this.now_data.cat_id = parseInt(class_id.cat_id);
-    }else{
-      this.now_data.cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
-    }
-  this.now_data.label_id = this.now_data.label_ids.join(",");
+  // this.now_data.label_id = this.now_data.label_ids.join(",");
   
+  if(typeof(this.now_data.label_ids)=='object'){
+    this.now_data.label_id = this.now_data.label_ids.join(",")
+  }
   this.now_data.opContext = this.editor.txt.html();
   console.log(this.now_data);
   this.service.post('/api/busiz/question/save',this.now_data).then(success => {
@@ -265,7 +285,15 @@ _submitForm() {
 _show(data){
   data.select = !data.select
 }
+//下载模板
+_down(){
+ let doc = document.createElement('iframe');;
+  doc.src = this.service.ctxPath +'/assets/file/muban.doc';
+  doc.style.display = 'none';
+  document.body.appendChild(doc);
 
+  
+}
 
 _checkAll(value) {
   if (value) {
@@ -297,11 +325,7 @@ ngAfterViewInit(){
   }else if(this.now_num == 2){
     this.editor.txt.html('<p >【题干】</p>'+this.now_data.title+'<p >【答案】</p>'+this.now_data.analysis+'<p >【解析】</p>'+this.now_data.parsing);
   }
-  
-  // editor.txt.html('<p>用 JS 设置的内容</p>');
-  // editor.txt.append('<p>追加的内容</p>');
-  // console.log(editor.txt.html())
-  // console.log(editor.txt.text())
+
 }
 
 }

@@ -11,24 +11,24 @@
   </nz-header>
   <nz-content class="main-page-content">
       <form nz-form>
-        <div nz-row nz-form-item>
-            <div nz-col [nzSpan]="8">
-              <div nz-form-label nz-col style="float:left;">
-                <label>提问用户</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="16">
-                <nz-input [nzType]="'text'" name="memberKey" [(ngModel)]="param.memberKey" [nzPlaceHolder]="'用户姓名'" [nzSize]="'default'"></nz-input>
-              </div>
-            </div>
-            <div nz-col [nzSpan]="8">
-                <div nz-form-label nz-col style="float:left;">
+        <div nz-row nz-form-item style="margin-bottom:10px;">
+            <div nz-col [nzSpan]="4">
+                <div nz-form-label nz-col [nzSpan]="6">
                     <label>提问时间</label>
                 </div>
                 <div nz-form-control nz-col [nzSpan]="16">
                     <nz-rangepicker name="time" [(ngModel)]="paramCol.time" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
                 </div>
             </div>
-            <div nz-col [nzSpan]="8" style="padding:2px 0;">
+            <div nz-col [nzSpan]="4">
+              <div nz-form-label nz-col [nzSpan]="6">
+                <label>搜索</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="16">
+                <nz-input [nzType]="'text'" name="memberKey" [(ngModel)]="param.memberKey" [nzPlaceHolder]="'用户姓名或提问问题'" [nzSize]="'default'"></nz-input>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="4" style="padding:2px 0;">
               <button nz-button nzType="primary" (click)="reload(true)" [nzLoading]="_loading">
                 <i class="anticon anticon-search"></i>
                 <span>查询</span>
@@ -41,8 +41,10 @@
                 <i class="anticon" [class.anticon-down]="isCollapse" [class.anticon-up]="!isCollapse"></i>
               </a>
             </div>
-            <div nz-col [nzSpan]="8" *ngIf="!isCollapse" style="margin-top:10px;">
-              <div nz-form-label nz-col style="float:left;">
+        </div>
+        <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:10px;">
+            <div nz-col [nzSpan]="4" >
+              <div nz-form-label nz-col [nzSpan]="6">
                 <label>回答状态</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="16">
@@ -51,15 +53,6 @@
                 </nz-select>
               </div>
             </div>
-            <div nz-col [nzSpan]="8" *ngIf="!isCollapse" style="margin-top:10px;">
-              <div nz-form-label nz-col style="float:left;">
-                <label>提问问题</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="16">
-                <nz-input [nzType]="'text'" name="problemKey" [(ngModel)]="param.problemKey" [nzPlaceHolder]="'问题搜索'" [nzSize]="'default'"></nz-input>
-              </div>
-            </div>
-            <div style="clear:both;"></div>
         </div>
       </form>
       <nz-table #nzTable  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
@@ -74,16 +67,16 @@
           <th nz-th [nzWidth]="'20%'">
               <span>问答作品</span>
           </th>
-          <th nz-th [nzWidth]="'10%'">
+          <th nz-th [nzWidth]="'20%'">
               <span>提问用户</span>
           </th>
           <th nz-th [nzWidth]="'20%'">
               <span>提问时间</span>
           </th>
-          <th nz-th [nzWidth]="'10%'">
+          <th nz-th [nzWidth]="'20%'">
               <span>回答状态</span>
           </th>
-          <th nz-th >
+          <th nz-th [nzWidth]="'20%'">
               <span>操作</span>
           </th>
         </tr>
@@ -99,18 +92,19 @@
             <td nz-td>{{data.create_time}}</td>
             <td nz-td>{{status[data.status-1].name}}</td>
             <td nz-td>
+              <span>
+                <a (click)="Sanswer(data)">查看</a>
+                <span nz-table-divider></span>
+              </span>
               <span *ngIf="data.status==1 ">
                 <a (click)="Yanswer(data)">回答</a>
                 <span nz-table-divider></span>
               </span>
               <span *ngIf="data.status==1 ">
                 <a (click)="Nanswer(data)">拒绝回答</a>
-                <span nz-table-divider></span>
-              </span>
-              <span>
-                <a (click)="Sanswer(data)">查看</a>
                 <!-- <span nz-table-divider></span> -->
               </span>
+              
             </td>
           </tr>
         </tbody>
@@ -197,8 +191,8 @@
                 <div nz-form-control nz-col [nzSpan]="16">
                   <p >{{selRow.problem_content}}</p>
                   <div *ngIf="selRow.img1 || selRow.img2" nz-row>
-                    <div  *ngIf="selRow.img1" style="width:72px;height:96px;float:left;margin:0 10px;"><img src="{{ service.ctxPath + selRow.img1 }}" alt=""></div>
-                    <div  *ngIf="selRow.img2" style="width:72px;height:96px;float:left;margin:0 10px;"><img src="{{ service.ctxPath + selRow.img2 }}" alt=""></div>
+                    <div  *ngIf="selRow.img1" style="width:72px;height:96px;float:left;margin:0 10px;"><img src="{{ service.ctxPath + selRow.img1 }}" alt="" style="width:100%;height:100%;"></div>
+                    <div  *ngIf="selRow.img2" style="width:72px;height:96px;float:left;margin:0 10px;"><img src="{{ service.ctxPath + selRow.img2 }}" alt="" style="width:100%;height:100%;"></div>
                   </div>
                 </div>
           </div>

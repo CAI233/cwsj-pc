@@ -17,6 +17,9 @@ export class CwWorksListComponent implements OnInit {
   _allChecked = false;
   _indeterminate = false;
   tableData: any = []; //数据列表
+  isDetail : any = false;//预览
+  detailData : any = {};//详情对象
+  isShowVisible : boolean = false;
   param: any = {
     searchText: null,
     total: 0,
@@ -142,6 +145,7 @@ export class CwWorksListComponent implements OnInit {
       this.formTitle = "新增作品";
     }
     this.isVisibleMiddle = true;
+    this.isDetail = false;
     this.setTopic = false;
     this.selectedIndex = 1;
     if (this.formBean.works_type == "资源包") {
@@ -226,6 +230,7 @@ export class CwWorksListComponent implements OnInit {
   //关闭tab
   closeTab() {
     this.isVisibleMiddle = false;
+    this.isDetail = false;
     this.selectedIndex = 0;
     this.myForm.reset();
   }
@@ -418,8 +423,91 @@ export class CwWorksListComponent implements OnInit {
     })
   }
   //详情
-  worksDetail() {
-    window.open('www.baidu.com')
+  worksResource : any = [];//当前作品所带资源
+  worksDetail(data) {
+    this.formTitle = "作品详情";
+    this.isDetail = true;
+    this.selectedIndex = 1;
+    this.isVisibleMiddle = false;
+    this.detailData = {...data};
+    console.log(this.detailData.works_type);
+
+    switch (this.detailData.works_type){
+      case"资源包":
+      this.service.post('/api/busiz/works/resources/list', { works_id:this.detailData.works_id}).then(success => {
+        console.log(success)
+        if(success.code==0){
+          this.worksResource = success.data;
+        }
+      })
+        break;
+      case "试题":
+      this.service.post('/api/busiz/works/testpaper/list', { works_id:this.detailData.works_id}).then(success => {
+        console.log(success)
+        if(success.code==0){
+          this.worksResource = success.data;
+        }
+    })
+    }
+  }
+
+  // 资源预览
+  nowData : any ={};
+  pdfMinNum: number = 1;
+  ListData : any = [];
+  look(data){
+    console.log(data);
+    this.isShowVisible = true;
+    switch (this.detailData.works_type){
+      case"资源包":
+      
+      if(data.res_type=="音频"){
+        this.nowData.res_type=1;
+        this.nowData.url = data.resources_path;
+      }else if(data.res_type=="视频"){
+        this.nowData.res_type=2;
+        this.nowData.url = data.resources_path;
+      }else{
+        this.nowData.res_type=3;
+        this.nowData.url = data.resources_path;
+        this.nowData.size = data.res_size;
+        this.pdfMinNum = 1;
+      }
+      
+      
+      break;
+      case"试题":
+        this.nowData.paper_name = data.test_paper_name;
+        this.service.post('/api/busiz/works/question/list',{paper_name:data.test_paper_name,paper_id:data.id}).then(success => {
+          this._loading = false;
+          if (success.code == 0) {
+            this.ListData = success.data
+          } else {
+            this.service.message.error(success.message)
+          }
+        })
+      break;
+    }
+    
+
+  }
+
+  _Cancel($event){
+    this.isShowVisible = false;
+    this.nowData = {};
+  }
+
+   //上一页
+   pdfMinNum1() {
+    if (this.pdfMinNum > 1) {
+      this.pdfMinNum -= 1;
+    }
+  }
+  //上一页
+  pdfMinNum2() {
+    if (this.pdfMinNum < this.nowData.size) {
+      this.pdfMinNum += 1;
+    }
   }
 
   //---------------------------------------------  试题 start --------------------------------------------
@@ -540,6 +628,7 @@ export class CwWorksListComponent implements OnInit {
   }
   //设置题目
   settingTopic(data?: any) {
+    console.log(data)
     this.selectedIndex = 4;
     this.setTopic = true;
     this.topicParam.paper_id = data.id
@@ -689,11 +778,25 @@ export class CwWorksListComponent implements OnInit {
       this.service.message.warning('请先保存作品基本信息');
       return false;
     }
+    console.log(data);
+    for(let i in this.resourceList){
+      if(data.resources_id == this.resourceList[i].res_id){
+        if(this.resourceList[i].res_type == "图书"){
+          data.resources_path =  this.resourceList[i].res_analysis_url;
+        }else{
+          data.resources_path =  this.resourceList[i].res_url;
+        }
+        
+        console.log(this.resourceList[i])
+        break;
+      }
+    }
     this.myForm1.controls[i].markAsDirty();
     this.service.post('/api/busiz/works/resources/save', {
       works_id: this.formBean.works_id,
       id: data.id,
       resources_id: data.resources_id,
+      resources_path: data.resources_path
     }).then(success => {
       if (success.code == 0) {
         if (success.data) {

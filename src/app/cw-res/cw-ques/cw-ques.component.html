@@ -21,6 +21,9 @@
               <button nz-button nzType="primary" type="button" (click)="_upload()" *ngIf="this.service.validataAction('cw_ques_upload')">
                 <span>导入试题</span>
               </button>
+              <button nz-button nzType="primary" type="button" (click)="_down()" *ngIf="this.service.validataAction('cw_ques_upload')">
+                <span>下载模板</span>
+              </button>
             </div>
             <div class="row-questions">
               <nz-input [nzType]="'search'" [nzPlaceHolder]="'模糊搜索'" name="searchText" [(ngModel)]="param.searchText" style="width: 200px;"
@@ -133,7 +136,7 @@
             <div nz-form-control>
 
                 <nz-cascader style="width:100%" formControlName="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="class_data"
-                    [(ngModel)]="now_data.cat_ids">
+                   #cat_idss [(ngModel)]="cat_ids" (nzSelectionChange)="_change($event)">
                 </nz-cascader>
                 <!-- <nz-input formControlName="score" [nzType]="'number'" [(ngModel)]="param.score" [nzPlaceHolder]="'请填写参考分值'"></nz-input> -->
             </div>
@@ -161,7 +164,7 @@
             <div nz-form-item nz-row>
                 <div nz-col >
                     <div nz-form-label nz-col [nzSpan]="8">
-                      <label nz-form-item-required>商品分类</label>
+                      <label nz-form-item-required>试题分类</label>
                     </div>
                     <div nz-form-control nz-col [nzSpan]="16">
                       <div class="row-actions" style="width:100%">

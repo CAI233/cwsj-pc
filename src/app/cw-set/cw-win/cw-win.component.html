@@ -60,11 +60,7 @@
                                 <span>{{data.order_weight}}</span>
                             </td>
                             <td nz-td>
-<<<<<<< HEAD
-                                <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" (click)="_enabled(data)"></nz-switch>
-=======
                                 <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" *ngIf="this.service.validataAction('cw_win_enable')" (click)="_enabled(data)"></nz-switch>
->>>>>>> 326b1ed49d962c12f40f2c6d3af26f730895f9ba
                             </td>
                             <td nz-td>
                                 <span>{{data.create_time}}</span>
