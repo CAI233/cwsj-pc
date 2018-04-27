@@ -63,7 +63,7 @@ export class CwGoodsListComponent implements OnInit {
   }
 // 获取分类
   get_class(){
-    this.service.post('/api/busiz/goods/cat/tree').then(success => {
+    this.service.post('/api/busiz/goods/cat/tree',{enabled:1}).then(success => {
       if(success.code==0){
         this.classData = success.data;
       }else{

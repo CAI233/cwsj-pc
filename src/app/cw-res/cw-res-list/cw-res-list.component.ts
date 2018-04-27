@@ -27,7 +27,7 @@ export class CwResListComponent implements OnInit {
     res_cat_id: null,
     res_type: null
   }
-  isCollapse: boolean = false;
+  isCollapse: boolean = true;
   _loading: boolean = false;
   _upload: boolean = false;
   tableData: any = [];
@@ -50,7 +50,7 @@ export class CwResListComponent implements OnInit {
   }
   //获取分类
   _getResClass() {
-    this.service.post('/api/busiz/cat/list', {}).then(success => {
+    this.service.post('/api/busiz/cat/list',{enabled:1}).then(success => {
       this.service._toisLeaf(success.data);
       this.resClassList = success.data;
     })

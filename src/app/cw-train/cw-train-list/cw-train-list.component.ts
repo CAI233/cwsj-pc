@@ -106,7 +106,7 @@ export class CwTrainListComponent implements OnInit {
   loadCat(e: { option: any, index: number, resolve: Function, reject: Function }): void {
     if (e.index === -1) {
       this.service.post('/api/busiz/video/cat/list', {
-        code: null
+        code: null,enabled:1
       }).then(success => {
         this.service._toisLeaf(success.data);
         e.resolve(success.data);

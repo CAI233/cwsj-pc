@@ -140,7 +140,7 @@ export class CwPrjListComponent implements OnInit {
 
   //项目分类列表
   get_list() {
-    this.service.post('/api/busiz/cat/Cooperation/list').then(success => {
+    this.service.post('/api/busiz/cat/Cooperation/list',{enabled:1}).then(success => {
       if (success.code == 0) {
         this.listData = this.data = success.data
       } else {

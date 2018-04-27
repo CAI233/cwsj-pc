@@ -96,7 +96,7 @@ export class CwQuesComponent implements OnInit {
 
   // 试题分类
   get_class(){
-    this.service.post('/api/busiz/book/cat/list').then(success => {
+    this.service.post('/api/busiz/book/cat/list',{enabled:1}).then(success => {
       if(success.code==0){
         console.log(success)
         this.class_data = success.data;

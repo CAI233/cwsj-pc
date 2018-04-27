@@ -126,13 +126,14 @@
               </span> -->
               <span *ngIf="this.service.validataAction('cw_orders_send')">
                 <a (click)="_send(data)">发货</a>
+                <!-- <a (click)="_sendCancel(data)" *ngIf="data.order_status!=1">取消发货</a> -->
                 <span nz-table-divider></span>
               </span>
               <span >
                 <a (click)="_see(data)">查看详情</a>
-                <span nz-table-divider></span>
+                <!-- <span nz-table-divider></span> -->
               </span>
-              <span *ngIf="this.service.validataAction('cw_orders_edit')">
+              <!-- <span *ngIf="this.service.validataAction('cw_orders_edit')">
                     <nz-dropdown>
                         <a class="ant-dropdown-link" nz-dropdown>
                             修改<i class="anticon anticon-down" style="margin-left:5px;"></i>
@@ -141,9 +142,7 @@
                             <li nz-menu-item *ngFor="let item of orderList;" (click)="_edit(data.order_id,item.id)">{{item.name}}</li>
                         </ul>
                     </nz-dropdown>
-                <!-- <a (click)="_edit(data)">修改</a>
-                 <span nz-table-divider></span>  -->
-              </span>
+              </span> -->
               <!-- <span *ngIf="this.service.validataAction('cw_orders_list_del')">
                   <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
                     <a nz-popconfirm>删除</a>

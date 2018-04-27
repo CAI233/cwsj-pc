@@ -138,6 +138,9 @@ export class CwQuesClassComponent implements OnInit {
   }
   //新增
   _cwResClassAdd() {
+    if(this.param.children.length>0 && this.param.children[0].cat_id==null){
+      return false;
+    }
     this.param.children.unshift(this.formBean);
   }
   //修改
