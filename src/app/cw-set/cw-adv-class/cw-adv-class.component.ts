@@ -57,6 +57,7 @@ export class CwAdvClassComponent implements OnInit {
     }
     else {
       this.formTitle = "新增广告分类";
+      this.formBean = {};
     }
     this.isVisibleMiddle = true;
     console.log(this.formBean)

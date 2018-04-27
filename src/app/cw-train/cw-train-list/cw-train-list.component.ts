@@ -116,9 +116,13 @@ export class CwTrainListComponent implements OnInit {
   }
   //打开
   showModalMiddle(bean?: any) {
+    
     this.formBean = {};
     if (bean) {
+      console.log(bean)
       this.formBean = { ...bean }
+
+      this.formBean.tag_id = (JSON.parse(bean.tag_id)).join(",");
       let video_cat_ids_array = this.formBean.video_cat_ids.split(',')
       //部门
       if (video_cat_ids_array) {
@@ -184,9 +188,16 @@ export class CwTrainListComponent implements OnInit {
     this.paramCol.audit_status = null;
     this.paramCol.video_cat_id = [];
     this.paramCol.tag_id = null;
-    this.searchCatName._lastValue = []
-    this.searchTagName._lastValue = []
-    this.searchAuditName._lastValue = []
+    // this.searchCatName._lastValue = []
+    // this.searchTagName._lastValue = []
+    // this.searchAuditName._lastValue = []
+    this.param = {
+      searchText: null,
+      total: 0,
+      pageSize: 10,
+      pageNum: 1
+    };
+    this.reload();
   }
   //提交
   _submitForm() {
