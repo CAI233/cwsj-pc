@@ -243,6 +243,7 @@ export class CwWorksListComponent implements OnInit {
     this.paramCol.audit_status = null;
     this.paramCol.cat_id = [];
     this.paramCol.tag_id = null;
+    this.paramCol.works_type = null;
     this.param = {
       searchText: null,
       total: 0,
@@ -343,7 +344,9 @@ export class CwWorksListComponent implements OnInit {
       this.param.searchText = this.paramCol.searchText;
       this.param.audit_status = this.paramCol.audit_status;
       this.param.tag_id = this.paramCol.tag_id;
-
+      if(this.paramCol.works_type){
+        this.param.works_type = this.paramCol.works_type;
+      }
       if (this.paramCol.cat_id.length > 0)
         this.param.cat_id = this.paramCol.cat_id[this.paramCol.cat_id.length - 1];
       else
@@ -679,7 +682,8 @@ export class CwWorksListComponent implements OnInit {
     this.addTopicParam.tag_id = null;
     this.addTopicParam.type = null;
     this.addTopicTag._lastValue = []
-    this.addTopicType._lastValue = []
+    this.addTopicType._lastValue = [];
+    this.addTopicReload()
   }
 
   //新增试题

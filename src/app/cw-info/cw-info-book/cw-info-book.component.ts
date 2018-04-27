@@ -47,6 +47,7 @@ export class CwInfoBookComponent implements OnInit {
   ebookResource : any = [];//已选的电子书资源
   ebookAllResource : any = [];//所有电子书资源
   AllResourceList : boolean = false;//所有电子书资源页面
+  nowTitle : string;
   AllResource_param : any = {
     pageNum:1,
     pageSize:1000,
@@ -92,7 +93,7 @@ export class CwInfoBookComponent implements OnInit {
   }
   // 图书分类列表
   get_classList(){
-    this.service.post('/api/busiz/book/cat/list').then(success => {
+    this.service.post('/api/busiz/book/cat/list',{enabled:1}).then(success => {
       if(success.code==0){
         this.bookClass = success.data;
       }else{
@@ -379,6 +380,7 @@ _enabled(data){
   } 
   //新增操作
   _add(){
+    this.nowTitle = "新增页面";
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
     this.bookList = true;
@@ -389,6 +391,7 @@ _enabled(data){
     console.log(data);
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
+    this.nowTitle = "修改页面";
     this.bookList = true;
     for(let i in data){
       this.bookData[i] = data[i];

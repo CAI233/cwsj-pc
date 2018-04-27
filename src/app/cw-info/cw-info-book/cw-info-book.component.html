@@ -189,7 +189,7 @@
     </nz-content>
   </nz-layout>
   <nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="bookContent"
-  [nzVisible]="bookList" (nzOnCancel)="bookCancel($event)" (nzOnOk)="bookOk($event)" [nzTitle]="'新增图书'" [nzFooter]="param.book_type==1">
+  [nzVisible]="bookList" (nzOnCancel)="bookCancel($event)" (nzOnOk)="bookOk($event)" [nzTitle]="nowTitle" [nzFooter]="param.book_type==1">
   <ng-template #bookContent>
       <form nz-form [formGroup]="myForm" class="ditForm">
             <nz-tabset [(nzSelectedIndex)]="goToindex">
