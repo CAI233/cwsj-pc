@@ -243,9 +243,16 @@ export class CwWorksListComponent implements OnInit {
     this.paramCol.audit_status = null;
     this.paramCol.cat_id = [];
     this.paramCol.tag_id = null;
-    this.searchCatName._lastValue = []
-    this.searchTagName._lastValue = []
-    this.searchAuditName._lastValue = []
+    this.param = {
+      searchText: null,
+      total: 0,
+      pageSize: 10,
+      pageNum: 1,
+    };
+    this.reload();
+    // this.searchCatName._lastValue = []
+    // this.searchTagName._lastValue = []
+    // this.searchAuditName._lastValue = []
   }
   //提交
   _submitForm() {
@@ -577,6 +584,7 @@ export class CwWorksListComponent implements OnInit {
       return false;
     }
     this.testPaperLayer = true;
+    this.formTitle = "新增试卷"
     this.testFormBean = {
       works_id: this.formBean.works_id
     };

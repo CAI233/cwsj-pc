@@ -40,6 +40,7 @@ export class CwOrdersListComponent implements OnInit {
   sendList : boolean = false;
   Row : any = {};
   enditList = null;
+  isCollapse : boolean = true;
   constructor(public service: AppService) { }
 
   load(reset?){
@@ -67,10 +68,13 @@ export class CwOrdersListComponent implements OnInit {
       this.param.start_time = this.param.searchTime[0];
       this.param.pageNum = 1;
     }
-    if(this.param.searchTime.length>0){
+    if(this.param.searchTime[0]){
       this.param.start_time = this.timeOut(this.param.searchTime[0]);
+    }
+    if(this.param.searchTime[1]){
       this.param.end_time = this.timeOut(this.param.searchTime[1]);
     }
+
     this.load();
   }
   // 重置
@@ -80,7 +84,7 @@ export class CwOrdersListComponent implements OnInit {
       pageNum:1,
       searchText:null
     }
-    this.param.searchTime = [];
+    this.param.searchTime = [null,null];
     this.load();
   }
 
@@ -90,8 +94,13 @@ export class CwOrdersListComponent implements OnInit {
       province_in:false,
       province_out:false,
       one_more:false,
+      //发货页面
+      consignee:false,
+      consignee_phone:false,
+      address:false,
       express:false,
-      express_num:false
+      express_num:false,
+
     })
 
     //加载交易列表
@@ -109,6 +118,7 @@ export class CwOrdersListComponent implements OnInit {
     this.seeOrder = false;
     this.editRow = null;
     this.sendList = false;
+    this.orderData = [];
     this.myForm.reset();
   }
   
@@ -223,7 +233,7 @@ export class CwOrdersListComponent implements OnInit {
       this.service.message.warning('请填写免运费价格');
       return false;
     }
-    if(!this.Row.peovince_in){
+    if(!this.Row.province_in){
       this.service.message.warning('请填写省内运费');
       return false;
     }
@@ -272,6 +282,12 @@ export class CwOrdersListComponent implements OnInit {
     this.seeData = {...data};
     console.log(this.editRow);
     console.log(this.seeData);
+    this.service.post('/api/busiz/order/goods/list',{order_id:this.seeData.order_id}).then(success => {
+      if(success.code==0){
+        this.orderData = success.data;
+      }
+    
+    })
   }
 
   // 全选

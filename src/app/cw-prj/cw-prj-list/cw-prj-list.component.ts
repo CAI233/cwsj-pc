@@ -19,6 +19,7 @@ export class CwPrjListComponent implements OnInit {
   isVisibleMiddle: boolean = false;
   isShow: boolean = false;
   switchValue: boolean = false;
+  isCollapse : boolean = true;
   formTitle: string;
   myForm: FormGroup;
   param: any = {

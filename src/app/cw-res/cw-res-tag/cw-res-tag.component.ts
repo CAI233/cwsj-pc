@@ -107,7 +107,20 @@ export class CwResTagComponent implements OnInit {
     }
     this.isVisible = true;
   }
-  //删除
+  // 删除
+  _del(data){
+    this.service.post('/api/busiz/tag/del', {
+      ids: [data.tag_id]
+    }).then(success => {
+      if (success.code == 0) {
+        this._reload(true);
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
+  }  
+  //多行删除
   _delRows() {
     if (this.tableData.filter(value => value.checked).length < 1) {
       this.service.message.warning('你没有选择需要删除的数据内容!');

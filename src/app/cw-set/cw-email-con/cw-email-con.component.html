@@ -54,36 +54,32 @@
           <td nz-td>
               <span *ngIf="editRow!=data.mail_setting_id">{{data.account}}</span>
               <span *ngIf="editRow==data.mail_setting_id">
-                <nz-input [(ngModel)]="data.account" style="width:100%;"></nz-input>
+                <nz-input [(ngModel)]="new_tempEditObject.account" style="width:100%;"></nz-input>
               </span>
           </td>
           <td nz-td>
               <span *ngIf="editRow!=data.mail_setting_id">{{data.pwd}}</span>
               <span *ngIf="editRow==data.mail_setting_id">
-                <nz-input [(ngModel)]="data.pwd" style="width:100%;"></nz-input>
+                <nz-input [(ngModel)]="new_tempEditObject.pwd" style="width:100%;"></nz-input>
               </span>
           </td>
           <td nz-td>
               <span *ngIf="editRow!=data.mail_setting_id">{{data.port}}</span>
               <span *ngIf="editRow==data.mail_setting_id">
-                <nz-input [(ngModel)]="data.port" style="width:100%;"></nz-input>
+                <nz-input [(ngModel)]="new_tempEditObject.port" style="width:100%;"></nz-input>
               </span>
           </td>
           <td nz-td>
               <span *ngIf="editRow!=data.mail_setting_id">{{data.smtp_url}}</span>
               <span *ngIf="editRow==data.mail_setting_id">
-                <nz-input [(ngModel)]="data.smtp_url" style="width:100%;"></nz-input>
+                <nz-input [(ngModel)]="new_tempEditObject.smtp_url" style="width:100%;"></nz-input>
               </span>
           </td>
           <td nz-td>
-              <nz-switch [ngModel]="data.status==1 ? 1 : 0" [nzSize]="'small'" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('cw_email_con_status')"></nz-switch>
-            <!-- <span *ngIf="editRow!=data.mail_setting_id" [innerHtml]="['无效','有效'][data.status==1 ? 1 : 0]"></span>
-            <span *ngIf="editRow==data.mail_setting_id">
-              <div style="margin-top:8px;">
-                
-              </div>
-            </span> -->
-          
+              <span *ngIf="editRow!=data.mail_setting_id">
+                  <nz-switch [ngModel]="data.status==1 ? 1 : 0" [nzSize]="'small'" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('cw_email_con_status')"></nz-switch>
+              </span>
+              <span *ngIf="editRow==data.mail_setting_id"></span>
           </td>
           <td nz-td>
               <span >{{data.update_time}}</span>
@@ -95,9 +91,9 @@
               <span nz-table-divider></span>
             </span>
             <span *ngIf="editRow==data.mail_setting_id && this.service.validataAction('cw_email_con_edit')">
-              <a (click)="save(data)">保存</a>
+              <a (click)="save()">保存</a>
               <span nz-table-divider></span>
-                <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="cancel(data)">
+                <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="cancel()">
                   <a nz-popconfirm>取消</a>
                 </nz-popconfirm>
             </span>

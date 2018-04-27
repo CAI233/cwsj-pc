@@ -30,6 +30,7 @@ export class CwInfoClassComponent implements OnInit {
     cat_pid: null
   };
   expandDataCache = {};
+  _isShow = false;//新建分类按钮是否显示
   constructor(public service: AppService) { }
 
   ngOnInit() {
@@ -131,6 +132,11 @@ export class CwInfoClassComponent implements OnInit {
   //选中
   _selectItem(row) {
     this.param = row;
+    if(row.level==2){
+      this._isShow = true;
+    }else{
+      this._isShow = false;
+    }
   }
   //启用/停用
   _rowEnabled(row) {

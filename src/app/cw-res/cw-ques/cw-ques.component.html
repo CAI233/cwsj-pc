@@ -160,7 +160,7 @@
   <nz-modal [nzMaskClosable]="false" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="uploadContent"
     [nzVisible]="uploadList" (nzOnCancel)="uploadCancel($event)" (nzOnOk)="uploadOk($event)" [nzTitle]="'导入试题'">
     <ng-template #uploadContent>
-        <form nz-form [formGroup]="myForm" (ngSubmit)="_submitUpload()" class="ditForm">
+        <form nz-form [formGroup]="myForm" class="ditForm">
             <div nz-form-item nz-row>
                 <div nz-col >
                     <div nz-form-label nz-col [nzSpan]="8">

@@ -54,10 +54,11 @@ export class CwEmailConComponent implements OnInit {
     // 修改操作
     edit(data) {
       this.editRow = data.mail_setting_id;
+      this.new_tempEditObject = {...data}
     }
   
     // 取消操作
-    cancel(data) {
+    cancel() {
       this.editRow = null;
       this.load();
     }
@@ -142,26 +143,28 @@ export class CwEmailConComponent implements OnInit {
   }
 
     //保存
-    save(data){
-      console.log(data);
-      if(!data.account){
+    save(){
+    
+      if(!this.new_tempEditObject.account){
         this.service.message.error('请填写账号信息');
         return false;
       }
-      if(!data.pwd){
+      if(!this.new_tempEditObject.pwd){
         this.service.message.error('请填写密码');
         return false;
       }
-      if(!data.port){
+      if(!this.new_tempEditObject.port){
         this.service.message.error('请填写端口号');
         return false;
       }
-      if(!data.smtp_url){
+      if(!this.new_tempEditObject.smtp_url){
         this.service.message.error('请填写服务器地址');
         return false;
       }
       this.service.post('/api/system/mailsetting/update',this.new_tempEditObject).then(success => {
         this.load();
+        this.editRow = null
+
       })
     }
 

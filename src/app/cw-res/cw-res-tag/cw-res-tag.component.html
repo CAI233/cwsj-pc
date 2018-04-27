@@ -82,7 +82,16 @@
               <span>{{data.update_time}}</span>
             </td>
             <td>
-              <a (click)="_editRow(data)">修改</a>
+              <!-- <a (click)="_editRow(data)">修改</a> -->
+              <span *ngIf="this.service.validataAction('cw_res_tag_edit')">
+                <a (click)="_editRow(data)">修改</a>
+                <span nz-table-divider *ngIf="this.service.validataAction('cw_res_tag_del')"></span>
+              </span>
+              <span *ngIf="this.service.validataAction('cw_res_tag_del')">
+                  <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="_del(data)">
+                    <a nz-popconfirm>删除</a>
+                  </nz-popconfirm>
+              </span>
             </td>
           </tr>
         </tbody>
