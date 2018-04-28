@@ -236,6 +236,7 @@ _submitUpload(){
     this.service.message.error('请选择标签');
     return false;
   }
+  this._loading = true;
   // this.upload_param.label_id = this.upload_param.label_ids.split(",");
   this.service.post('/api/busiz/question/save/file',this.upload_param).then(success => {
     if(success.code==0){

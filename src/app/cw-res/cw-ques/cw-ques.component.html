@@ -9,7 +9,7 @@
         </nz-breadcrumb-item>
       </nz-breadcrumb>
     </nz-header>
-    <nz-content class="main-page-content">
+    <nz-content class="main-page-content" >
       <div class="ListSearch">
         <form nz-form>
           <div nz-row nz-form-item>
@@ -68,7 +68,10 @@
                     </span>
                   </ng-template>
                   <ng-template #body>
-                    <p style="margin-bottom:10px;"><span style="margin-right:10px;font-size:14px;">试题标签:</span>{{item.tag_names}}</p>
+                    <p style="margin-bottom:10px;" nz-row>
+                      <span nz-col [nzSpan]="8"><span style="margin-right:10px;font-size:14px;">试题分类:</span>{{item.cat_names}}</span>
+                      <span nz-col [nzSpan]="8"><span style="margin-right:10px;font-size:14px;">试题标签:</span>{{item.tag_names}}</span>
+                    </p>
 
                     <p [innerHtml]="item.title" class="cont_question"></p>
 
@@ -178,7 +181,7 @@
             <div nz-form-item nz-row>
                 <div nz-col >
                     <div nz-form-label nz-col [nzSpan]="8">
-                      <label nz-form-item-required>商品标签</label>
+                      <label nz-form-item-required>试题标签</label>
                     </div>
                     <div nz-form-control nz-col [nzSpan]="16">
                       <div class="row-actions" style="width:100%">

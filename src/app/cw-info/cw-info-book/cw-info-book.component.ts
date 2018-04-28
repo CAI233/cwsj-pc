@@ -18,8 +18,8 @@ export class CwInfoBookComponent implements OnInit {
     searchText:null,
     book_type:1
   }
-
-  selectedIndex = 0;
+  selectedIndex: number = 0;
+  // selectedIndex = 0;
   tabs = [
     {book_type:1,content:"纸质图书"},{book_type:2,content:"电子书"}
   ]
@@ -127,10 +127,14 @@ export class CwInfoBookComponent implements OnInit {
   // 选项卡切换
   change(reset?){
     console.log(this.selectedIndex)
+    // console.log(reset)
     this.param.book_type = reset+1;
+    if(reset!=2){
+      this.bookList = false;
+    }
+
     this.load();
   }
-
   //查询
   reload(rest?){
     if(rest){
@@ -263,7 +267,7 @@ _enabled(data){
     
     this.service.post('/api/busiz/book/save',this.bookData).then(success => {
       if(success.code==0){
-        if(this.param.book_type==2){
+        if(this.bookData.book_type==2){
           this.ebookRlist = true;
           this.goToindex = 1;
           console.log(success); 
@@ -383,7 +387,9 @@ _enabled(data){
     this.nowTitle = "新增页面";
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
+    console.log(this.param.book_type)
     this.bookList = true;
+    this.selectedIndex = 2;
     this.bookData.publisher = "崇文书局";
   }
   // 修改操作
@@ -393,6 +399,7 @@ _enabled(data){
     this.bookData.book_type = this.param.book_type;
     this.nowTitle = "修改页面";
     this.bookList = true;
+    this.selectedIndex = 2;
     for(let i in data){
       this.bookData[i] = data[i];
     }

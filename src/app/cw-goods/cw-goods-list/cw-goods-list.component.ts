@@ -33,6 +33,9 @@ export class CwGoodsListComponent implements OnInit {
   showData : any = {};//商品详情展示对象
 
   cat_data : any = null;
+
+  isCollapse : boolean = true;
+  selectedIndex: number = 0;
   constructor(public service: AppService) { }
 
   //文件上传
@@ -243,8 +246,8 @@ export class CwGoodsListComponent implements OnInit {
     this.ebookRecourse = [];//清空资源
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
 
-    this.isVisibleMiddle = true;
-    this.selRow.real_price = 0;
+    // this.isVisibleMiddle = true;
+    this.selRow.real_price = 1;
     if(this.selRow.goods_type==1){
       this.formTitle = '新增图书商品'
     }else if(this.selRow.goods_type==2){
@@ -252,6 +255,7 @@ export class CwGoodsListComponent implements OnInit {
     }else{
       this.formTitle = '新增电子书商品'
     }
+    this.selectedIndex = 1;
     // 获取当前类型的资源
     this.get_recourse();
   }
