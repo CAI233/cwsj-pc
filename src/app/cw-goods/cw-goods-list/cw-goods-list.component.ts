@@ -247,7 +247,7 @@ export class CwGoodsListComponent implements OnInit {
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
 
     // this.isVisibleMiddle = true;
-    this.selRow.real_price = 1;
+    this.selRow.discount = 1;
     if(this.selRow.goods_type==1){
       this.formTitle = '新增图书商品'
     }else if(this.selRow.goods_type==2){
@@ -337,7 +337,7 @@ export class CwGoodsListComponent implements OnInit {
     setTimeout(_=>{
       this.selRow.price = this.selRow.price == null ? 0 : this.selRow.price;
       this.selRow.discount = this.selRow.discount == null ? 0 : this.selRow.discount;
-      this.selRow.real_price = (parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1
+      this.selRow.real_price = ((parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1).toFixed(2)
     },50)
   }
   //提交

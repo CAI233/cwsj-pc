@@ -93,25 +93,25 @@
                               <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
                               </label>
                             </th>
-                            <th nz-th [nzWidth]="'20%'">
+                            <th nz-th >
                                 <span>商品信息</span>
                             </th>
-                            <th nz-th [nzWidth]="'10%'">
+                            <th nz-th >
                                 <span>商品分类</span>
                             </th>
-                            <th nz-th [nzWidth]="'10%'">
+                            <th nz-th >
                                 <span>商品标签</span>
                             </th>
-                            <th nz-th [nzWidth]="'10%'">
+                            <th nz-th >
                                 <span>售价（元）</span>
                             </th>
-                            <th nz-th [nzWidth]="'10%'">
+                            <th nz-th >
                                 <span>上架状态</span>
                             </th>
-                            <th nz-th [nzWidth]="'10%'">
+                            <th nz-th >
                                 <span>品牌标签</span>
                             </th>
-                            <th nz-th [nzWidth]="'20%'">
+                            <th nz-th >
                                 <span>操作</span>
                             </th>
                           </tr>
@@ -340,7 +340,7 @@
                                     </tbody>
                                 </nz-table>
                             </div>
-                            <button style="display:none;">save</button>
+                            <button  nz-button [nzType]="'primary'" (click)="_submitForm($event)"><span>保存</span></button>
                         </form>
                     </nz-content>
                 </nz-tab>

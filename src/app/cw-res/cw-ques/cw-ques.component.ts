@@ -236,6 +236,8 @@ _submitUpload(){
     this.service.message.error('请选择标签');
     return false;
   }
+  this.upload_param.cat_id = parseInt(this.upload_param.cat_ids[this.upload_param.cat_ids.length-1]);
+  this.upload_param.label_id = this.upload_param.label_ids.join(",")
   this._loading = true;
   // this.upload_param.label_id = this.upload_param.label_ids.split(",");
   this.service.post('/api/busiz/question/save/file',this.upload_param).then(success => {
@@ -288,10 +290,17 @@ _show(data){
 }
 //下载模板
 _down(){
- let doc = document.createElement('iframe');;
-  doc.src = this.service.ctxPath +'/assets/file/muban.doc';
-  doc.style.display = 'none';
-  document.body.appendChild(doc);
+
+  // /api/busiz/question/template
+  this.service.post('/api/busiz/question/template').then(success => {
+    if(success.code==0){
+      let doc = document.createElement('iframe');;
+      doc.src = this.service.ctxPath +'/assets/file/muban.doc';
+      doc.style.display = 'none';
+      document.body.appendChild(doc);
+    }
+  })
+  
 
   
 }

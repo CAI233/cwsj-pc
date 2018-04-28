@@ -21,7 +21,7 @@ export class CwInfoBookComponent implements OnInit {
   selectedIndex: number = 0;
   // selectedIndex = 0;
   tabs = [
-    {book_type:1,content:"纸质图书"},{book_type:2,content:"电子书"}
+    {book_type:1,content:"图书"},{book_type:2,content:"电子书"}
   ]
   _loading : boolean = false;
   data : any = [];
@@ -384,9 +384,14 @@ _enabled(data){
   } 
   //新增操作
   _add(){
-    this.nowTitle = "新增页面";
+    
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
+    if(this.bookData.book_type==1){
+      this.nowTitle = "图书新增页面";
+    }else{
+      this.nowTitle = "电子书新增页面";
+    }
     console.log(this.param.book_type)
     this.bookList = true;
     this.selectedIndex = 2;
@@ -397,7 +402,11 @@ _enabled(data){
     console.log(data);
     this.bookData = {};
     this.bookData.book_type = this.param.book_type;
-    this.nowTitle = "修改页面";
+    if(this.bookData.book_type==1){
+      this.nowTitle = "图书修改页面";
+    }else{
+      this.nowTitle = "电子书修改页面";
+    }
     this.bookList = true;
     this.selectedIndex = 2;
     for(let i in data){
