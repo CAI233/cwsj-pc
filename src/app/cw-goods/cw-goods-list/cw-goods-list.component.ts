@@ -206,10 +206,17 @@ export class CwGoodsListComponent implements OnInit {
       pageNum:1,
       pageSize:10
     }
-
     this.paramCol.searchTime = [null,null];
     this.load();
-    
+  }
+
+  // 顶部标签页转换
+  change(rest?){
+    if(rest){
+      if(this.selectedIndex==0){
+        this.isVisibleMiddle = false;
+      }
+    }
   }
 
   now_change(rest?){
@@ -242,11 +249,15 @@ export class CwGoodsListComponent implements OnInit {
 
   // 新增操作
   add(){
-    console.log(this.selRow.goods_type);
+    if(!this.param.goods_type){
+      this.service.message.warning("请选择一个商品类型")
+      return false;
+    }
+    this.selRow.goods_type = this.param.goods_type
     this.ebookRecourse = [];//清空资源
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
 
-    // this.isVisibleMiddle = true;
+    this.isVisibleMiddle = true;
     this.selRow.discount = 1;
     if(this.selRow.goods_type==1){
       this.formTitle = '新增图书商品'

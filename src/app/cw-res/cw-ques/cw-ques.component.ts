@@ -292,15 +292,15 @@ _show(data){
 _down(){
 
   // /api/busiz/question/template
-  // this.service.post('/api/busiz/question/template').then(success => {
-  //   if(success.code==0){
-      
-  //   }
-  // })
-  let doc = document.createElement('iframe');;
-      doc.src = this.service.ctxPath +'/assets/file/muban.doc';
+  this.service.post('/api/busiz/question/template').then(success => {
+    if(success.code==0){
+      let doc = document.createElement('iframe');;
+      doc.src = this.service.ctxPath +'/static/attchment/template.doc';
       doc.style.display = 'none';
       document.body.appendChild(doc);
+    }
+  })
+
 
   
 }
