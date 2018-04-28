@@ -14,6 +14,31 @@
                 <nz-tab >
                     <ng-template #nzTabHeading>列表</ng-template>
                     <nz-content class="main-page-content">
+                        <div class="gutter-example">
+                            <div nz-row [nzGutter]="8">
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type== 1}" (click)="param.goods_type=1">
+                                <!-- <i class="anticon anticon-book"></i> -->
+                                <span>图书</span>
+                                <span class="check">
+                                    <i class="anticon anticon-check"></i>
+                                </span>
+                                </div>
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 2}" (click)="param.goods_type=2">
+                                <!-- <i class="anticon anticon-database"></i> -->
+                                <span>音视频</span>
+                                <span class="check">
+                                    <i class="anticon anticon-check"></i>
+                                </span>
+                                </div>
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 3}" (click)="param.goods_type=3">
+                                <!-- <i class="anticon anticon-file-text"></i> -->
+                                <span>电子书</span>
+                                <span class="check">
+                                    <i class="anticon anticon-check"></i>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
                     <form nz-form>
                         <div nz-row nz-form-item style="margin-bottom:10px;">
                             <div nz-col [nzSpan]="6">
@@ -21,7 +46,7 @@
                                     <label>商品名称</label>
                                 </div>
                                 <div nz-form-control nz-col [nzSpan]="14">
-                                    <nz-input [nzType]="'text'" name="goods_type" [(ngModel)]="param.goods_type" [nzPlaceHolder]="'请输入商品名称'" [nzSize]="'default'"></nz-input>
+                                    <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'请输入商品名称'" [nzSize]="'default'"></nz-input>
                                 </div>
                             </div>
                             <div nz-col [nzSpan]="6">
