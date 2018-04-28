@@ -292,13 +292,14 @@ _show(data){
 _down(){
 
   // /api/busiz/question/template
-  this.service.post('/api/busiz/question/template').then(success => {
+  // this.service.get('/api/busiz/question/template').then(success => {
     
-  })
-  // let doc = document.createElement('iframe');;
-  //     doc.src = this.service.ctxPath +'/static/attchment/template.doc';
-  //     doc.style.display = 'none';
-  //     document.body.appendChild(doc);
+  // })
+  let doc = document.createElement('a');;
+      doc.href = this.service.ctxPath+'/api/busiz/question/template';
+      doc.style.display = 'none';
+      doc.click();
+      document.body.appendChild(doc);
 
 
   

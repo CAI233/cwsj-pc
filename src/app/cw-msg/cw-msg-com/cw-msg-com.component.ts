@@ -35,6 +35,7 @@ export class CwMsgComComponent implements OnInit {
     {id:3,name:"电子书"}
   ]
 
+  isCollapse : boolean = true;
   constructor(public service: AppService) { }
 
   // 商品列表
@@ -100,7 +101,11 @@ export class CwMsgComComponent implements OnInit {
     })
 
   }
-
+  //关闭tab
+  closeTab() {
+    this.isVisibleMiddle = false;
+    this.goToindex = 0;
+  }
 
   //获取到搜索分类id
   search_change(rest?){
