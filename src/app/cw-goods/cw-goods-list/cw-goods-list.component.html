@@ -358,6 +358,14 @@
                 <nz-tab *ngIf="isVisibleMiddle">
                     <ng-template #nzTabHeading>资源列表</ng-template>
                     <nz-content class="main-page-content" >
+                            <div nz-row nz-form-item style="margin-bottom:10px;">
+                                <div class="row-actions">
+                                    <button nz-button nzType="primary" type="button" (click)="_onCheck()" >
+                                        <i class="anticon anticon-plus" style="font-size:12px;color:#fff;"></i>
+                                        <span>选择资源</span>
+                                    </button>
+                                </div>
+                            </div>
                             <nz-table #nzTableRecourse [nzDataSource]="allRecourse" [nzIsPagination]="false">
                                 <thead nz-thead>
                                     <tr>
