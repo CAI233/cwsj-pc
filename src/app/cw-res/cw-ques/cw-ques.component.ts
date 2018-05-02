@@ -38,6 +38,7 @@ export class CwQuesComponent implements OnInit {
   now_data : any = {};//当前修改新增对象
   now_num :number = 1;
   cat_ids : any = null;
+  upload_cat_ids : any = null;
   constructor(public service: AppService,public msg: NzMessageService) { }
 
   ngOnInit() {
@@ -222,6 +223,7 @@ _upload(){
   //关闭弹窗
   uploadCancel($event) {
     this.uploadList = false;
+    this.upload_ids._lastValue = [];
     this.myForm.reset();
   }
   //上传确定
@@ -255,7 +257,7 @@ _submitUpload(){
     this.service.message.error('请选择标签');
     return false;
   }
-  this.upload_param.cat_id = parseInt(this.upload_param.cat_ids[this.upload_param.cat_ids.length-1]);
+
   this.upload_param.label_id = this.upload_param.label_ids.join(",")
   this._loading = true;
   // this.upload_param.label_id = this.upload_param.label_ids.split(",");

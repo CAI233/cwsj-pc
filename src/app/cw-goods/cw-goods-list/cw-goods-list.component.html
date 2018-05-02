@@ -358,7 +358,53 @@
                 <nz-tab *ngIf="isVisibleMiddle">
                     <ng-template #nzTabHeading>资源列表</ng-template>
                     <nz-content class="main-page-content" >
-                        <nz-table #nzTableRecourse  nzShowSizeChanger [nzAjaxData]="allRecourse" [nzIsPagination]="false">
+                            <nz-table #nzTableRecourse [nzDataSource]="allRecourse" [nzIsPagination]="false">
+                                <thead nz-thead>
+                                    <tr>
+                                        <th nz-th><span>资源封面</span></th>
+                                        <th nz-th><span>资源名称</span></th>
+                                        <th nz-th><span>资源分类</span></th>
+                                        <th nz-th>资源标签</th>
+                                        <th nz-th>作/译者:</th>
+                                        <th nz-th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody nz-tbody>
+                                    <tr nz-tbody-tr *ngFor="let data of nzTableRecourse.data">
+                                    <td nz-td>
+                                        <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + data.book_cover }}" style="float:left;width:72px;height:96px;"/>
+                                        <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + data.video_cover }}" style="float:left;width:72px;height:96px;"/> 
+                                    </td>
+                                    <td nz-td>
+                                        <span *ngIf="selRow.goods_type!=2">{{data.book_name}}</span>
+                                        <span *ngIf="selRow.goods_type==2">{{data.video_name}}</span>
+                                    </td>
+                                    <td nz-td>
+                                        <span *ngIf="selRow.goods_type!=2">{{data.book_cat_name}}</span>
+                                        <span *ngIf="selRow.goods_type==2">{{data.book_cat_name}}</span>
+                                    </td>
+                                    <td nz-td>
+                                        <span *ngIf="selRow.goods_type!=2">{{data.tag_names}}</span>
+                                        <span *ngIf="selRow.goods_type==2">{{data.book_cat_name}}</span>
+                                    </td>
+                                    <td nz-td>
+                                        <span *ngIf="selRow.goods_type!=2">{{data.author_name}}</span>
+                                        <span *ngIf="selRow.goods_type==2">{{data.author_name}}</span>
+                                    </td>
+                                    <td nz-td>
+                                            <span >
+                                                <a (click)="edit(data)">修改</a>
+                                                <span nz-table-divider></span>
+                                            </span>
+                                            <span >
+                                                <a (click)="show(data)">查看</a>
+                                                <span nz-table-divider></span>
+                                            </span>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </nz-table>
+                        <!-- <nz-table #nzTableRecourse  nzShowSizeChanger [nzAjaxData]="allRecourse" [nzIsPagination]="false">
                           <thead nz-thead>
                             <tr>
                                 <th nz-th>资源封面</th>
@@ -370,11 +416,9 @@
                           </thead>
                           <tbody>
                               <tr nz-tbody-tr *ngFor="let data of nzTableRecourse.data">
-                                  <td nz-td>
-                                      <span>
-                                            <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + data.book_cover }}" style="float:left;width:72px;height:96px;"/>
-                                            <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + data.video_cover }}" style="float:left;width:72px;height:96px;"/> 
-                                      </span>
+                                  <td nz-td style="padding:16px 8px;">
+                                        <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + data.book_cover }}" style="float:left;width:72px;height:96px;"/>
+                                        <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + data.video_cover }}" style="float:left;width:72px;height:96px;"/> 
                                   </td>
                                   <td nz-td>
                                     <span *ngIf="selRow.goods_type!=2">{{data.book_name}}</span>
@@ -385,7 +429,7 @@
                                   <td nz-td></td>
                               </tr>
                            </tbody>
-                        </nz-table>
+                        </nz-table> -->
                         <button  nz-button [nzType]="'primary'" (click)="_submitForm($event)"><span>保存</span></button>
                     </nz-content>
                 </nz-tab>
