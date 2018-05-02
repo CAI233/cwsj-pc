@@ -273,7 +273,7 @@ export class CwGoodsListComponent implements OnInit {
     }
     this.selectedIndex = 1;
     // 获取当前类型的资源
-    this.get_recourse();
+    
   }
   // 修改操作
   edit(data){
@@ -313,6 +313,7 @@ export class CwGoodsListComponent implements OnInit {
   // 查看所属分类的资源列表
   _onCheck(){
     this.isCheck = true;
+    this.get_recourse();
   }
   //
   _CheckCancel($event){

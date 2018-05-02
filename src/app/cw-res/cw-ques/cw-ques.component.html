@@ -38,7 +38,7 @@
             <li *ngFor="let item of data;" style="margin-bottom:10px;">
               <nz-card style="width:100%;">
                   <ng-template #title>
-                      <span><i style="font-size:14px;color:#000;margin-right:5px;">题型:</i>{{['单选题','多选题','判断题'][item.type]}}</span>
+                      <span><i style="font-size:14px;color:#000;margin-right:5px;">题型:</i>{{['单选题','多选题','判断题'][item.type-1]}}</span>
                       <span nz-table-divider></span>
                       <span style="margin-left:10px;"><i style="font-size:14px;color:#000;margin-right:5px;">分值:</i>{{item.score}}</span>
                       <span nz-table-divider></span>
@@ -139,7 +139,7 @@
             <div nz-form-control>
 
                 <nz-cascader style="width:100%" formControlName="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="class_data"
-                   #cat_idss [(ngModel)]="cat_ids" (nzSelectionChange)="_change($event)">
+                   #cat_idss [(ngModel)]="cat_ids" (nzSelectionChange)="_change($event)" [nzAllowClear]="false">
                 </nz-cascader>
                 <!-- <nz-input formControlName="score" [nzType]="'number'" [(ngModel)]="param.score" [nzPlaceHolder]="'请填写参考分值'"></nz-input> -->
             </div>
@@ -172,7 +172,7 @@
                     <div nz-form-control nz-col [nzSpan]="16">
                       <div class="row-actions" style="width:100%">
                           <nz-cascader #upload_ids style="width:100%" formControlName="upload_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="class_data"
-                              [(ngModel)]="upload_cat_ids" (nzSelectionChange)="now_change($event)">
+                              [(ngModel)]="upload_cat_ids" (nzSelectionChange)="now_change($event)" (nzClear)="_uploadClear();">
                           </nz-cascader>
                       </div>
                     </div>

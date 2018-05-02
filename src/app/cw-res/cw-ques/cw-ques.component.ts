@@ -247,6 +247,13 @@ now_change(rest?){
     this.upload_param.cat_names = this.upload_param.cat_names.substring(0,this.upload_param.cat_names.length-1);
   }
 }
+//清除分类
+_uploadClear(){
+  this.upload_param.cat_id = null;
+    this.upload_param.cat_name = null;
+    this.upload_param.cat_ids = null;
+    this.upload_param.cat_names = null;
+}
 
 _submitUpload(){
   if(!this.upload_param.cat_id){
@@ -255,6 +262,10 @@ _submitUpload(){
   }
   if(!this.upload_param.label_ids || this.upload_param.label_ids.length==0){
     this.service.message.error('请选择标签');
+    return false;
+  }
+  if(!this.upload_param.id ){
+    this.service.message.error('请选择上传文件');
     return false;
   }
 
