@@ -36,6 +36,7 @@ export class CwGoodsListComponent implements OnInit {
 
   isCollapse : boolean = true;
   selectedIndex: number = 0;
+  isCheck : boolean = false;//资源列表开关
   constructor(public service: AppService) { }
 
   //文件上传
@@ -302,21 +303,28 @@ export class CwGoodsListComponent implements OnInit {
     this.get_recourse();
   }
 
+
+  //取消操作
   _ShowCancel($event){
     this.isShow = false;
     this.myForm.reset();
   }
+
+  // 查看所属分类的资源列表
+  _onCheck(){
+    this.isCheck = true;
+  }
+
+
   //查看商品详情 
   show(data){
     this.isShow = true;
     this.nowRecourse = {};
     this.showData = {...data};
-    
     // 得到当前商品的资源
     this.selRow.goods_type = this.showData.goods_type;
     this.selRow.res_id = this.showData.res_id;
     this.get_recourse();
-
   }
 
   // 删除操作
