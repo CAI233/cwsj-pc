@@ -37,6 +37,8 @@ export class CwGoodsListComponent implements OnInit {
   isCollapse : boolean = true;
   selectedIndex: number = 0;
   isCheck : boolean = false;//资源列表开关
+  nowRecourseArr : any = [];//资源对象数组
+  isRecourse : boolean = true;
   constructor(public service: AppService) { }
 
   //文件上传
@@ -75,6 +77,32 @@ export class CwGoodsListComponent implements OnInit {
       }
     })
   }
+  // 分类列表
+  allClass : any = [];
+  // 图书&&电子书
+  get_bookClass(){
+    this.service.post('/api/busiz/book/cat/list',{enabled:1}).then(success => {
+      if(success.code==0){
+        this.allClass = success.data;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  // 音视频
+  get_videoClass(){
+    this.service.post('/api/busiz/cat/list',{enabled:1}).then(success => {
+      if(success.code==0){
+        this.allClass = success.data;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  allTags : any = [];
+  
+
+
   // 获取标签
   get_tag(){
     this.service.post('/api/busiz/goods/tag/list',{pageNum:1,pageSize:1000}).then(success => {
@@ -147,6 +175,8 @@ export class CwGoodsListComponent implements OnInit {
           }
         }
       }
+
+      this.nowRecourseArr = [this.nowRecourse];
       console.log(this.nowRecourse)
       console.log(this.selRow)
       // 在查看详情时不需要带出资源
@@ -154,7 +184,7 @@ export class CwGoodsListComponent implements OnInit {
         // 获取当前电子书的资源列表
         if(this.selRow.goods_type==3){
           // 获取电子书资源
-          this.service.post('/api/busiz/book/res/list',{book_id:this.selRow.res_id}).then(success => {
+          this.service.post('/api/busiz/book/res/list',{book_id:id}).then(success => {
             if(success.code==0){
               this.ebookRecourse = success.data;
             }else{
@@ -165,7 +195,7 @@ export class CwGoodsListComponent implements OnInit {
         // 获取当前视频的资源列表
         if(this.selRow.goods_type==2){
           // 获取视频资源
-          this.service.post('/api/busiz/video/detail',{video_id:this.selRow.res_id}).then(success => {
+          this.service.post('/api/busiz/video/detail',{video_id:id}).then(success => {
             if(success.code==0){
               this.ebookRecourse = success.data.videoResRelList;
             }else{

@@ -160,7 +160,7 @@ export class CwInfoBookComponent implements OnInit {
     this.bookData.audit_status = id;
     this.bookData.book_type = this.param.book_type;
     this.bookData.tag_ids = this.bookData.tag_ids.split(",");
-    this.service.post('/api/busiz/book/save',this.bookData).then(success => {
+    this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
       if(success.code==0){
             this.load();
           }else{
@@ -169,13 +169,13 @@ export class CwInfoBookComponent implements OnInit {
           }
     })
   }
-// 上架状态
+// 发布状态
 _enabled(data){
   data.status = data.status == 1 ? 2 : 1;
   this.bookData = {...data}
   this.bookData.book_type = this.param.book_type;
   this.bookData.tag_ids = this.bookData.tag_ids.split(",");
-  this.service.post('/api/busiz/book/save',this.bookData).then(success => {
+  this.service.post('/api/busiz/book/release',this.bookData).then(success => {
     if(success.code==0){
       this.load();
     }else{
