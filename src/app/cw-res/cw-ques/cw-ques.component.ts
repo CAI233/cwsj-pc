@@ -13,6 +13,7 @@ declare let wangEditor: any;
 })
 export class CwQuesComponent implements OnInit {
   @ViewChild("cat_idss") cat_idss;
+  @ViewChild("upload_ids") upload_ids;
   _allChecked = false;
   _indeterminate = false;
   param :any = {
@@ -227,8 +228,26 @@ _upload(){
   uploadOk($event) {
     this._submitUpload();
 }
+
+now_change(rest?){
+  if(rest.length>0){
+    console.log(rest);
+    // upload_param
+    this.upload_param.cat_id = rest[rest.length-1].cat_id;
+    this.upload_param.cat_name = rest[rest.length-1].cat_name;
+    this.upload_param.cat_ids = '';
+    this.upload_param.cat_names = '';
+    for(let i in rest){
+      this.upload_param.cat_ids += rest[i].cat_id+',';
+      this.upload_param.cat_names += rest[i].cat_name+',';
+    }
+    this.upload_param.cat_ids = this.upload_param.cat_ids.substring(0,this.upload_param.cat_ids.length-1);
+    this.upload_param.cat_names = this.upload_param.cat_names.substring(0,this.upload_param.cat_names.length-1);
+  }
+}
+
 _submitUpload(){
-  if(!this.upload_param.cat_ids || this.upload_param.cat_ids.length==0){
+  if(!this.upload_param.cat_id){
     this.service.message.error('请选择分类');
     return false;
   }
@@ -244,6 +263,7 @@ _submitUpload(){
     if(success.code==0){
       this.load();
       this.uploadList = false;
+      this.upload_ids._lastValue = [];
       this.myForm.reset();
       this.service.message.success(success.message);
     }else{

@@ -355,14 +355,19 @@ export class CwGoodsListComponent implements OnInit {
       this.selRow.real_price = ((parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1).toFixed(2)
     },50)
   }
+  _goTo(){
+    this.selectedIndex = 3;
+  }
+
+
   //提交
   _submitForm(){
     console.log(this.selRow);
     console.log(this.nowRecourse);
-    if(!this.selRow.res_id){
-      this.service.message.warning('请选择一个文件!');
-      return false;
-    }
+    // if(!this.selRow.res_id){
+    //   this.service.message.warning('请选择一个文件!');
+    //   return false;
+    // }
     if(this.selRow.cat_ids){
       let class_id = this.selRow.cat_ids[this.selRow.cat_ids.length-1];
       if(typeof(class_id)=='object'){

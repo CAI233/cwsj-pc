@@ -171,8 +171,8 @@
                     </div>
                     <div nz-form-control nz-col [nzSpan]="16">
                       <div class="row-actions" style="width:100%">
-                          <nz-cascader style="width:100%" formControlName="upload_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="class_data"
-                              [(ngModel)]="upload_param.cat_ids">
+                          <nz-cascader #upload_ids style="width:100%" formControlName="upload_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="class_data"
+                              [(ngModel)]="upload_cat_ids" (nzSelectionChange)="now_change($event)">
                           </nz-cascader>
                       </div>
                     </div>
