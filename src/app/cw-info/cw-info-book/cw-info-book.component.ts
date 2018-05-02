@@ -123,6 +123,12 @@ export class CwInfoBookComponent implements OnInit {
     })
   }
 
+    //关闭tab
+    closeTab() {
+      this.bookList = false;
+      // this.selectedIndex = 0;
+      this.myForm.reset();
+    }
 
   // 选项卡切换
   change(reset?){
@@ -200,17 +206,12 @@ _enabled(data){
       limit_num:false,
       book_remark:false,
     })
-
-
     //加载图书列表
     this.load();
-
     //加载图书标签列表
     this.get_tagList();
     //加载图书分类列表
     this.get_classList();
-
-    
   }
 
   //关闭弹窗
