@@ -212,11 +212,15 @@ export class CwGoodsListComponent implements OnInit {
 
   // 顶部标签页转换
   change(rest?){
-    if(rest){
-      if(this.selectedIndex==0){
-        this.isVisibleMiddle = false;
-      }
+    if(this.selectedIndex==0){
+      this.isVisibleMiddle = false;
     }
+  }
+  //关闭tab
+  closeTab() {
+    this.isVisibleMiddle = false;
+    this.selectedIndex = 0;
+    this.myForm.reset();
   }
 
   now_change(rest?){

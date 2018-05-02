@@ -18,7 +18,7 @@
             </nz-tab>
             <nz-tab  *ngIf="bookList">
                 <ng-template #nzTabHeading>
-                    {{nowTitle}}<i class="anticon anticon-cross" (click)="closeTab()"></i>
+                    {{nowTitle}}<i class="anticon anticon-cross" (click)="closeTab()" style="margin-left:5px;"></i>
                 </ng-template>
                 <nz-content class="main-page-content">
                     <form nz-form [formGroup]="myForm" class="ditForm" style="width:600px;">

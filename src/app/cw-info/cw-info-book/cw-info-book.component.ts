@@ -126,7 +126,7 @@ export class CwInfoBookComponent implements OnInit {
     //关闭tab
     closeTab() {
       this.bookList = false;
-      // this.selectedIndex = 0;
+      this.selectedIndex = 0;
       this.myForm.reset();
     }
 
