@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ViewChild} from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cw-goods-list.component.css']
 })
 export class CwGoodsListComponent implements OnInit {
+  @ViewChild("Check_catIds") Check_catIds;
   myForm: FormGroup;
 
   _loading : boolean = false;
@@ -39,6 +40,8 @@ export class CwGoodsListComponent implements OnInit {
   isCheck : boolean = false;//资源列表开关
   nowRecourseArr : any = [];//资源对象数组
   isRecourse : boolean = true;
+  Check_cat_ids : any = null;
+  check_param : any = {};
   constructor(public service: AppService) { }
 
   //文件上传
@@ -99,10 +102,28 @@ export class CwGoodsListComponent implements OnInit {
       }
     })
   }
+  //标签列表
   allTags : any = [];
+  // 图书&&电子书
+  get_bookTags(){
+    this.service.post('/api/busiz/tag/list',{pageNum:1,pageSize:10}).then(success => {
+      if(success.code==0){
+        this.allTags = success.data.rows;
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  // 音视频
+  get_videotags(){
+        this.service.post('/api/busiz/goods/tag/list', { pageNum: 1, pageSize: 1000 }
+        ).then(success => {
+          if (success.code == 0) {
+            this.allTags = success.data.rows;
+        }
+    })
+  }
   
-
-
   // 获取标签
   get_tag(){
     this.service.post('/api/busiz/goods/tag/list',{pageNum:1,pageSize:1000}).then(success => {
@@ -206,6 +227,7 @@ export class CwGoodsListComponent implements OnInit {
         }
       }
   }
+  
 
   get_tagName(id ?){
     let name = '';
@@ -303,7 +325,10 @@ export class CwGoodsListComponent implements OnInit {
       this.formTitle = '新增电子书商品'
     }
     this.selectedIndex = 1;
-    // 获取当前类型的资源
+
+    // 清空资源
+    this.nowRecourseArr = [];
+    this.nowRecourse = {};
     
   }
   // 修改操作
@@ -345,11 +370,74 @@ export class CwGoodsListComponent implements OnInit {
   _onCheck(){
     this.isCheck = true;
     this.get_recourse();
+
+    // 加载分类和标签
+    if(this.selRow.goods_type==2){
+      this.get_videoClass();
+      this.get_videotags();
+    }else{
+      this.get_bookClass();
+      this.get_bookTags()
+    }
+    
   }
   //
   _CheckCancel($event){
     this.isCheck = false;
+    this.Check_catIds._lastValue = []
     this.myForm.reset();
+  }
+  //获取分类
+  check_change(rest?){
+      if(rest.length>0){
+        console.log(rest)
+        this.check_param.cat_id = rest[rest.length-1].cat_id;
+      }
+    } 
+  // 资源搜索
+  reloadRecourse(){
+    console.log(this.check_param)
+    if(this.selRow.goods_type==2){
+      this.service.post('/api/busiz/video/getlist',{
+        pageNum:1,
+        pageSize:1000,
+        searchText:this.check_param.searchText,
+        cat_id:this.check_param.cat_id,
+        tag_id:this.check_param.tag_id
+      }).then(success => {
+        if(success.code==0){
+          this.allRecourse = success.data.rows;
+        }else{
+          this.service.message.error(success.message);
+        }
+      })
+    }else{
+      let book_type = this.selRow.goods_type ==3 ? 2 : 1;
+        this.service.post('/api/busiz/book/list',{
+          pageNum:1,
+          pageSize:1000,
+          book_type:book_type,
+          searchText:this.check_param.searchText,
+          cat_id:this.check_param.cat_id,
+          tag_id:this.check_param.tag_id
+        }).then(success => {
+          if(success.code==0){
+            this.allRecourse = success.data.rows;
+          }else{
+            this.service.message.error(success.message);
+          }
+      })
+    }
+  }
+  // 资源重置
+  resetRecourse(){
+
+  }
+
+  // 资源删除
+  _unCheck(data){
+    this.nowRecourseArr = [];
+    this.nowRecourse = {};
   }
 
   //查看商品详情 
@@ -399,7 +487,30 @@ export class CwGoodsListComponent implements OnInit {
       this.selRow.real_price = ((parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1).toFixed(2)
     },50)
   }
+  isTrue : boolean = true;
   _goTo(){
+    
+    if(!this.selRow.goods_name){
+      this.service.message.warning('请填写商品名称!');
+      return false;
+    }
+    if(!this.selRow.goods_cat_id){
+      this.service.message.warning('请填写商品分类!');
+      return false;
+    }
+    if(!this.selRow.goods_brand_id){
+      this.service.message.warning('请填写品牌标签!');
+      return false;
+    }
+    if(!this.selRow.goods_tag_ids){
+      this.service.message.warning('请填写商品标签!');
+      return false;
+    }
+    if(!this.selRow.price || this.selRow.price==0){
+      this.service.message.warning('请填写价格!');
+      return false;
+    }
+    this.isTrue = false;
     this.selectedIndex = 3;
   }
 
@@ -542,9 +653,9 @@ export class CwGoodsListComponent implements OnInit {
     let M, D, H, mm, ss;
     M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
     D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
-    //   H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
-    //   mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
-    //   ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+      // H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+      // mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+      // ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
     // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
     return m.getFullYear() + '-' + M + '-' + D;
   }

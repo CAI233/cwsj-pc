@@ -327,7 +327,7 @@
                         </form>
                     </nz-content>
                 </nz-tab>
-                <nz-tab *ngIf="isVisibleMiddle">
+                <nz-tab *ngIf="isVisibleMiddle" [nzDisabled]="isTrue">
                     <ng-template #nzTabHeading>资源列表</ng-template>
                     <nz-content class="main-page-content" >
                         <div nz-row nz-form-item style="margin-bottom:10px;">
@@ -373,8 +373,8 @@
                                     </td>
                                     <td nz-td>
                                         <span >
-                                            <a *ngIf="selRow.goods_type!=2" (click)="_unCheck(data.book_id)">删除</a>
-                                            <a *ngIf="selRow.goods_type==2" (click)="_unCheck(data.video_id)">删除</a>
+                                            <a *ngIf="selRow.goods_type!=2" (click)="_unCheck(data)">删除</a>
+                                            <a *ngIf="selRow.goods_type==2" (click)="_unCheck(data)">删除</a>
                                             <!-- <span nz-table-divider></span> -->
                                         </span>
                                     </td>
@@ -515,7 +515,7 @@
                             <label>资源名称</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'请输入商品名称'" [nzSize]="'default'"></nz-input>
+                            <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="check_param.searchText" [nzPlaceHolder]="'请输入商品名称'" [nzSize]="'default'"></nz-input>
                         </div>
                     </div>
                     <div nz-col [nzSpan]="8">
@@ -523,8 +523,8 @@
                             <label>资源分类</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-cascader style="width:100%" name="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
-                                [(ngModel)]="param.cat_ids" >
+                            <nz-cascader #Check_catIds style="width:100%" name="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="allClass"
+                                [(ngModel)]="Check_cat_ids" (nzSelectionChange)="check_change($event)">
                             </nz-cascader>
                         </div>
                     </div>
@@ -550,8 +550,8 @@
                             <label>资源标签</label>
                         </div>
                         <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-select style="width:100%;" name="tag_id" (nzSearchChange)="get_tagList($event)" [nzMode]="'multiple'" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="bookData.tag_ids" nzShowSearch>
-                                <nz-option *ngFor="let item of bookTag" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
+                            <nz-select style="width:100%;" name="tag_id"  nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="check_param.tag_id" nzShowSearch>
+                                <nz-option *ngFor="let item of allTags" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
                             </nz-select>
                         </div>
                     </div>
