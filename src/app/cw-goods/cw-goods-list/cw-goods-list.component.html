@@ -365,12 +365,21 @@
                                 <th nz-th>文件名称</th>
                                 <th nz-th>文件名称</th>
                                 <th nz-th>文件名称</th>
+                                <th nz-th>操作</th>
                             </tr>
                           </thead>
                           <tbody>
                               <tr>
                                   <td>
-                                        <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover }}" style="float:left;width:72px;height:96px;"/> 
+                                    <img *ngIf="selRow.goods_type!=2" src="{{ service.ctxPath + nowRecourse.book_cover }}" style="float:left;width:72px;height:96px;"/>
+                                    <img *ngIf="selRow.goods_type==2" src="{{ service.ctxPath + nowRecourse.video_cover }}" style="float:left;width:100%;height:100%;"/> 
+                                  </td>
+                                  <td>
+                                    <span *ngIf="selRow.goods_type!=2">{{nowRecourse.book_name}}</span>
+                                    <span *ngIf="selRow.goods_type==2">{{nowRecourse.video_name}}</span>
+                                  </td>
+                                  <td>
+
                                   </td>
                               </tr>
                           </tbody>
