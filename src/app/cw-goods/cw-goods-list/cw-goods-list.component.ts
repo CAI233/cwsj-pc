@@ -314,7 +314,11 @@ export class CwGoodsListComponent implements OnInit {
   _onCheck(){
     this.isCheck = true;
   }
-
+  //
+  _CheckCancel($event){
+    this.isCheck = false;
+    this.myForm.reset();
+  }
 
   //查看商品详情 
   show(data){
