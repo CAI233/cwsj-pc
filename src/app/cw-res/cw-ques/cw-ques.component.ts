@@ -320,6 +320,7 @@ _down(){
   let doc = document.createElement('a');;
       doc.href = this.service.ctxPath+'/api/busiz/question/template';
       doc.style.display = 'none';
+      doc.target = "_self";
       doc.click();
       document.body.appendChild(doc);
 
