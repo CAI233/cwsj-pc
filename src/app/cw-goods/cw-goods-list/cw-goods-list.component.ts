@@ -148,6 +148,7 @@ export class CwGoodsListComponent implements OnInit {
         }
       }
       console.log(this.nowRecourse)
+      console.log(this.selRow)
       // 在查看详情时不需要带出资源
       if(!this.showData.res_id){
         // 获取当前电子书的资源列表
@@ -261,7 +262,7 @@ export class CwGoodsListComponent implements OnInit {
     this.selRow.goods_type = this.param.goods_type
     this.ebookRecourse = [];//清空资源
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
-
+    console.log(this.selRow.goods_type);
     this.isVisibleMiddle = true;
     this.selRow.discount = 1;
     if(this.selRow.goods_type==1){

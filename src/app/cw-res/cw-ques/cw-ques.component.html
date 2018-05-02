@@ -48,7 +48,7 @@
                   </ng-template>
                   <ng-template #extra>
                     <span *ngIf="this.service.validataAction('cw_ques_enable')">
-                      <a (click)="_enabled(item)"><span>{{['未','已'][item.enabled-1]}}发布</span></a>
+                      <a (click)="_enabled(item)"><span>{{['已','未'][item.enabled-1]}}发布</span></a>
                       <!-- <a (click)="_see(item)">预览</a> -->
                       <span nz-table-divider></span>
                     </span>
