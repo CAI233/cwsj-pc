@@ -26,7 +26,7 @@ export class CwInfoBookComponent implements OnInit {
   _loading : boolean = false;
   data : any = [];
   pullList : any = [
-    {id:0,name:"全部"},
+    {id:null,name:"全部"},
     {id:1,name:"上架"},
     {id:2,name:"下架"}
   ]
@@ -124,22 +124,23 @@ export class CwInfoBookComponent implements OnInit {
     })
   }
 
+  newTrue : any = false;//当前标签页的位置
+
     //关闭tab
     closeTab() {
       this.bookList = false;
+      this.seeList = false;
       this.selectedIndex = 0;
       this.myForm.reset();
     }
 
   // 选项卡切换
   change(reset?){
-    console.log(this.selectedIndex)
-    // console.log(reset)
+    // console.log(this.selectedIndex)
     this.param.book_type = reset+1;
     if(reset!=2){
       this.bookList = false;
     }
-
     this.load();
   }
   //查询
@@ -151,7 +152,15 @@ export class CwInfoBookComponent implements OnInit {
     }
   }
   //重置
+  cat_ids : any = null;
   resetForm(){
+    this.param.searchText = null;
+    this.param.status = null;
+    this.param.tag_id = null;
+    this.param.book_cat_id = null;
+    this.cat_ids = null;
+    this.isCollapse = true;
+    this.load();
 
   }
   // 提交审核
@@ -377,16 +386,18 @@ _enabled(data){
   _see(data){
     this.bookData = {};
     this.seeList = true;
-    for(let i in data){
-      this.bookData[i] = data[i];
-    }
-    if(this.param.book_type==1){
+    this.bookData = {...data};
+    console.log(this.bookData)
+    this.nowTitle = "查看详情"
+    this.bookData.book_type = this.param.book_type;
+    if(this.bookData.book_type==1){
       //当图书时  获取二维码
       this.get_code();
     }else{
       //当电子书时 获取资源列表
       this.get_ebookResource();
     }
+    this.selectedIndex = 2;
   } 
   //新增操作
   _add(){
