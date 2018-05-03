@@ -120,13 +120,14 @@ export class CwEmailConComponent implements OnInit {
   }
   sendOk($event){
     const EMAIL_REGEXP = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-    if (!this.sendTo.email_addr) {
+    if (!this.sendTo.email) {
       this.service.message.warning('请填写邮箱发送地址!');
       return false;
-    } else if (!EMAIL_REGEXP.test(this.sendTo.email_addr)) {
+    } else if (!EMAIL_REGEXP.test(this.sendTo.email)) {
       this.service.message.warning('请填写正确的邮箱地址!');
       return false;
     }
+    
     this.service.post('/api/system/mailsetting/sendmail',this.sendTo).then(success => {
       if(success.code==0){
         this.sendVisible = false;
