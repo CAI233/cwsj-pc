@@ -49,7 +49,7 @@
             </a>
             <!--文件上传-->
             <nz-upload *ngIf="this.service.validataAction('cw_res_list_upload')" style="float:right" [nzShowUploadList]="false" (nzChange)="_uploadChange($event)"
-              [nzDisabled]="_uploadDisabled" nzAction="{{this.service.ctxPath + '/api/busiz/res/upload'}}">
+              [nzDisabled]="_uploadDisabled" nzAction="{{this.service.ctxPath + '/api/busiz/res/upload'}}" [nzBeforeUpload]="_beforeUpload">
               <button nz-button [nzLoading]="_upload" nzType="dashed">
                 <i class="anticon anticon-upload"></i>
                 <span>上传资源文件</span>

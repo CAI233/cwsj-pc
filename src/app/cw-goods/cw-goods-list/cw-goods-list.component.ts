@@ -272,6 +272,7 @@ export class CwGoodsListComponent implements OnInit {
   //关闭tab
   closeTab() {
     this.isVisibleMiddle = false;
+    this.param.goods_type = null;
     this.selectedIndex = 0;
     this.myForm.reset();
   }
@@ -315,7 +316,7 @@ export class CwGoodsListComponent implements OnInit {
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
     console.log(this.selRow.goods_type);
     this.isVisibleMiddle = true;
-    this.selRow.discount = 1;
+    this.selRow.discount = 10;
     if(this.selRow.goods_type==1){
       this.formTitle = '新增图书商品'
     }else if(this.selRow.goods_type==2){

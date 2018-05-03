@@ -49,6 +49,9 @@
           <span>状态</span>
         </th>
         <th nz-th>
+          <span>备注</span>
+        </th>
+        <th nz-th>
           <span>文件数量</span>
         </th>
         <th nz-th>
@@ -70,6 +73,7 @@
           <label *ngIf="data.status==3" style="color:green">解析完成</label>
           <label *ngIf="data.status==4" style="color:#f00">解析失败</label>
         </td>
+        <td nz-td>{{data.remark}}</td>
         <td nz-td>{{data.file_num}}</td>
         <td nz-td>{{data.final_num}}</td>
         <td nz-td>

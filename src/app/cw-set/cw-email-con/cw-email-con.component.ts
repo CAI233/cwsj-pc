@@ -130,6 +130,7 @@ export class CwEmailConComponent implements OnInit {
     this.service.post('/api/system/mailsetting/sendmail',this.sendTo).then(success => {
       if(success.code==0){
         this.sendVisible = false;
+        this.service.message.success(success.message);
         this.load();
       }else{
         this.service.message.error(success.message);

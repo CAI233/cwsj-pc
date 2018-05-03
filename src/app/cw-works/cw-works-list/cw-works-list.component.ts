@@ -141,6 +141,7 @@ export class CwWorksListComponent implements OnInit {
       }
       this.formBean.works_type = this.paramCol.works_type;
       this.formBean.deadline = null;
+      this.formBean.discount = 10;
       this.formBean.real_price = 0;
       this.formTitle = "新增作品";
     }

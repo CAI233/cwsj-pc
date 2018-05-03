@@ -172,14 +172,11 @@
                     <nz-cascader #dept_idss style="width:100%" formControlName="project_cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="listData"
                         [(ngModel)]="cat_data" (nzSelectionChange)="now_change($event)">
                     </nz-cascader>
-                    <!-- <nz-select style="width:100%;" formControlName="project_cat_id" [(ngModel)]="selRow.project_cat_id" [nzPlaceHolder]="'请选择合作分类'" nzShowSearch>
-                      <nz-option *ngFor="let item of listData" [nzLabel]="item.cat_name" [nzValue]="item.cat_id" ></nz-option>
-                    </nz-select> -->
                 </div>
             </div>
             <div nz-form-item nz-row>
                 <div nz-form-label>
-                    <label>合作单位</label>
+                    <label nz-form-item-required>合作单位</label>
                 </div>
                 <div nz-form-control>
                     <nz-input formControlName="org" [(ngModel)]="selRow.org" [nzPlaceHolder]="'请输入合作单位'"></nz-input>
@@ -189,7 +186,7 @@
     </div>
     <div nz-form-item nz-row>
         <div nz-form-label>
-          <label nz-form-item-required>合作详情</label>
+          <label>合作详情</label>
         </div>
         <div nz-form-control>
             <div id="editor"></div>

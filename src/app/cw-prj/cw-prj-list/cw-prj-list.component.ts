@@ -273,6 +273,22 @@ export class CwPrjListComponent implements OnInit {
   _submitForm() {
     console.log(this.selRow)
     this.selRow.remark = this.editor.txt.html();
+    if(!this.selRow.project_name){
+      this.service.message.warning('请填写合作项目名称!');
+      return false;
+    }
+    if(!this.selRow.project_cat_id){
+      this.service.message.warning('请选择合作项目分类!');
+      return false;
+    }
+    if(!this.selRow.org){
+      this.service.message.warning('请填写合作项目单位!');
+      return false;
+    }
+    // if(!this.selRow.project_cover){
+    //   this.service.message.warning('请上传合作项目封面!');
+    //   return false;
+    // }
     // this.selRow.project_cat_id = parseInt(this.selRow.parent[this.selRow.parent.length - 1])
     this.service.post('/api/busiz/cooproject/save', this.selRow).then(success => {
       if (success.code == 0) {

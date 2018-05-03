@@ -54,6 +54,7 @@ export class CwInfoBookComponent implements OnInit {
     res_type:'图书'
   }
   ebookRlist : boolean = false;
+  publish_date : any = null;
   constructor(public service: AppService) { }
 
   // 图书列表
@@ -219,6 +220,7 @@ _enabled(data){
     this.bookList = false;
     this.seeList = false;
     this.AllResourceList = false;
+    this.publish_date = null;
     this.myForm.reset();
   }
   goToindex = 0;
@@ -227,7 +229,7 @@ _enabled(data){
   //确定
   bookOk($event?) {
     // this._getRecouse();
-    console.log(this.bookData);
+    this.bookData.publish_date  = this.timeOut(this.publish_date);
     if(!this.bookData.book_name){
       this.service.message.warning('请填写书名!');
       return false;
@@ -272,12 +274,15 @@ _enabled(data){
           this.ebookRlist = true;
           this.goToindex = 1;
           console.log(success); 
+          console.log(this.bookData); 
+          this.bookData.tag_ids = this.bookData.tag_ids.join(",")
           if(success.data){
             this.bookData.book_id = success.data.book_id;
           }
           this.get_ebookResource();
         }else{
           this.bookList = false;
+          this.publish_date = null;
           this.myForm.reset();
         }
         this.load();
@@ -410,9 +415,11 @@ _enabled(data){
     }
     this.bookList = true;
     this.selectedIndex = 2;
+    
     for(let i in data){
       this.bookData[i] = data[i];
     }
+    this.publish_date = new Date(this.bookData.publish_date);
     this.cat_data = [];
 
     let arr_name = this.bookData.book_cat_names.split(",");
@@ -522,4 +529,15 @@ _enabled(data){
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
+  timeOut(d) {
+    let m = new Date(d);
+    let M, D, H, mm, ss;
+    M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
+    D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
+    H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+    mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+    ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+    return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
+  }
+
 }

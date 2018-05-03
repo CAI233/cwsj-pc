@@ -328,7 +328,7 @@ _down(){
   // this.service.get('/api/busiz/question/template').then(success => {
     
   // })
-  let doc = document.createElement('a');;
+  let doc = document.createElement('a');
       doc.href = this.service.ctxPath+'/api/busiz/question/template';
       doc.style.display = 'none';
       doc.target = "_self";
