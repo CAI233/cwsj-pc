@@ -198,7 +198,6 @@ export class CwGoodsListComponent implements OnInit {
       }
 
       this.nowRecourseArr = [this.nowRecourse];
-      console.log(this.nowRecourse)
       console.log(this.selRow)
       // 在查看详情时不需要带出资源
       if(!this.showData.res_id){
@@ -335,6 +334,7 @@ export class CwGoodsListComponent implements OnInit {
   edit(data){
     console.log(data)
     this.isVisibleMiddle = true;
+    this.selectedIndex = 1;
     if(this.selRow.goods_type==1){
       this.formTitle = '修改图书商品'
     }else if(this.selRow.goods_type==2){
@@ -379,13 +379,14 @@ export class CwGoodsListComponent implements OnInit {
       this.get_bookClass();
       this.get_bookTags()
     }
-    
+    console.log(this.selRow)
   }
   //
   _CheckCancel($event){
     this.isCheck = false;
     this.Check_catIds._lastValue = []
-    this.myForm.reset();
+    // this.myForm.reset();
+    console.log(this.selRow)
   }
   //获取分类
   check_change(rest?){
@@ -518,19 +519,6 @@ export class CwGoodsListComponent implements OnInit {
   //提交
   _submitForm(){
     console.log(this.selRow);
-    console.log(this.nowRecourse);
-    // if(!this.selRow.res_id){
-    //   this.service.message.warning('请选择一个文件!');
-    //   return false;
-    // }
-    if(this.selRow.cat_ids){
-      let class_id = this.selRow.cat_ids[this.selRow.cat_ids.length-1];
-      if(typeof(class_id)=='object'){
-        this.selRow.goods_cat_id = parseInt(class_id.cat_id);
-      }else{
-        this.selRow.goods_cat_id = parseInt(class_id) == null ? '' : parseInt(class_id);
-      }
-    }
     if(this.selRow.tag_ids){
       // goods_tag_ids
       if(typeof(this.selRow.tag_ids)!='object'){
@@ -542,6 +530,10 @@ export class CwGoodsListComponent implements OnInit {
     this.selRow.goods_cover = this.nowRecourse.book_cover == null ? this.nowRecourse.video_cover : this.nowRecourse.book_cover;
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){
+          this.param = {
+            pageNum:1,
+            pageSize:10
+          }
           this.load();
           this.isVisibleMiddle = false;
           this.myForm.reset();
