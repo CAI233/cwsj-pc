@@ -154,20 +154,20 @@ export class CwResListComponent implements OnInit {
       }
     }
   }
-  _beforeUpload(file, fileList){
-    console.log(file);
-    if(file.name.indexOf("")!=-1){
-      let span =  document.createElement('span');
-      span.innerHTML = '<i class="anticon anticon-close" style="color: #fff;padding: 3px;background: red;border-radius: 50%;vertical-align: inherit;margin-right: 5px;"></i>文件上传名字里不能包含空格';
-      span.style.cssText = 'position:absolute;top:45px;z-index:999;left:50%;padding:10px 15px;width:250px;background:#fff;box-shadow:1px 1px 1px 0.5px #b1b1b1;border-radius:5px;'
-      document.body.appendChild(span);
-      setTimeout(function(){
-        span.style.display = "none";
-        span.remove();
-      },1500)
-      return false;
-    }
-  }
+  // _beforeUpload(file, fileList){
+  //   console.log(file);
+  //   if(file.name.indexOf("")!=-1){
+  //     let span =  document.createElement('span');
+  //     span.innerHTML = '<i class="anticon anticon-close" style="color: #fff;padding: 3px;background: red;border-radius: 50%;vertical-align: inherit;margin-right: 5px;"></i>文件上传名字里不能包含空格';
+  //     span.style.cssText = 'position:absolute;top:45px;z-index:999;left:50%;padding:10px 15px;width:250px;background:#fff;box-shadow:1px 1px 1px 0.5px #b1b1b1;border-radius:5px;'
+  //     document.body.appendChild(span);
+  //     setTimeout(function(){
+  //       span.style.display = "none";
+  //       span.remove();
+  //     },1500)
+  //     return false;
+  //   }
+  // }
 
 
   _uploadDisabled: boolean = false;

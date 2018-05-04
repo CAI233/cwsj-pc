@@ -56,7 +56,6 @@ export class CwGoodsListComponent implements OnInit {
     if (reset == true) {
       this.param.pageNum = 1;
     }
-    console.log(this.param)
     this._loading = true;
     this.service.post('/api/busiz/goods/getlist',this.param).then(success => {
       this._loading = false;
@@ -147,13 +146,13 @@ export class CwGoodsListComponent implements OnInit {
   }
   // 获取每一种类型的资源
   get_recourse(){
-    console.log(this.selRow.goods_type)
     if(this.selRow.goods_type==1 || this.selRow.goods_type==3){
       let book_type = this.selRow.goods_type ==3 ? 2 : 1;
       this.service.post('/api/busiz/book/list',{pageNum:1,pageSize:1000,book_type:book_type}).then(success => {
         if(success.code==0){
           this.allRecourse = success.data.rows;
           if(this.selRow.res_id){
+
             //得到当前资源文件的详情
             this.selected(this.selRow.res_id);
           }
@@ -197,10 +196,13 @@ export class CwGoodsListComponent implements OnInit {
         }
       }
 
+      this.selRow.res_id = id;
+
       this.nowRecourseArr = [this.nowRecourse];
-      console.log(this.selRow)
+      // console.log(this.nowRecourse)
+
       // 在查看详情时不需要带出资源
-      if(!this.showData.res_id){
+      if(this.showData.res_id){
         // 获取当前电子书的资源列表
         if(this.selRow.goods_type==3){
           // 获取电子书资源
@@ -267,11 +269,13 @@ export class CwGoodsListComponent implements OnInit {
   change(rest?){
     if(this.selectedIndex==0){
       this.isVisibleMiddle = false;
+      this.isShow = false;
     }
   }
   //关闭tab
   closeTab() {
     this.isVisibleMiddle = false;
+    this.isShow = false;
     this.param.goods_type = null;
     this.selectedIndex = 0;
     this.myForm.reset();
@@ -279,7 +283,6 @@ export class CwGoodsListComponent implements OnInit {
 
   now_change(rest?){
     if(rest.length>0){
-      console.log(rest);
       
       this.selRow.goods_cat_id = rest[rest.length-1].cat_id;
       this.selRow.goods_cat_name = rest[rest.length-1].cat_name;
@@ -314,7 +317,6 @@ export class CwGoodsListComponent implements OnInit {
     this.selRow.goods_type = this.param.goods_type
     this.ebookRecourse = [];//清空资源
     this.nowRecourse = [];//清空当前图书，电子书，视频资源详情
-    console.log(this.selRow.goods_type);
     this.isVisibleMiddle = true;
     this.selRow.discount = 10;
     if(this.selRow.goods_type==1){
@@ -333,9 +335,8 @@ export class CwGoodsListComponent implements OnInit {
   }
   // 修改操作
   edit(data){
-    console.log(data)
     this.isVisibleMiddle = true;
-    this.selectedIndex = 1;
+    this.selRow = {...data};
     if(this.selRow.goods_type==1){
       this.formTitle = '修改图书商品'
     }else if(this.selRow.goods_type==2){
@@ -343,7 +344,7 @@ export class CwGoodsListComponent implements OnInit {
     }else{
       this.formTitle = '修改电子书商品'
     }
-    this.selRow = {...data};
+    
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
     this.cat_data = [];
 
@@ -356,6 +357,7 @@ export class CwGoodsListComponent implements OnInit {
         cat_name:arr_name[i]
       })
     }
+    this.selectedIndex = 1;
     // 获取当前类型的资源
     this.get_recourse();
   }
@@ -380,25 +382,21 @@ export class CwGoodsListComponent implements OnInit {
       this.get_bookClass();
       this.get_bookTags()
     }
-    console.log(this.selRow)
   }
   //
   _CheckCancel($event){
     this.isCheck = false;
     this.Check_catIds._lastValue = []
     // this.myForm.reset();
-    console.log(this.selRow)
   }
   //获取分类
   check_change(rest?){
       if(rest.length>0){
-        console.log(rest)
         this.check_param.cat_id = rest[rest.length-1].cat_id;
       }
     } 
   // 资源搜索
   reloadRecourse(){
-    console.log(this.check_param)
     if(this.selRow.goods_type==2){
       this.service.post('/api/busiz/video/getlist',{
         pageNum:1,
@@ -447,11 +445,21 @@ export class CwGoodsListComponent implements OnInit {
     this.isShow = true;
     this.nowRecourse = {};
     this.showData = {...data};
+
+    for(let i in this.brandData){
+      if(this.showData.goods_brand_id == this.brandData[i].brand_id){
+        this.showData.goods_brand_name = this.brandData[i].brand_name;
+        break;
+      }
+    }
     // 得到当前商品的资源
     this.selRow.goods_type = this.showData.goods_type;
     this.selRow.res_id = this.showData.res_id;
+    this.selectedIndex = 1;
+
     this.get_recourse();
   }
+
 
   // 删除操作
   del(data){
@@ -519,7 +527,6 @@ export class CwGoodsListComponent implements OnInit {
 
   //提交
   _submitForm(){
-    console.log(this.selRow);
     if(this.selRow.tag_ids){
       // goods_tag_ids
       if(typeof(this.selRow.tag_ids)!='object'){
