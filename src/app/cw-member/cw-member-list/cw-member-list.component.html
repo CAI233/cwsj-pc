@@ -52,9 +52,12 @@
             <span>昵称</span>
         </th>
         <th nz-th [nzWidth]="'10%'">
+            <span>是否关注</span>
+        </th>
+        <th nz-th [nzWidth]="'10%'">
             <span>性别</span>
         </th>
-        <th nz-th [nzWidth]="'30%'">
+        <th nz-th [nzWidth]="'20%'">
             <span>地址</span>
         </th>
         <th nz-th >
@@ -79,6 +82,10 @@
           </td>
           <td nz-td>
               <span>{{base64decoder(data.member_name)}}</span>
+          </td>
+          <td nz-td>
+            <span *ngIf="!data.subscribe">未关注</span>
+            <span *ngIf="data.subscribe">{{['未','已'][data.subscribe]}}关注</span>
           </td>
           <td nz-td>
               <span>{{['男','女'][data.sex-1]}}</span>

@@ -42,7 +42,7 @@
           <div class="tableListSearch">
             <div nz-row nz-form-item>
               <div class="row-actions">
-                <button nz-button nzType="primary" *ngIf="this.service.validataAction('cw_ques_class_add')" (click)="_cwResClassAdd()">
+                <button nz-button nzType="primary" *ngIf="!_isShow && this.service.validataAction('cw_ques_class_add')" (click)="_cwResClassAdd()">
                   <i class="anticon anticon-plus"></i>
                   <span>新建分类</span>
                 </button>

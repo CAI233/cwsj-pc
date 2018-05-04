@@ -177,3 +177,24 @@
 .zp-list .zp-info p{
     margin-bottom: 5px;
 }
+.check{
+    text-align: center;
+    position: absolute;
+    display: block;
+    right: 10px;
+    top:10px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    background-color: #fff;
+    color: 948d8d;
+    border-radius: 50%;
+    -webkit-box-shadow: -1px 0px 10px #948d8d;
+    box-shadow: -1px 0px 10px #948d8d;
+    cursor:pointer;
+}
+.check.active{
+    color: white;
+    background-color: #108ee9;
+}

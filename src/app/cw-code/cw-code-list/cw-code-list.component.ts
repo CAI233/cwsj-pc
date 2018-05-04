@@ -45,7 +45,12 @@ export class CwCodeListComponent implements OnInit {
   //页签切换
   _nzSelectedIndexChange(e?){
     if(e == 0){
+      console.log(e)
+      this.nzSelectedIndex = 0;
     }
+  }
+  closeTab(){
+    this.nzSelectedIndex = 0;
   }
   //标签搜索
   searchChange(key?) {
@@ -266,8 +271,29 @@ export class CwCodeListComponent implements OnInit {
     })
   }
 
-  daochu(id){
-    let nowid = id.toString();
+  ids : any = [];
+  // 二维码选中
+  select(data){
+    if(this.ids.indexOf(data.code_id)!=-1){
+      this.ids.splice(this.ids.indexOf(data.code_id),1)
+    }else{
+      this.ids.push(data.code_id);
+    }
+  }
+
+
+  daochu(id?){
+    let nowid = '';
+    if(id){
+      nowid = id.toString();
+    }else{
+      if(this.ids.length>0){
+        nowid = this.ids.join(",");
+      }else{
+        this.service.message.warning('请选择要下载的二维码');
+      }
+    }
+    
     // let doc = `<iframe style="display: none" src="${this.service.ctxPath}/api/busiz/code/export/ids=${data.code_id}"></iframe>`;
     let doc = document.createElement('iframe');
     doc.src = this.service.ctxPath + '/api/busiz/code/export?ids=' + nowid;

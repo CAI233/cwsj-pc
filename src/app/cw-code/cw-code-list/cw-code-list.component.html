@@ -15,10 +15,10 @@
   <nz-content class="main-page-content">
     <ng-container *ngIf="formBeanObject">
       <nz-tabset [(nzSelectedIndex)]="nzSelectedIndex" (nzSelectedIndexChange)="_nzSelectedIndexChange($event)">
-        <nz-tab *ngFor="let tab of tabs">
+        <nz-tab *ngFor="let tab of tabs;let idx=index">
           <ng-template #nzTabHeading>
             <i [ngClass]="tab.icon"></i>
-            {{tab.name}}
+            {{tab.name}}<i *ngIf="idx==1" class="anticon anticon-cross" (click)="closeTab()" style="margin-left:5px;"></i>
           </ng-template>
         </nz-tab>
       </nz-tabset>
@@ -64,7 +64,7 @@
                 <i class="anticon anticon-plus"></i>
                 <span>二维码新增</span>
               </button>
-              <button nz-button nzType="button" (click)="_resetForm()">
+              <button nz-button nzType="button" (click)="daochu()">
                 <i class="anticon anticon-export"></i>
                 <span>二维码导出</span>
               </button>
@@ -113,6 +113,9 @@
                   </div>
                 </ng-container>
               </div>
+              <span class="check" (click)="data.check=!data.check;select(data)" [ngClass]="{'active': data.check == true}">
+                <i class="anticon anticon-check"></i>
+              </span>
             </ng-template>
           </nz-card>
         </div>
@@ -327,8 +330,8 @@
                 <div class="zp-info">
                   <h1>{{data.works_name}}</h1>
                   <p>类型：{{data.works_type}}</p>
-                  <p>创建时间：{{data.create_time}}</p>
-                  <div *ngIf="data.tag_names">
+                  <!-- <p>创建时间：{{data.create_time}}</p> -->
+                  <div *ngIf="data.tag_names" style="margin-top:20px;">
                     <ng-container *ngFor="let item of data.tag_names.split(',')">
                       <nz-tag [nzColor]="'blue'">{{item}}</nz-tag>
                     </ng-container>

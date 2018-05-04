@@ -121,8 +121,14 @@ export class CwWorksClassComponent implements OnInit {
     this._reload();
   }
   //选中
-  _selectItem(row) {
+  _isShow : boolean = false;
+  _selectItem(row){
     this.param = row;
+    if(row.level==2){
+      this._isShow = true;
+    }else{
+      this._isShow = false;
+    }
   }
   //启用/停用
   _rowEnabled(row) {

@@ -51,6 +51,7 @@ export class CwTrainListComponent implements OnInit {
   isCollapse: any = true;
   _loading: boolean = true;
 
+  isDetails : boolean = false;
   // 实例化一个对象
   constructor(public service: AppService) { }
   //表单
@@ -171,6 +172,7 @@ export class CwTrainListComponent implements OnInit {
   //关闭tab
   closeTab() {
     this.isVisibleMiddle = false;
+    this.isDetails = false;
     this.selectedIndex = 0;
     this.myForm.reset();
   }
@@ -343,11 +345,45 @@ export class CwTrainListComponent implements OnInit {
       }
     })
   }
-  //详情
-  videoDetail() {
-    window.open('www.baidu.com')
+
+  // 顶部标签页转换
+  change(rest?){
+    if(this.selectedIndex==0){
+      this.isVisibleMiddle = false;
+      this.isDetails = false;
+    }
   }
 
+  nowData : any = {}
+  allRecourse : any = [];
+  //详情
+  videoDetail(data) {
+    // window.open('www.baidu.com')
+    this.isDetails = true;
+    this.formTitle = '详情预览';
+    this.nowData = {...data}
+    console.log(this.nowData)
+    // 获取当前视频的资源
+    this.service.post('/api/busiz/video/detail', { video_id:this.nowData.video_id }).then(success => {
+      if(success.code==0){
+        this.allRecourse = success.data.videoResRelList;
+      }
+    })
+    this.selectedIndex = 1;
+  }
+
+  videoModel : any = {};
+  isVisibleVideo : boolean = false; 
+  look(data){
+    this.isVisibleVideo = true;
+    this.videoModel = {...data};
+  }
+
+  //视频关闭预览
+  _vedioCancel($event){
+    this.isVisibleVideo = false;
+    this.myForm.reset();
+  }
   //---------------------------------------------  资源文件 start --------------------------------------------
   myForm1: FormGroup;
   resourceArray: any = [];
