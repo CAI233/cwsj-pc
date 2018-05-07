@@ -109,25 +109,16 @@
                   <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
                   </label>
                 </th>
-                <th nz-th>
-                  <span>视频封面</span>
+                <th nz-th [nzWidth]="'40%'">
+                    <span>视频信息</span>
                 </th>
-                <th nz-th>
-                  <span>视频名称</span>
-                </th>
-                <th nz-th>
-                  <span>视频标签</span>
-                </th>
-                <th nz-th>
-                  <span>视频分类</span>
-                </th>
-                <th nz-th>
+                <th nz-th [nzWidth]="'10%'">
                   <span>审核状态</span>
                 </th>
-                <th nz-th>
+                <th nz-th [nzWidth]="'20%'">
                   <span>创建日期</span>
                 </th>
-                <th nz-th>
+                <th nz-th [nzWidth]="'30%'">
                   <span>操作</span>
                 </th>
               </tr>
@@ -137,19 +128,15 @@
                 <td nz-td nzCheckbox>
                   <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
                 </td>
-                <td nz-td>
-                  <div nz-col [nzSpan]="6" style="float:left;border:1px #ddd dashed;width:60px;height:80px;background: #f5f8fa;">
-                    <img src="{{service.ctxPath + data.video_cover}}" alt="" style="float:left;width:100%;height:100%;">
-                  </div>
-                </td>
-                <td nz-td>
-                  <span>{{data.video_name}}</span>
-                </td>
-                <td nz-td>
-                  <span>{{data.tag_names}}</span>
-                </td>
-                <td nz-td>
-                  <span [innerHtml]="data.video_cat_names.split(',')[data.video_cat_names.split(',').length-1]"></span>
+                <td nz-td nz-row>
+                    <div nz-col [nzSpan]="6" style="float:left;border:1px #ddd dashed;width:72px;height:96px;background: #f5f8fa;">
+                        <img src="{{service.ctxPath + data.video_cover}}" alt="" style="float:left;width:100%;height:100%;">
+                    </div>
+                    <div nz-col [nzSpan]="14" style="padding:10px;">
+                        <p>视频名称:<span [innerHtml]="data.video_name"></span></p>
+                        <p>视频标签:<span [innerHtml]="data.tag_names"></span></p>
+                        <p>视频分类:<span [innerHtml]="data.video_cat_names.split(',')[data.video_cat_names.split(',').length-1]"></span></p>
+                    </div>
                 </td>
                 <td nz-td>
                   <span [ngStyle]="{'color':['#999','#f90','green','#f00'][data.audit_status-1]}" [innerHtml]="['草稿','待审核','通过','驳回'][data.audit_status-1]">

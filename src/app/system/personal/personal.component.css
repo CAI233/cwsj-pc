@@ -54,3 +54,11 @@ form .ant-col-12:first-child{
     padding: 10px 20px;
     margin: 0;
 }
+.cont{
+    margin-bottom:10px;
+}
+.list{
+    width:75px;
+    display:inline-block;
+    text-align:right;
+}

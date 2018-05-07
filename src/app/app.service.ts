@@ -79,6 +79,7 @@ export class AppService {
             localStorage.setItem('token', success.data.token);
             this.post('/api/system/resource/menus').then(res => {
                 if (res.code == 0) {
+                    console.log(res.data);
                     localStorage.setItem('userMenus', JSON.stringify(res.data));
                     this.loginUserMenus = res.data;
                     this.parsonMenu(this.loginUserMenus);

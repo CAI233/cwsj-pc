@@ -14,7 +14,9 @@ export class PersonalComponent implements OnInit {
   //表单
   myForm: FormGroup;
   myForm2: FormGroup;
-  formBean: any = this.service.loginUserInfo
+  myMess  = this.service.loginUserInfo
+  
+  formBean : any = {}
   formBean2: any = {
     old_pwd:null,
     new_pwd:null,
@@ -22,6 +24,9 @@ export class PersonalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.load();
+
+
     this.myForm = this.service.fb.group({
       user_name: [null, [this.service.validators.required]],
       user_real_name: false,
@@ -35,6 +40,18 @@ export class PersonalComponent implements OnInit {
     })
     console.log(this.formBean)
   }
+
+  load(){
+    console.log(this.myMess)
+    this.service.post("/api/system/user/my",{user_id:this.myMess.user_id}).then(success => {
+      if(success.code==0){
+        console.log(success);
+
+      }
+
+      // this.formBean = 
+    })
+  }
   getFormControl(name) {
     return this.myForm2.controls[name];
   }
@@ -45,8 +62,9 @@ export class PersonalComponent implements OnInit {
       return { confirm: true, error: true };
     }
   };
-  //提交
+  //修改个人信息提交
   _submitForm() {
+    console.log(this.formBean)
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
@@ -64,14 +82,22 @@ export class PersonalComponent implements OnInit {
   }
   //提交
   _submitForm2() {
-    for (const i in this.myForm.controls) {
-      this.myForm2.controls[i].markAsDirty();
+    console.log(this.formBean2)
+    if(this.formBean2.old_pwd === this.formBean2.new_pwd){
+      this.service.message.warning("新密码不能和旧密码相同")
+      return false;
     }
+    // for (const i in this.myForm.controls) {
+    //   this.myForm2.controls[i].markAsDirty();
+    // }
     if (this.myForm.valid) {
-      this.formBean.user_pwd = "123456";
-      this.service.post("/api/system/user/save", this.formBean).then(success => {
+      // this.formBean.user_pwd = "123456";
+      this.service.post("/api/system/user/updatePwd", this.formBean2).then(success => {
         if (success.code == 0) {
           this.service.loginUserInfo = success.data
+          this.service.message.success("修改密码成功");
+          this.isVisibleMiddle2 = false;
+
         }
         else {
           this.service.message.error(success.message);

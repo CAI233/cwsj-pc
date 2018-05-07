@@ -29,6 +29,9 @@ export class CwCodeListComponent implements OnInit {
     name: '二维码配置',
     icon: 'anticon anticon-qrcode'
   }];
+  //配置的二维码对象
+  formBeanObject: any;
+  nzSelectedIndex: number = 0;
   constructor(public service: AppService) { }
 
   ngOnInit() {
@@ -48,9 +51,11 @@ export class CwCodeListComponent implements OnInit {
       console.log(e)
       this.nzSelectedIndex = 0;
     }
+    
   }
   closeTab(){
     this.nzSelectedIndex = 0;
+    this.formBeanObject = null;
   }
   //标签搜索
   searchChange(key?) {
@@ -139,9 +144,7 @@ export class CwCodeListComponent implements OnInit {
       }
     })
   }
-  //配置的二维码对象
-  formBeanObject: any;
-  nzSelectedIndex: number = 0;
+  
   //配置对象
   _settingBean(data?) {
     console.log(data);

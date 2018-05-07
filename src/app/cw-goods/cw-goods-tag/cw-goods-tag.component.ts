@@ -121,12 +121,12 @@ export class CwGoodsTagComponent implements OnInit {
   //品牌新增操作
   add(){
     this.selRow = {};
-    this.data.push(this.nowList);
+    this.data.unshift(this.nowList);
   }
   //商品新增操作 
   goods_add(){
     this.goods_selRow = {};
-    this.goods_data.push(this.nowGlist)
+    this.goods_data.unshift(this.nowGlist)
   }
   // 品牌修改操作
   edit(data){
@@ -208,5 +208,51 @@ export class CwGoodsTagComponent implements OnInit {
           this.service.message.error(success.message);
         }
     })
-  }  
+  } 
+  
+  // 全选
+  _allChecked : boolean = false;
+  _indeterminate : boolean = false;
+   // 全选
+   _checkAll(value) {
+    if (value) {
+      this.data.forEach(data => {
+        if (!data.disabled) {
+          data.checked = true;
+        }
+      });
+    } else {
+      this.data.forEach(data => data.checked = false);
+    }
+    this._refreshStatus();
+  }
+  _refreshStatus() {
+    const allChecked = this.data.every(value => value.disabled || value.checked);
+    const allUnChecked = this.data.every(value => value.disabled || !value.checked);
+    this._allChecked = allChecked;
+    this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
+
+   // 全选
+   _goods_allChecked : boolean = false;
+   _goods_indeterminate : boolean = false;
+    // 全选
+    _goods_checkAll(value) {
+     if (value) {
+       this.goods_data.forEach(data => {
+         if (!data.disabled) {
+           data.checked = true;
+         }
+       });
+     } else {
+       this.goods_data.forEach(data => data.checked = false);
+     }
+     this._goods_refreshStatus();
+   }
+   _goods_refreshStatus() {
+     const allChecked = this.goods_data.every(value => value.disabled || value.checked);
+     const allUnChecked = this.goods_data.every(value => value.disabled || !value.checked);
+     this._goods_allChecked = allChecked;
+     this._indeterminate = (!allChecked) && (!allUnChecked);
+   }
 }

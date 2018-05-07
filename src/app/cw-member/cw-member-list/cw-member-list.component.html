@@ -84,8 +84,8 @@
               <span>{{base64decoder(data.member_name)}}</span>
           </td>
           <td nz-td>
-            <span *ngIf="!data.subscribe">未关注</span>
-            <span *ngIf="data.subscribe">{{['未','已'][data.subscribe]}}关注</span>
+            <span *ngIf="!data.subscribe"  [ngStyle]="{'color':'red'}">未关注</span>
+            <span *ngIf="data.subscribe" [ngStyle]="{'color': data.subscribe == 0 ? 'red' : '#108ee9'}">{{['未','已'][data.subscribe]}}关注</span>
           </td>
           <td nz-td>
               <span>{{['男','女'][data.sex-1]}}</span>

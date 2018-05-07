@@ -125,8 +125,7 @@
         <nz-pagination [nzPageIndex]="param.pageNum" [nzTotal]="param.total" [nzPageSize]="param.pageSize" (nzPageIndexChange)="param.pageNum=$event;_reload()"></nz-pagination>
       </div>
     </ng-container>
-    <ng-container *ngIf="nzSelectedIndex == 1">
-
+    <ng-container *ngIf="nzSelectedIndex == 1" >
         <!--二维码配置-->
         <div class="code-setting">
           <div class="gutter-row-code">
@@ -326,7 +325,9 @@
           <tr nz-tbody-tr *ngFor="let data of nzTable.data">
             <td nz-td>
               <div class="zp-list">
-                <div class="zp-cover" style="background-image:url(https://oss.5rs.me/oss/uploadfe/jpg/db24dc12d0406363bd00d52893addac4.jpg?x-oss-process=image/resize,p_100)"></div>
+                <div class="zp-cover" style="width:72px;height:96px;">
+                  <img src="{{service.ctxPath+data.works_cover_small}}" alt="" style="width:100%;height:100%;" />
+                </div>
                 <div class="zp-info">
                   <h1>{{data.works_name}}</h1>
                   <p>类型：{{data.works_type}}</p>
