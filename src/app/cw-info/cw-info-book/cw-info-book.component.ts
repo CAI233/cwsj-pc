@@ -216,6 +216,7 @@ _enabled(data){
       limit_num:false,
       book_remark:false,
     })
+    console.log(this.service.validataAction('cw_info_book_add'));
     //加载图书列表
     this.load();
     //加载图书标签列表

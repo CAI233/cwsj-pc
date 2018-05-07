@@ -16,7 +16,7 @@
           <div nz-row nz-form-item style="margin-bottom:15px;">
             <div class="row-actions" style="width:100%">
               <nz-select style="width:100%;" [(ngModel)]="param.role_id" [nzPlaceHolder]="'请选择一个角色'" nzShowSearch (ngModelChange)="reload(true)">
-                <nz-option *ngFor="let item of roleRow" [nzLabel]="item.role_name" [nzValue]="item.role_id" ></nz-option>
+                <nz-option *ngFor="let item of roleRow" [nzLabel]="item.role_name" [nzValue]="item.role_id"></nz-option>
               </nz-select>
             </div>
           </div>

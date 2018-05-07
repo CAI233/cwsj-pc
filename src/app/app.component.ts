@@ -64,8 +64,8 @@ export class AppComponent {
           localStorage.clear();
         }
         else if (this.fiterMenu.filter(el => el == menu.module).length == 0 && !this.service.validataMenu(menu.module)) {
-          this.router.navigate(['/error']);
-        }
+         this.router.navigate(['/error']);
+       }
         else {
           //菜单选中
           if (menu.module && menu.module != 'login' && menu.module != 'home') {

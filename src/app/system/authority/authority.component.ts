@@ -25,7 +25,7 @@ export class AuthorityComponent implements OnInit {
   constructor(public service: AppService) { }
   ngOnInit() {
     // 获取角色列表
-    this.service.post('/api/system/role/list', {
+    this.service.post('/api/system/role/lists', {
       pageNum: 1,
       pageSize: 1000
     }).then(success => {

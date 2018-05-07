@@ -138,7 +138,7 @@ export class RoleComponent implements OnInit {
       this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
-    this.service.post('/api/system/role/list', this.param).then(success => {
+    this.service.post('/api/system/role/lists', this.param).then(success => {
       this._loading = false;
       if (success.code == 0) {
         this.tableData = success.data.rows;
