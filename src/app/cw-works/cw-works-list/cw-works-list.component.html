@@ -22,28 +22,28 @@
         <div class="tableListSearch">
           <div class="gutter-example">
             <div nz-row [nzGutter]="8">
-              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '问答'}" (click)="paramCol.works_type='问答'">
+              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '问答'}" (click)="paramCol.works_type='问答';reload(true);">
                 <i class="anticon anticon-book"></i>
                 <span>问答</span>
                 <span class="check">
                   <i class="anticon anticon-check"></i>
                 </span>
               </div>
-              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '资源包'}" (click)="paramCol.works_type='资源包'">
+              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '资源包'}" (click)="paramCol.works_type='资源包';reload(true);">
                 <i class="anticon anticon-database"></i>
                 <span>资源包</span>
                 <span class="check">
                   <i class="anticon anticon-check"></i>
                 </span>
               </div>
-              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '试题'}" (click)="paramCol.works_type='试题'">
+              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '试题'}" (click)="paramCol.works_type='试题';reload(true);">
                 <i class="anticon anticon-file-text"></i>
                 <span>试题</span>
                 <span class="check">
                   <i class="anticon anticon-check"></i>
                 </span>
               </div>
-              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '教育表格'}" (click)="paramCol.works_type='教育表格'">
+              <div nz-col class="gutter-row" [ngClass]="{'active': paramCol.works_type == '教育表格'}" (click)="paramCol.works_type='教育表格';reload(true);">
                 <i class="anticon anticon-file-excel"></i>
                 <span>教育表格</span>
                 <span class="check">

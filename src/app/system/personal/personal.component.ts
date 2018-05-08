@@ -46,7 +46,7 @@ export class PersonalComponent implements OnInit {
     this.service.post("/api/system/user/my",{user_id:this.myMess.user_id}).then(success => {
       if(success.code==0){
         console.log(success);
-
+        this.formBean = success.data; 
       }
 
       // this.formBean = 

@@ -175,10 +175,10 @@ export class CwGoodsTagComponent implements OnInit {
   }
   //品牌提交
   _saveRow(){
-    if(!this.selRow.brand_code){
-      this.service.message.error('请填写品牌编码');
-      return false;
-    }
+    // if(!this.selRow.brand_code){
+    //   this.service.message.error('请填写品牌编码');
+    //   return false;
+    // }
     if(!this.selRow.brand_name){
       this.service.message.error('请选择品牌名称');
       return false;

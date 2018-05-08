@@ -16,21 +16,21 @@
                     <nz-content class="main-page-content">
                         <div class="gutter-example">
                             <div nz-row [nzGutter]="8">
-                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type== 1}" (click)="param.goods_type=1">
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type== 1}" (click)="param.goods_type=1;reload(true)">
                                 <!-- <i class="anticon anticon-book"></i> -->
                                 <span>图书</span>
                                 <span class="check">
                                     <i class="anticon anticon-check"></i>
                                 </span>
                                 </div>
-                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 2}" (click)="param.goods_type=2">
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 2}" (click)="param.goods_type=2;reload(true)">
                                 <!-- <i class="anticon anticon-database"></i> -->
                                 <span>音视频</span>
                                 <span class="check">
                                     <i class="anticon anticon-check"></i>
                                 </span>
                                 </div>
-                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 3}" (click)="param.goods_type=3">
+                                <div nz-col class="gutter-row" [ngClass]="{'active': param.goods_type == 3}" (click)="param.goods_type=3;reload(true)">
                                 <!-- <i class="anticon anticon-file-text"></i> -->
                                 <span>电子书</span>
                                 <span class="check">
@@ -261,6 +261,15 @@
                                     <nz-input formControlName="real_price"  [nzType]="'number'" [(ngModel)]="selRow.real_price"  nzReadonly>
                                         <ng-template #addOnBefore>折后售价<i>¥</i></ng-template>
                                     </nz-input>
+                                </div>
+                            </div>
+                            <div nz-form-item nz-row>
+                                <div nz-form-label>
+                                    <label>售卖截止时间</label>
+                                </div>
+                                <div nz-form-control>
+                                    <nz-datepicker [(ngModel)]="selRow.deadline" formControlName="deadline" nzShowTime [nzPlaceHolder]="'售卖截止时间'" [nzFormat]="'YYYY-MM-DD HH:mm:ss'"></nz-datepicker>
+                                    <!-- <nz-input formControlName="deadline"  [nzType]="'text'" [(ngModel)]="selRow.deadline" [nzPlaceHolder]="'请填写关键字'"></nz-input> -->
                                 </div>
                             </div>
                             <div nz-form-item nz-row>

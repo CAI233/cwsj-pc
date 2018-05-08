@@ -344,7 +344,7 @@ export class CwGoodsListComponent implements OnInit {
     }else{
       this.formTitle = '修改电子书商品'
     }
-    
+    console.log(this.selRow);
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
     this.cat_data = [];
 
@@ -516,10 +516,14 @@ export class CwGoodsListComponent implements OnInit {
       this.service.message.warning('请填写商品标签!');
       return false;
     }
-    if(!this.selRow.price || this.selRow.price==0){
+    if(!this.selRow.price){
       this.service.message.warning('请填写价格!');
       return false;
     }
+    // if(!this.selRow.deadline){
+    //   this.service.message.warning('请填写售价截止时间!');
+    //   return false;
+    // }
     this.isTrue = false;
     this.selectedIndex = 3;
   }
@@ -535,6 +539,14 @@ export class CwGoodsListComponent implements OnInit {
         this.selRow.goods_tag_ids = this.selRow.tag_ids
       }
     }
+    if(this.selRow.deadline){
+      this.selRow.deadline = this.timeOut(this.selRow.deadline);
+    }
+    if(!this.selRow.res_id){
+      this.service.message.warning('请选择资源!');
+      return false;
+    }
+
     this.selRow.goods_cover = this.nowRecourse.book_cover == null ? this.nowRecourse.video_cover : this.nowRecourse.book_cover;
     this.service.post('/api/busiz/goods/save',this.selRow).then(success => {
         if(success.code==0){
@@ -569,7 +581,8 @@ export class CwGoodsListComponent implements OnInit {
       inventory:false,
       limit_buy:false,
       remark:false,
-      res_id:false
+      res_id:false,
+      deadline:false
     })
 
 
@@ -653,10 +666,10 @@ export class CwGoodsListComponent implements OnInit {
     let M, D, H, mm, ss;
     M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
     D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
-      // H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
-      // mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
-      // ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
-    // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
-    return m.getFullYear() + '-' + M + '-' + D;
+    H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+    mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+    ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+    return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
+    // return m.getFullYear() + '-' + M + '-' + D;
   }
 }
