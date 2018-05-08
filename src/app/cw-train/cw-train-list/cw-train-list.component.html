@@ -92,16 +92,28 @@
                 </nz-popconfirm>
 
               </div>
-              <div class="row-questions">
-                <button nz-button nzType="primary" (click)="submitAudit()" *ngIf="this.service.validataAction('cw_train_list_add')">
-                  <span>提交审核</span>
-                </button>
-              </div>
+              <div style="float:right;">
+                  <button nz-button nzType="primary" (click)="audit()" *ngIf="this.service.validataAction('cw_train_list_audit')">
+                      <span>审核</span>
+                  </button>
+                  <nz-modal [(nzVisible)]="isAudit" [nzTitle]="AuditTitle" [nzContent]="AuditContent" [nzFooter]="false" (nzOnCancel)="auditCancel()">
+                    <ng-template #AuditTitle>
+                      审核操作
+                    </ng-template>
+                    <ng-template #AuditContent >
+                      <div style="text-align:center;margin:15px auto;">
+                          <button nz-button nzType="default" (click)="Not()">驳回</button>
+                          <button nz-button nzType="primary" (click)="Ok()">通过</button>
+                      </div>
+                      
+                    </ng-template>
+                  </nz-modal>
+                </div>
             </div>
 
           </form>
           <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
-            [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)"
+            [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;reload($event)" (nzPageIndexChange)="_refresh()"
             (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;reload($event)">
             <thead nz-thead>
               <tr>
@@ -162,9 +174,13 @@
                     <!-- 详情 -->
                     <ng-container *ngIf="this.service.validataAction('cw_train_list_details')">
                       <a href="javascript:void(0)" (click)="videoDetail(data)">查看</a>
-                      <span nz-table-divider ></span>
+                      <span nz-table-divider *ngIf="this.service.validataAction('cw_train_list_upaudit')"></span>
                     </ng-container>
-                    <nz-dropdown >
+                    <!-- 提交审核 -->
+                    <ng-container *ngIf="this.service.validataAction('cw_train_list_upaudit')">
+                      <a href="javascript:void(0)" (click)="submitAudit(data)">提交审核</a>
+                    </ng-container>
+                    <!-- <nz-dropdown >
                       <a class="ant-dropdown-link" nz-dropdown>更多操作
                         <i class="anticon anticon-down"></i>
                       </a>
@@ -176,7 +192,7 @@
                           <a (click)="auditStatus(data,4)">驳回</a>
                         </li>
                       </ul>
-                    </nz-dropdown>
+                    </nz-dropdown> -->
                   </span>
                 </td>
               </tr>
@@ -290,7 +306,7 @@
         </form>
       </nz-content>
     </nz-tab>
-    <nz-tab *ngIf="isVisibleMiddle">
+    <nz-tab *ngIf="isVisibleMiddle" [nzDisabled]="isVisibleMiddle">
       <ng-template #nzTabHeading>
         视频资源
       </ng-template>

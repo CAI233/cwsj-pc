@@ -122,8 +122,6 @@ export class CwTrainListComponent implements OnInit {
     if (bean) {
       console.log(bean)
       this.formBean = { ...bean }
-
-      this.formBean.tag_id = (JSON.parse(bean.tag_id)).join(",");
       let video_cat_ids_array = this.formBean.video_cat_ids.split(',')
       //部门
       if (video_cat_ids_array) {
@@ -201,6 +199,8 @@ export class CwTrainListComponent implements OnInit {
     };
     this.reload();
   }
+
+
   //提交
   _submitForm() {
     for (const i in this.myForm.controls) {
@@ -211,6 +211,7 @@ export class CwTrainListComponent implements OnInit {
         this.service.message.warning('请上传封面');
         return false;
       }
+      console.log(this.formBean)
       this.formBean.video_ids_array = []
       this.formBean.video_cat_idss.forEach(element => {
         if (typeof (element) == 'object') {
@@ -223,17 +224,20 @@ export class CwTrainListComponent implements OnInit {
       this.formBean.video_cat_id = this.formBean.video_ids_array[this.formBean.video_ids_array.length - 1];
       this.formBean.video_cat_ids = this.formBean.video_ids_array.join(',');
       this.formBean.video_cat_names = this.video_cat_idss._displayLabelContext.labels.join(',');
-      // this.formBean.tag_id = this.formBean.tag_id.join(',');
-      this.service.post('/api/busiz/video/save', this.formBean).then(success => {
-        if (success.code == 0) {
-          this.isVisibleMiddle = false;
-          this.formClear()
-          this.reload();
-        }
-        else {
-          this.service.message.error(success.message);
-        }
-      })
+      this.formBean.tag_id = this.formBean.tag_id.join(',');
+      if (!this.formBean.tag_id) {
+        this.service.message.warning('请选择标签');
+        return false;
+      }
+      if (!this.formBean.video_cat_id) {
+        this.service.message.warning('请选择分类');
+        return false;
+      }
+      this.selectedIndex = 2
+
+
+
+      
     }
   }
   //删除
@@ -314,37 +318,84 @@ export class CwTrainListComponent implements OnInit {
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
   }
+  _refresh(){
+    this._allChecked = false;
+  }
 
   //提交审核
-  submitAudit() {
-    if (this.tableData.filter(value => value.checked).length < 1) {
-      this.service.message.warning('你没有选择需要提交审核的数据!');
-    }
-    else {
-      let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.video_id) })
-      this.service.post('/api/busiz/video/submitaudit', {
-        ids: ids, mark: 'audit', audit_status: 2
+  submitAudit(data) {
+       this.service.post('/api/busiz/video/submitaudit', {
+        ids: [data.video_id], mark: 'audit', audit_status: 2
       }).then(success => {
         if (success.code == 0) {
           this.reload();
-        }
-        else {
+        }else{
           this.service.message.error(success.message);
         }
       })
+  }
+
+  // 审核
+  isAudit : boolean = false;
+  auditCancel(){
+    this.isAudit = false;
+  }
+  ids : any = [];//审核作品id
+  _status : number = 0;
+  //通过-驳回
+  audit() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要审核的数据!');
+      return false;
+    }
+    else if(this.tableData.filter(value => value.checked).length == 1){
+      this.ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { this.ids.push(item.video_id);this._status = item.audit_status });
+      if(this._status==1){
+        this.service.message.warning('请先进行提交审核!');
+        return false;
+      }else{
+        this.isAudit = true;
+      }
+      
+    }else{
+      this.service.message.warning('仅能同时操作一条数据,请重新选择!');
+      return false;
     }
   }
-  //通过驳回
-  auditStatus(data, status) {
-    this.service.post('/api/busiz/video/audit', { ids: [data.video_id], audit_status: status }).then(success => {
+  Ok(){
+    this.service.post('/api/busiz/video/audit',{ids: this.ids, audit_status: 4} ).then(success => {
       if (success.code == 0) {
         this.reload();
+        this.isAudit = false;
+        this.ids = [];
       } else {
         this.service.message.error(success.message);
       }
     })
   }
+  Not(){
+    this.service.post('/api/busiz/video/audit',{ids: this.ids, audit_status: 3} ).then(success => {
+      if (success.code == 0) {
+        this.reload();
+        this.isAudit = false;
+        this.ids = [];
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
+  // //通过驳回
+  // auditStatus(data, status) {
+  //   this.service.post('/api/busiz/video/audit', { ids: [data.video_id], audit_status: status }).then(success => {
+  //     if (success.code == 0) {
+  //       this.reload();
+  //     } else {
+  //       this.service.message.error(success.message);
+  //     }
+  //   })
+  // }
 
   // 顶部标签页转换
   change(rest?){
@@ -413,30 +464,52 @@ export class CwTrainListComponent implements OnInit {
   getFormControl1(name) {
     return this.myForm1.controls[name];
   }
+
+  
   submitForm1() {
-    if (!this.formBean.video_id) {
-      this.service.message.warning('请先保存视频基本信息');
-      return false;
-    }
     for (const i in this.myForm1.controls) {
       this.myForm1.controls[i].markAsDirty();
     }
 
     console.log(this.resourceArray)
-    let res_ids = this.resourceArray.map(element => element.res_id)
-    console.log(res_ids)
+    let res_ids = this.resourceArray.map(element => element.res_id);
+  
+    if (!res_ids || res_ids.length==0 || res_ids[0]==null) {
+      this.service.message.warning('请先选择资源');
+      return false;
+    }
+    if([...Array.from(new Set(res_ids))].length != res_ids.length){
+      this.service.message.warning('资源选择有重复，请另选资源');
+      return false;
+    }
+   
     this._loading = true;
-    this.service.post('/api/busiz/video/config', {
-      video_id: this.formBean.video_id,
-      res_ids: res_ids
-    }).then(success => {
-      this._loading = false;
+    this.service.post('/api/busiz/video/save', this.formBean).then(success => {
       if (success.code == 0) {
-        this.service.message.success("保存成功")
-      } else {
-        this.service.message.error(success.message)
+        this.isVisibleMiddle = false;
+        console.log(success)
+        if(success.data){
+          this.formBean.video_id = success.data.video_id;
+          this.service.post('/api/busiz/video/config', {
+            video_id: this.formBean.video_id,
+            res_ids: res_ids
+          }).then(success => {
+            this._loading = false;
+            if (success.code == 0) {
+              this.formClear()
+              this.reload();
+              this.service.message.success("保存成功")
+            } else {
+              this.service.message.error(success.message)
+            }
+          })
+        }
+      }
+      else {
+        this.service.message.error(success.message);
       }
     })
+    
   }
 
   //---------------------------------------------  资源文件 end --------------------------------------------

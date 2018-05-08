@@ -316,7 +316,7 @@
             </nz-tab>
         </nz-tabset>
         <form nz-form style="margin-bottom:15px;" *ngIf="selectedIndex!=2">
-            <div nz-row nz-form-item style="margin-bottom:0;">
+            <div nz-row nz-form-item style="margin-bottom:10px;">
                 <div nz-col [nzSpan]="6">
                     <div nz-form-label nz-col [nzSpan]="6">
                         <label>图书名称</label>
@@ -351,7 +351,7 @@
                   </a>
                 </div>
             </div>
-            <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:0;margin-top:10px;">
+            <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:10px;margin-top:10px;">
                 <div nz-col [nzSpan]="6" >
                     <div nz-form-label nz-col [nzSpan]="6">
                         <label>标签</label>
@@ -373,8 +373,24 @@
                     </div>
                 </div>
             </div>
-            <div nz-form-item style="float:right;margin-bottom:0;">
-                <div class="row-actions">
+            <div nz-form-item style="width:100%;margin-bottom:0;">
+                <div style="float:left;">
+                    <button nz-button nzType="primary" (click)="audit()" *ngIf="this.service.validataAction('cw_info_book_check')">
+                        <span>审核</span>
+                    </button>
+                    <nz-modal [(nzVisible)]="isAudit" [nzTitle]="AuditTitle" [nzContent]="AuditContent" [nzFooter]="false" (nzOnCancel)="auditCancel()">
+                        <ng-template #AuditTitle>
+                        审核操作
+                        </ng-template>
+                        <ng-template #AuditContent >
+                        <div style="text-align:center;margin:15px auto;">
+                            <button nz-button nzType="default" (click)="Not()">驳回</button>
+                            <button nz-button nzType="primary" (click)="Ok()">通过</button>
+                        </div>
+                        </ng-template>
+                    </nz-modal>
+                </div>
+                <div style="float:right;">
                     <button nz-button nzType="primary" type="button" (click)="_add()" *ngIf="this.service.validataAction('cw_info_book_add')">
                     <i class="anticon anticon-plus" style="font-size:12px;color:#fff;"></i>
                     <span>新增</span>
@@ -390,7 +406,7 @@
             <div style="clear:both;"></div>
         </form>
         <nz-table #nzTable *ngIf="selectedIndex!=2" nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
-      [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
+      [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)" (nzPageIndexChange)="_refresh()"
       (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
         <thead nz-thead>
         <tr>
@@ -455,29 +471,23 @@
                 <span>{{data.create_time}}</span>
             </td>
             <td nz-td>
-              <span >
-                <a (click)="_see(data)">查看</a>
-                <span nz-table-divider></span>
-              </span>
-              <nz-dropdown *ngIf="this.service.validataAction('resource_add')">
-                <a class="ant-dropdown-link" nz-dropdown>审核
-                    <i class="anticon anticon-down"></i>
-                    <span nz-table-divider></span>
-                </a>
-                <ul nz-menu>
-                    <li nz-menu-item *ngFor="let item of auilt">
-                        <a (click)="_audit(data,item.id)">{{item.name}}</a>
-                    </li>
-                </ul>
-            </nz-dropdown>
-              <span >
+              <span *ngIf="this.service.validataAction('cw_info_book_edit')">
                 <a (click)="_edit(data)" *ngIf="this.service.validataAction('cw_info_book_edit')">修改</a>
-                <span nz-table-divider></span>
+                <span nz-table-divider *ngIf="this.service.validataAction('cw_info_book_del')"></span>
                 </span>
-              <span >
+              <span *ngIf="this.service.validataAction('cw_info_book_del')">
                   <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)" *ngIf="this.service.validataAction('cw_info_book_del')">
                     <a nz-popconfirm>删除</a>
-                  </nz-popconfirm>
+                    <span nz-table-divider *ngIf="this.service.validataAction('cw_info_book_see')"></span>
+                  </nz-popconfirm >
+              </span>
+              <span *ngIf="this.service.validataAction('cw_info_book_see')">
+                <a (click)="_see(data)">查看</a>
+                <span nz-table-divider *ngIf="this.service.validataAction('cw_info_book_audit')"></span>
+              </span>
+               <span *ngIf="this.service.validataAction('cw_info_book_audit')">
+                <a (click)="_audit(data)">提交审核</a>
+                <!-- <span nz-table-divider></span>  -->
               </span>
             </td>
           </tr>

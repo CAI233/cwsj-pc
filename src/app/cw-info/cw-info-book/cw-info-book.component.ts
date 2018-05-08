@@ -164,10 +164,10 @@ export class CwInfoBookComponent implements OnInit {
 
   }
   // 提交审核
-  _audit(data,id){
+  _audit(data){
 
     this.bookData = {...data}
-    this.bookData.audit_status = id;
+    this.bookData.audit_status = 2;
     this.bookData.book_type = this.param.book_type;
     this.bookData.tag_ids = this.bookData.tag_ids.split(",");
     this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
@@ -179,6 +179,67 @@ export class CwInfoBookComponent implements OnInit {
           }
     })
   }
+
+  // 审核
+  isAudit : boolean = false;
+  auditCancel(){
+    this.isAudit = false;
+  }
+  ids : any = [];//审核作品id
+  _status : number = 0;
+  //通过-驳回
+  audit() {
+    if (this.data.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要审核的数据!');
+      return false;
+    }
+    else if(this.data.filter(value => value.checked).length == 1){
+      
+      this.data.filter(value => value.checked).forEach(item => { this.bookData = item;this._status = item.audit_status });
+      if(this._status==1){
+        this.service.message.warning('请先进行提交审核!');
+        return false;
+      }else{
+        this.isAudit = true;
+      }
+      
+    }else{
+      this.service.message.warning('仅能同时操作一条数据,请重新选择!');
+      return false;
+    }
+  }
+  Ok(){
+    this.bookData.audit_status = 3;
+    this.bookData.book_type = this.param.book_type;
+    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
+    this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
+      if (success.code == 0) {
+        this.reload();
+        this.isAudit = false;
+        this.bookData = {};
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  Not(){
+    this.bookData.audit_status = 4;
+    this.bookData.book_type = this.param.book_type;
+    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
+    this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
+      if (success.code == 0) {
+        this.reload();
+        this.isAudit = false;
+        this.bookData = {};
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
+
+
+
 // 发布状态
 _enabled(data){
   data.status = data.status == 1 ? 2 : 1;
@@ -540,6 +601,9 @@ _enabled(data){
     const allUnChecked = this.data.every(value => value.disabled || !value.checked);
     this._allChecked = allChecked;
     this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
+  _refresh(){
+    this._allChecked = false;
   }
   timeOut(d) {
     let m = new Date(d);

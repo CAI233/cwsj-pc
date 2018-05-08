@@ -442,7 +442,7 @@ export class CwWorksListComponent implements OnInit {
       })
   }
 
-  currentModal ;
+
   isAudit : boolean = false;
   isConfirmLoading = false;
   auditCancel(){
