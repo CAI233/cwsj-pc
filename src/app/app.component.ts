@@ -40,19 +40,21 @@ export class AppComponent {
         return route;
       })
       .filter(route => route.outlet === 'primary')
-      .mergeMap(route => route.data)
+      .mergeMap(route => {console.log(route.data);return route.data})
       .subscribe((event) => {
+        console.log(11111)
         //路由data的标题
         if (!event['title']) {
           event = { title: '首页', module: 'home', power: "SHOW" };
         }
+  
         let title = event['title'];
         this.menuList.forEach(p => p.select = false);
         var menu = { title: title, module: event['module'], power: event['power'], select: true };
         this.titleService.setTitle(title);
         let exitMenu = this.menuList.find(info => info.title == title);
         this.activeMenu = menu;
-        console.log(menu)
+
         if (menu.module != 'login' && (!this.service.token || this.service.token == '')) {
           this.router.navigate(['/login']);
           this.menuList = [];
@@ -63,12 +65,14 @@ export class AppComponent {
           this.service.loginUserMenus = null;
           localStorage.clear();
         }
-        else if (this.fiterMenu.filter(el => el == menu.module).length == 0 && !this.service.validataMenu(menu.module)) {
+        else if ( this.fiterMenu.filter(el => el == menu.module).length == 0 && !this.service.validataMenu(menu.module)) {
+  
          this.router.navigate(['/error']);
        }
         else {
+   
           //菜单选中
-          if (menu.module && menu.module != 'login' && menu.module != 'home') {
+          if (menu.module && menu.module != 'login' && menu.module != 'home' ) {
             this.service.loginUserMenus.forEach(one => {
               one.children.forEach(two => {
                 if (two.res_key == menu.module) {
@@ -84,10 +88,13 @@ export class AppComponent {
               })
             })
           }
+      
+          console.log(exitMenu)
           if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
             this.menuList.forEach(p => p.select = p.title == title);
-            return;
+            return false;
           }
+        
           this.menuList.push(menu);
         }
       });

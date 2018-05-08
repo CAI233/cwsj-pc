@@ -441,6 +441,17 @@
                                             </div>
                                         </div> 
                                     </div>
+                                    <div nz-form-item nz-row style="margin-bottom:0;">
+                                        <div nz-col [nzSpan]="12">
+                                            <div nz-form-label nz-col style="float:left;">
+                                              <label>售卖截止时间</label>
+                                            </div>
+                                            <div nz-form-control nz-col style="float:left;">
+                                              <p>{{showData.deadline}}</p>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
                                   </div>
                             </div>
                             <div nz-row nz-form-item style="margin-bottom:0;" *ngIf="nowRecourseArr.length>0">

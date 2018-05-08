@@ -180,7 +180,7 @@ export class CwGoodsTagComponent implements OnInit {
     //   return false;
     // }
     if(!this.selRow.brand_name){
-      this.service.message.error('请选择品牌名称');
+      this.service.message.error('请填写标签名称');
       return false;
     }
     this.service.post('/api/busiz/brand/save',this.selRow).then(success => {
@@ -196,7 +196,7 @@ export class CwGoodsTagComponent implements OnInit {
   //商品提交
   goods_saveRow(){
     if(!this.goods_selRow.tag_name){
-      this.service.message.error('请填写商品名称');
+      this.service.message.error('请填写标签名称');
       return false;
     }
     this.service.post('/api/busiz/goods/tag/save',this.goods_selRow).then(success => {

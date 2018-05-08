@@ -250,7 +250,7 @@ export class CwGoodsListComponent implements OnInit {
         this.param.cat_id = this.param.cat_ids[this.param.cat_ids.length-1];
       }
       if(this.paramCol.searchTime[0]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[0]);
-      if(this.paramCol.searchTime[1]!=null) this.param.start_time = this.timeOut(this.paramCol.searchTime[1]);
+      if(this.paramCol.searchTime[1]!=null) this.param.end_time = this.timeOut(this.paramCol.searchTime[1]);
       this.load();
     }
 
@@ -347,6 +347,9 @@ export class CwGoodsListComponent implements OnInit {
     console.log(this.selRow);
     this.selRow.goods_tag_ids = this.selRow.tag_ids;
     this.cat_data = [];
+
+    //售卖截止时间
+    this.selRow.deadline = this.selRow.deadline ? new Date(this.selRow.deadline) : null;
 
     let arr_name = this.selRow.goods_cat_names.split(",");
     let arr_id = this.selRow.goods_cat_ids.split(",");

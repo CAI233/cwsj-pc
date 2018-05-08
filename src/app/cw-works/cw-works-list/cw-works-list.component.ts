@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-
+import { NzModalService } from 'ng-zorro-antd';
 
 declare let wangEditor: any
 @Component({
@@ -51,7 +51,7 @@ export class CwWorksListComponent implements OnInit {
   _address: any;
 
   // 实例化一个对象
-  constructor(public service: AppService) { }
+  constructor(public service: AppService,private confirmServ: NzModalService) { }
   //表单
   myForm: FormGroup;
   formTitle: string;
@@ -289,6 +289,7 @@ export class CwWorksListComponent implements OnInit {
               this.testParam.works_id = this.formBean.works_id;
             }
           }
+          this.isVisibleMiddle = false;
           this.reload();
         }
         else {
@@ -381,10 +382,13 @@ export class CwWorksListComponent implements OnInit {
     this._refreshStatus();
   }
   _refreshStatus() {
-    const allChecked = this.tableData.every(value => value.disabled || value.checked);
-    const allUnChecked = this.tableData.every(value => value.disabled || !value.checked);
-    this._allChecked = allChecked;
-    this._indeterminate = (!allChecked) && (!allUnChecked);
+      const allChecked = this.tableData.every(value => value.disabled || value.checked);
+      const allUnChecked = this.tableData.every(value => value.disabled || !value.checked);
+      this._allChecked = allChecked;
+      this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
+  _refresh(){
+    this._allChecked = false;
   }
 
   //上架下架
@@ -404,15 +408,30 @@ export class CwWorksListComponent implements OnInit {
     }
   }
   //提交审核
-  submitAudit() {
-    if (this.tableData.filter(value => value.checked).length < 1) {
-      this.service.message.warning('你没有选择需要提交审核的数据!');
-    }
-    else {
-      let ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.works_id) })
-      this.service.post('/api/busiz/works/audit', {
-        ids: ids, mark: 'audit'
+  // submitAudit() {
+  //   if (this.tableData.filter(value => value.checked).length < 1) {
+  //     this.service.message.warning('你没有选择需要提交审核的数据!');
+  //   }
+  //   else {
+  //     let ids = [];
+  //     this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.works_id) })
+  //     this.service.post('/api/busiz/works/audit', {
+  //       ids: ids, mark: 'audit'
+  //     }).then(success => {
+  //       if (success.code == 0) {
+  //         this.reload();
+  //       }
+  //       else {
+  //         this.service.message.error(success.message);
+  //       }
+  //     })
+  //   }
+  // }
+
+    //提交审核
+  submitAudit(data){
+         this.service.post('/api/busiz/works/audit', {
+        ids: [data.works_id], mark: 'audit'
       }).then(success => {
         if (success.code == 0) {
           this.reload();
@@ -421,18 +440,64 @@ export class CwWorksListComponent implements OnInit {
           this.service.message.error(success.message);
         }
       })
+  }
+
+  currentModal ;
+  isAudit : boolean = false;
+  isConfirmLoading = false;
+  auditCancel(){
+    this.isAudit = false;
+  }
+
+  ids : any = [];//审核作品id
+  _status : number = 0;
+  //通过-驳回
+  auditStatus() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('你没有选择需要审核的数据!');
+      return false;
+    }
+    else if(this.tableData.filter(value => value.checked).length == 1){
+      this.ids = [];
+      this.tableData.filter(value => value.checked).forEach(item => { this.ids.push(item.works_id);this._status = item.audit_status });
+      if(this._status==1){
+        this.service.message.warning('请先进行提交审核!');
+        return false;
+      }else{
+        this.isAudit = true;
+      }
+      
+    }else{
+      this.service.message.warning('仅能同时操作一条数据,请重新选择!');
+      return false;
     }
   }
-  //通过驳回
-  auditStatus(data, status) {
-    this.service.post('/api/busiz/works/audit', { ids: [data.works_id], audit_status: status }).then(success => {
+  Ok(){
+    this.isConfirmLoading = true;
+    this.service.post('/api/busiz/works/audit',{ids: this.ids, audit_status: 3} ).then(success => {
       if (success.code == 0) {
         this.reload();
+        this.isConfirmLoading = false;
+        this.isAudit = false;
+
+        this.ids = [];
       } else {
         this.service.message.error(success.message);
       }
     })
   }
+  Not(){
+    this.service.post('/api/busiz/works/audit',{ids: this.ids, audit_status: 4} ).then(success => {
+      if (success.code == 0) {
+        this.reload();
+        this.isAudit = false;
+        this.ids = [];
+      } else {
+        this.service.message.error(success.message);
+      }
+    })
+  }
+
   //详情
   worksResource : any = [];//当前作品所带资源
   worksDetail(data) {
