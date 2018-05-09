@@ -24,12 +24,13 @@ export class PersonalComponent implements OnInit {
   }
 
   ngOnInit() {
+    //加载个人基本信息
     this.load();
-
-
     this.myForm = this.service.fb.group({
       user_name: [null, [this.service.validators.required]],
       user_real_name: false,
+      dept_name:false,
+      role_name:false,
       email: false,
       phone: false,
     })
@@ -52,6 +53,9 @@ export class PersonalComponent implements OnInit {
       // this.formBean = 
     })
   }
+
+
+
   getFormControl(name) {
     return this.myForm2.controls[name];
   }
@@ -68,11 +72,29 @@ export class PersonalComponent implements OnInit {
     for (const i in this.myForm.controls) {
       this.myForm.controls[i].markAsDirty();
     }
+
+    const EMAIL_REGEXP = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+    if (!this.formBean.email) {
+      this.service.message.warning('请填写邮箱发送地址!');
+      return false;
+    } else if (!EMAIL_REGEXP.test(this.formBean.email)) {
+      this.service.message.warning('请填写正确的邮箱地址!');
+      return false;
+    }
+    const PHONE_REGEXP = /^1[3|4|5|7|8][0-9]{9}$/;
+    if (!this.formBean.phone) {
+      this.service.message.warning('请填写手机号!');
+      return false;
+    } else if (!PHONE_REGEXP.test(this.formBean.phone)) {
+      this.service.message.warning('请填写正确的手机号!');
+      return false;
+    }
     if (this.myForm.valid) {
-      this.formBean.user_pwd = "123456";
+      // this.formBean.user_pwd = "123456";
       this.service.post("/api/system/user/save", this.formBean).then(success => {
         if (success.code == 0) {
           this.service.loginUserInfo = success.data
+          this.isVisibleMiddle = false;
         }
         else {
           this.service.message.error(success.message);

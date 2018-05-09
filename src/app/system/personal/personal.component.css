@@ -62,3 +62,8 @@ form .ant-col-12:first-child{
     display:inline-block;
     text-align:right;
 }
+.nowInput{
+    border:none;
+    border-bottom:1px solid #ccc;
+    border-radius:0;
+}

@@ -1,7 +1,7 @@
-import 'zone.js';
-import 'reflect-metadata';
+// import 'zone.js';
+// import 'reflect-metadata';
 import { Component, OnInit } from '@angular/core';
-import { ViserModule } from 'viser-ng';
+// import { ViserModule } from 'viser-ng';
 
 const data = [
   { year: '1991', value: 3 },

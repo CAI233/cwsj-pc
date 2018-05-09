@@ -357,7 +357,7 @@ export class CwTrainListComponent implements OnInit {
   ids : any = [];
   //通过-驳回
   audit(data) {
-    
+    this.ids = [];
     if(data.audit_status==1){
       this.service.message.warning('请先进行提交审核!');
       return false;
@@ -374,6 +374,7 @@ export class CwTrainListComponent implements OnInit {
         this.isAudit = false;
         this.ids = [];
       } else {
+        this.isAudit = false;
         this.service.message.error(success.message);
       }
     })
@@ -385,6 +386,7 @@ export class CwTrainListComponent implements OnInit {
         this.isAudit = false;
         this.ids = [];
       } else {
+        this.isAudit = false;
         this.service.message.error(success.message);
       }
     })

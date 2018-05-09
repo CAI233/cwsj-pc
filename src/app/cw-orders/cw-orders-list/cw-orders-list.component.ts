@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare const Buffer
 @Component({
   selector: 'app-cw-orders-list',
   templateUrl: './cw-orders-list.component.html',
@@ -156,12 +157,19 @@ export class CwOrdersListComponent implements OnInit {
           }
     })
   }
-
+  //base64转码 
+  base64decoder(Context):any{
+    let newChange  = new Buffer(Context,'base64').toString();
+    return newChange
+  }
+ 
 
   // 发货
   _send(data){
     this.sendList = true;
     this.sendNow = {...data}
+    console.log(this.sendNow)
+    // this.sendNow.consignee = this.base64decoder(this.sendNow.nick_name);
     this.service.post('/api/busiz/order/goods/list',{order_id:this.sendNow.order_id}).then(success => {
       if(success.code==0){
         this.orderData = success.data;
@@ -285,6 +293,7 @@ export class CwOrdersListComponent implements OnInit {
     this.seeOrder = true;
     this.seeData = {...data};
     console.log(this.editRow);
+    this.seeData.nick_name = this.base64decoder(this.seeData.nick_name);
     console.log(this.seeData);
     this.service.post('/api/busiz/order/goods/list',{order_id:this.seeData.order_id}).then(success => {
       if(success.code==0){

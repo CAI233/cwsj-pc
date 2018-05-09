@@ -124,7 +124,7 @@
                 <a (click)="_edit(data)">修改</a>
                 <span nz-table-divider></span>
               </span> -->
-              <span *ngIf="this.service.validataAction('cw_orders_send')">
+              <span *ngIf="this.service.validataAction('cw_orders_send') && data.order_status==2">
                 <a (click)="_send(data)">发货</a>
                 <!-- <a (click)="_sendCancel(data)" *ngIf="data.order_status!=1">取消发货</a> -->
                 <span nz-table-divider></span>
@@ -257,6 +257,10 @@
         <div class="see_class" nz-row>
             <span nz-col [nzSpan]="6">运输费:</span>
             <span nz-col [nzSpan]="16" >{{seeData.express_fee}}</span>
+        </div>
+        <div class="see_class" nz-row>
+            <span nz-col [nzSpan]="6">发货时间:</span>
+            <span nz-col [nzSpan]="16" >{{seeData.delivery_time}}</span>
         </div>
         <div class="see_class" nz-row>
             <div  nz-row style="margin-bottom:10px;">

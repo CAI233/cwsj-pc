@@ -459,6 +459,7 @@ export class CwWorksListComponent implements OnInit {
   ids : any = [];
   //通过-驳回
   auditStatus(data) {
+    this.ids = [];
     if(data._status==1){
       this.service.message.warning('请先进行提交审核!');
       return false;
@@ -474,6 +475,7 @@ export class CwWorksListComponent implements OnInit {
         this.isAudit = false;
         this.ids = [];
       } else {
+        this.isAudit = true;
         this.service.message.error(success.message);
       }
     })
@@ -485,6 +487,7 @@ export class CwWorksListComponent implements OnInit {
         this.isAudit = false;
         this.ids = [];
       } else {
+        this.isAudit = true;
         this.service.message.error(success.message);
       }
     })

@@ -50,7 +50,7 @@ export class CwInfoBookComponent implements OnInit {
   nowTitle : string;
   AllResource_param : any = {
     pageNum:1,
-    pageSize:1000,
+    pageSize:10,
     res_type:'图书'
   }
   ebookRlist : boolean = false;
@@ -201,33 +201,34 @@ export class CwInfoBookComponent implements OnInit {
       return false;
     }else{
       this.isAudit = true;
+      this.bookData = {};
       this.bookData = {...data};
+      this.bookData.book_type = this.param.book_type;
+      this.bookData.tag_ids = this.bookData.tag_ids.split(",");
     }
   }
   Ok(){
     this.bookData.audit_status = 3;
-    this.bookData.book_type = this.param.book_type;
-    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
     this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
       if (success.code == 0) {
         this.reload();
         this.isAudit = false;
         this.bookData = {};
       } else {
+        this.isAudit = false;
         this.service.message.error(success.message);
       }
     })
   }
   Not(){
     this.bookData.audit_status = 4;
-    this.bookData.book_type = this.param.book_type;
-    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
     this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
       if (success.code == 0) {
         this.reload();
         this.isAudit = false;
         this.bookData = {};
       } else {
+        this.isAudit = false;
         this.service.message.error(success.message);
       }
     })
