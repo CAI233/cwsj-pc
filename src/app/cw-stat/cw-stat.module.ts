@@ -10,6 +10,10 @@ import { NgZorroAntdModule, NZ_MESSAGE_CONFIG, NZ_NOTIFICATION_CONFIG } from 'ng
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";//引入NZ 使用的form核心
 import { routes } from './cw-stat.routing';
 import { RouterModule } from '@angular/router';
+// import 'zone.js';
+// import 'reflect-metadata';
+import { ViserModule } from 'viser-ng';
+
 
 
 @NgModule({
@@ -18,7 +22,8 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgZorroAntdModule.forRoot(), //引入NZ
-    CommonModule
+    CommonModule,
+    ViserModule
   ],
   declarations: [CwSearchComponent, CwMarketComponent, CwReadComponent, CwPlayComponent],
   providers: [  //引入NZ

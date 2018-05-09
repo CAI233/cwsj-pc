@@ -164,20 +164,28 @@ export class CwInfoBookComponent implements OnInit {
 
   }
   // 提交审核
-  _audit(data){
-
-    this.bookData = {...data}
-    this.bookData.audit_status = 2;
-    this.bookData.book_type = this.param.book_type;
-    this.bookData.tag_ids = this.bookData.tag_ids.split(",");
-    this.service.post('/api/busiz/book/audit',this.bookData).then(success => {
-      if(success.code==0){
-            this.load();
-          }else{
-            this.service.message.error(success.message);
-            this.load();
-          }
-    })
+  _audit(){
+    if (this.data.filter(value => value.checked).length < 1) {
+      this.service.message.warning('请选择需要提交审核的数据!');
+      return false;
+    }
+    else {
+      let idss = [];
+      let status = []
+      this.data.filter(value => value.checked).forEach(item => { idss.push(item.book_id) ;status.push(item.audit_status)});
+      if(status.indexOf(3)!=-1 || status.indexOf(4)!=-1){
+        this.service.message.warning('只能选择草稿状态的数据!');
+        return false;
+      }
+      this.service.post('/api/busiz/submit/audit',{ids:idss}).then(success => {
+        if(success.code==0){
+              this.load();
+            }else{
+              this.service.message.error(success.message);
+              this.load();
+            }
+      })
+    } 
   }
 
   // 审核
@@ -185,27 +193,15 @@ export class CwInfoBookComponent implements OnInit {
   auditCancel(){
     this.isAudit = false;
   }
-  ids : any = [];//审核作品id
-  _status : number = 0;
+  
   //通过-驳回
-  audit() {
-    if (this.data.filter(value => value.checked).length < 1) {
-      this.service.message.warning('你没有选择需要审核的数据!');
+  audit(data) {
+    if(data.audit_status==1){
+      this.service.message.warning('请先进行提交审核!');
       return false;
-    }
-    else if(this.data.filter(value => value.checked).length == 1){
-      
-      this.data.filter(value => value.checked).forEach(item => { this.bookData = item;this._status = item.audit_status });
-      if(this._status==1){
-        this.service.message.warning('请先进行提交审核!');
-        return false;
-      }else{
-        this.isAudit = true;
-      }
-      
     }else{
-      this.service.message.warning('仅能同时操作一条数据,请重新选择!');
-      return false;
+      this.isAudit = true;
+      this.bookData = {...data};
     }
   }
   Ok(){
@@ -354,6 +350,7 @@ _enabled(data){
         }else{
           this.bookList = false;
           this.publish_date = null;
+          this.selectedIndex = 0;
           this.myForm.reset();
         }
         this.load();
@@ -488,6 +485,7 @@ _enabled(data){
     }
     this.bookList = true;
     this.selectedIndex = 2;
+    this.goToindex = 0;
     
     for(let i in data){
       this.bookData[i] = data[i];

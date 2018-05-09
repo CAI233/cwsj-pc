@@ -18,10 +18,11 @@ export const routes: Routes = [
   { path: 'cw_res', loadChildren: './cw-res/cw-res.module#CwResModule' },
   { path: 'cw_set', loadChildren: './cw-set/cw-set.module#CwSetModule' },
   { path: 'cw_stat', loadChildren: './cw-stat/cw-stat.module#CwStatModule' },
-  { path: 'cw_tool', loadChildren: './cw-tool/cw-tool.module#CwToolModule' },
+  // { path: 'cw_tool', loadChildren: './cw-tool/cw-tool.module#CwToolModule' },
   { path: 'cw_train', loadChildren: './cw-train/cw-train.module#CwTrainModule' },
   { path: 'cw_works', loadChildren: './cw-works/cw-works.module#CwWorksModule' },
   { path: 'cw_info', loadChildren: './cw-info/cw-info.module#CwInfoModule' },
+  { path: 'cw_tool', loadChildren: './cw-tool/cw-tool.module#CwToolModule' },
   //路由添加请在 ** 申明之前
   { path: '**', redirectTo: '/error', pathMatch: 'full' }
 ];

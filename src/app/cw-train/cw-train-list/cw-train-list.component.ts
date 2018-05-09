@@ -323,16 +323,30 @@ export class CwTrainListComponent implements OnInit {
   }
 
   //提交审核
-  submitAudit(data) {
-       this.service.post('/api/busiz/video/submitaudit', {
-        ids: [data.video_id], mark: 'audit', audit_status: 2
+  submitAudit() {
+    if (this.tableData.filter(value => value.checked).length < 1) {
+      this.service.message.warning('请选择需要提交审核的数据!');
+      return false;
+    }
+    else {
+      let idss = [];
+      let status = []
+      this.tableData.filter(value => value.checked).forEach(item => { idss.push(item.video_id) ;status.push(item.audit_status)});
+      if(status.indexOf(3)!=-1 || status.indexOf(4)!=-1){
+        this.service.message.warning('只能选择草稿状态的数据!');
+        return false;
+      }
+      this.service.post('/api/busiz/video/submitaudit', {
+        ids: idss, mark: 'audit', audit_status: 2
       }).then(success => {
         if (success.code == 0) {
           this.reload();
-        }else{
+        }
+        else {
           this.service.message.error(success.message);
         }
       })
+    }
   }
 
   // 审核
@@ -340,28 +354,18 @@ export class CwTrainListComponent implements OnInit {
   auditCancel(){
     this.isAudit = false;
   }
-  ids : any = [];//审核作品id
-  _status : number = 0;
+  ids : any = [];
   //通过-驳回
-  audit() {
-    if (this.tableData.filter(value => value.checked).length < 1) {
-      this.service.message.warning('你没有选择需要审核的数据!');
+  audit(data) {
+    
+    if(data.audit_status==1){
+      this.service.message.warning('请先进行提交审核!');
       return false;
-    }
-    else if(this.tableData.filter(value => value.checked).length == 1){
-      this.ids = [];
-      this.tableData.filter(value => value.checked).forEach(item => { this.ids.push(item.video_id);this._status = item.audit_status });
-      if(this._status==1){
-        this.service.message.warning('请先进行提交审核!');
-        return false;
-      }else{
-        this.isAudit = true;
-      }
-      
     }else{
-      this.service.message.warning('仅能同时操作一条数据,请重新选择!');
-      return false;
+      this.isAudit = true;
+      this.ids = [data.video_id];
     }
+    
   }
   Ok(){
     this.service.post('/api/busiz/video/audit',{ids: this.ids, audit_status: 4} ).then(success => {

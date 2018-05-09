@@ -21,10 +21,12 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@antv/g2": "^3.0.10",
     "@ckeditor/ckeditor5-build-decoupled-document": "^1.0.0-beta.1",
     "core-js": "^2.4.1",
     "ng-zorro-antd": "^0.6.15",
     "rxjs": "^5.5.6",
+    "viser-ng": "^2.2.7",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {

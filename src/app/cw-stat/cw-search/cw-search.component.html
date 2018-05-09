@@ -1,3 +1,26 @@
-<p>
-  cw-search works!
-</p>
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a href="#/home">首页</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        大数据统计
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        搜索统计
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content">
+
+      <div>
+          <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+            <v-tooltip></v-tooltip>
+            <v-axis></v-axis>
+            <v-line position="year*value"></v-line>
+            <v-point position="year*value" shape="circle"></v-point>
+          </v-chart>
+        </div>
+  </nz-content>
+</nz-layout>

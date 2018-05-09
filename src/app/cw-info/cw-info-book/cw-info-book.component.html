@@ -65,8 +65,8 @@
                                         </div>
                                     </div>
                                     <div nz-col [nzSpan]="12" style="text-align:center;">
-                                        <div style="border:1px #ddd dashed;height:120px;width:90px;margin: 0 auto 10px;background: #f5f8fa;">
-                                            <img *ngIf="bookData.book_cover" src="{{ service.ctxPath + bookData.book_cover }}" style="float:left;height:120px;width:90px;"/>
+                                        <div style="border:1px #ddd dashed;height:96px;width:72px;margin: 0 auto 10px;background: #f5f8fa;">
+                                            <img *ngIf="bookData.book_cover" src="{{ service.ctxPath + bookData.book_cover }}" style="float:left;height:100%;width:100%;"/>
                                         </div>
                                         <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
                                             nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">
@@ -374,23 +374,8 @@
                 </div>
             </div>
             <div nz-form-item style="width:100%;margin-bottom:0;">
+                
                 <div style="float:left;">
-                    <button nz-button nzType="primary" (click)="audit()" *ngIf="this.service.validataAction('cw_info_book_check')">
-                        <span>审核</span>
-                    </button>
-                    <nz-modal [(nzVisible)]="isAudit" [nzTitle]="AuditTitle" [nzContent]="AuditContent" [nzFooter]="false" (nzOnCancel)="auditCancel()">
-                        <ng-template #AuditTitle>
-                        审核操作
-                        </ng-template>
-                        <ng-template #AuditContent >
-                        <div style="text-align:center;margin:15px auto;">
-                            <button nz-button nzType="default" (click)="Not()">驳回</button>
-                            <button nz-button nzType="primary" (click)="Ok()">通过</button>
-                        </div>
-                        </ng-template>
-                    </nz-modal>
-                </div>
-                <div style="float:right;">
                     <button nz-button nzType="primary" type="button" (click)="_add()" *ngIf="this.service.validataAction('cw_info_book_add')">
                     <i class="anticon anticon-plus" style="font-size:12px;color:#fff;"></i>
                     <span>新增</span>
@@ -401,6 +386,11 @@
                             <span>删除</span>
                         </button>
                     </nz-popconfirm>
+                </div>
+                <div style="float:right;">
+                    <button nz-button nzType="primary" (click)="_audit()" *ngIf="this.service.validataAction('cw_info_book_audit')" >
+                        <span>提交审核</span>
+                    </button>
                 </div>
             </div>
             <div style="clear:both;"></div>
@@ -465,7 +455,7 @@
                 <nz-switch [nzSize]="'small'" [ngModel]="data.status == 1" (click)="_enabled(data)" [nzDisabled]="!this.service.validataAction('cw_info_book_enabled')"></nz-switch>
             </td>
             <td nz-td>
-                <span>{{['草稿','待审核','通过','驳回'][data.audit_status-1]}}</span>
+                <span [ngStyle]="{'color':['#999','#f90','green','#f00'][data.audit_status-1]}">{{['草稿','待审核','通过','驳回'][data.audit_status-1]}}</span>
             </td>
             <td nz-td>
                 <span>{{data.create_time}}</span>
@@ -483,10 +473,10 @@
               </span>
               <span *ngIf="this.service.validataAction('cw_info_book_see')">
                 <a (click)="_see(data)">查看</a>
-                <span nz-table-divider *ngIf="this.service.validataAction('cw_info_book_audit')"></span>
+                <span nz-table-divider *ngIf="this.service.validataAction('cw_info_book_check')"></span>
               </span>
-               <span *ngIf="this.service.validataAction('cw_info_book_audit')">
-                <a (click)="_audit(data)">提交审核</a>
+               <span *ngIf="this.service.validataAction('cw_info_book_check')">
+                <a (click)="audit(data)" >审核</a>
                 <!-- <span nz-table-divider></span>  -->
               </span>
             </td>
@@ -564,4 +554,15 @@
         </div>
     </ng-template>
     <ng-template #modalFooter2 style="display:none"></ng-template>
+</nz-modal>
+<nz-modal [(nzVisible)]="isAudit" [nzWidth]="200" [nzTitle]="AuditTitle" [nzContent]="AuditContent" [nzFooter]="false" (nzOnCancel)="auditCancel()">
+    <ng-template #AuditTitle >
+    <div style="text-align:center;">审核操作</div>  
+    </ng-template>
+    <ng-template #AuditContent >
+    <div style="text-align:center;margin:15px auto;">
+        <button nz-button nzType="default" (click)="Not()">驳回</button>
+        <button nz-button nzType="primary" (click)="Ok()">通过</button>
+    </div>
+    </ng-template>
 </nz-modal>

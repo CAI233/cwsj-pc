@@ -40,9 +40,8 @@ export class AppComponent {
         return route;
       })
       .filter(route => route.outlet === 'primary')
-      .mergeMap(route => {console.log(route.data);return route.data})
+      .mergeMap(route =>  route.data)
       .subscribe((event) => {
-        console.log(11111)
         //路由data的标题
         if (!event['title']) {
           event = { title: '首页', module: 'home', power: "SHOW" };
@@ -89,7 +88,6 @@ export class AppComponent {
             })
           }
       
-          console.log(exitMenu)
           if (exitMenu || menu.module == 'login') {//如果存在不添加，当前表示选中  登录页面不存储
             this.menuList.forEach(p => p.select = p.title == title);
             return false;
