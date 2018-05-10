@@ -4,176 +4,105 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-cw-tool-class',
   templateUrl: './cw-tool-class.component.html',
-  styleUrls: ['./cw-tool-class.component.css']
+  styles: [`
+  :host ::ng-deep .vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :host ::ng-deep .vertical-center-modal .ant-modal {
+    top: 0;
+  }
+` ]
 })
 export class CwToolClassComponent implements OnInit {
-
   param: any = {
-    cat_id: null,
-    children: []
+    searchText: null,
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    pages: 0
   }
-  paramCol: any = {
-    searchText: null
-  }
-  paramSearch: any = {
-    searchText: null
-  }
-  dataSet = [];
+  _allChecked = false; //全选
+  _indeterminate = false; //半选
   tableData = [];
-  _loading = false;
-  _isShow = false;
-  formBean = {
-    cat_id: null,
-    cat_name: null,
-    enabled: null,
-    order_weight: null,
-    create_time: null,
-    cat_pid: null
+  _loading: boolean = false;
+  formBean: any = {};
+  isConfirmLoading: boolean = false;
+
+  selRow : any = {
+    "cat_id": null,
+    "cat_name": null,
+    "create_time": null,
+    "update_time": null
   };
-  expandDataCache = {};
   constructor(public service: AppService) { }
 
   ngOnInit() {
     this._reload();
   }
-
-  //////////////////tree转化
-  collapse(array, data, $event) {
-    if ($event === false) {
-      if (data.children) {
-        data.children.forEach(d => {
-          const target = array.find(a => a.cat_id === d.cat_id);
-          target.expand = false;
-          this.collapse(array, target, false);
-        });
-      } else {
-        return;
-      }
-    }
-  }
-  convertTreeToList(root) {
-    const stack = [], array = [], hashMap = {};
-    stack.push({ ...root, level: 0, expand: true });
-
-    while (stack.length !== 0) {
-      const node = stack.pop();
-      this.visitNode(node, hashMap, array);
-      if (node.children) {
-        if (this.param.cat_id == node.cat_id)
-          this.param.children = node.children;
-        for (let i = node.children.length - 1; i >= 0; i--) {
-          stack.push({ ...node.children[i], level: node.level + 1, expand: false, parent: node });
+  //全选
+  _checkAll(value) {
+    if (value) {
+      this.tableData.forEach(data => {
+        if (!data.disabled) {
+          data.checked = true;
         }
-      }
-    }
-
-    return array;
-  }
-  visitNode(node, hashMap, array) {
-    if (!hashMap[node.cat_id]) {
-      hashMap[node.cat_id] = true;
-      array.push(node);
-    }
-  }
-  //////////////////tree转化
-  //获取资源分类
-  _reload(bool?: any) {
-    if (bool) {
-      this.paramSearch.searchText = this.paramCol.searchText;
-    }
-    this.service.post('/api/busiz/cat/Cooperation/list', {
-      searchText: this.paramSearch.searchText
-    }).then(success => {
-      this.dataSet = [{
-        cat_id: 0,
-        cat_name: '所有分类',
-        children: success.data
-      }];
-      this.dataSet.forEach(item => {
-        this.expandDataCache[item.cat_id] = this.convertTreeToList(item);
       });
-      if (!this.param.cat_id)
-        this.param = this.dataSet[0];
-    })
-  }
-  //保存
-  _saveRow() {
-    if (!this.formBean.cat_name) {
-      this.service.message.warning('请填写分类名称');
-      return false;
+    } else {
+      this.tableData.forEach(data => data.checked = false);
     }
-    if (!this.formBean.cat_id) {
-      this.formBean.cat_pid = this.param.cat_id;
+    this._refreshStatus();
+  }
+  //半选
+  _refreshStatus() {
+    const allChecked = this.tableData.every(value => value.disabled || value.checked);
+    const allUnChecked = this.tableData.every(value => value.disabled || !value.checked);
+    this._allChecked = allChecked;
+    this._indeterminate = (!allChecked) && (!allUnChecked);
+  }
+  //刷新
+  _reload(bool?: any) {
+    this._loading = true;
+    if (bool) {
+      this.param.pageNum = 1;
     }
-    this.service.post('/api/busiz/cat/Cooperation/save', this.formBean).then(success => {
-      if (success.code == 0) {
-        for (let i in this.formBean) {
-          this.formBean[i] = null;
-        }
-        this._reload();
-      }
-      else {
-        this.service.message.error(success.message);
-      }
-    })
-  }
-  //取消
-  _cancelRow(row) {
-    this.formBean = {
-      cat_id: null,
-      cat_name: null,
-      enabled: null,
-      order_weight: null,
-      create_time: null,
-      cat_pid: null
-    };
-    this._reload();
-  }
-  //选中
-  _selectItem(row) {
-    console.log(row)
-    this.param = row;
-    if(row.level==2){
-      this._isShow = true;
-    }else{
-      this._isShow = false;
-    }
-  }
-  //启用/停用
-  _rowEnabled(row) {
-    // row.enabled = row.enabled == 1 ? 2 : 1;
-    // this.formBean = row;
-    // this._saveRow();
-    this.service.post('/api/busiz/cat/Cooperation/enabled', {
-      cat_id:row.cat_id
-    }).then(success => {
-      if (success.code == 0) {
-        this._reload();
-      }
-      else {
-        this.service.message.error(success.message);
-      }
+    this.service.post('/api/busiz/dict/cat/list', this.param).then(success => {
+      this.tableData = success.data.rows;
+      this.param.pages = success.data.pages;
+      this.param.total = success.data.total;
+      this._loading = false;
     })
   }
   //新增
-  _cwResClassAdd() {
-    if(this.param.children.length>0 && this.param.children[0].cat_id==null){
+  _cwResTagAdd() {
+    if(this.tableData.length>0 && this.tableData[0].cat_id==null){
       return false;
     }
-    this.param.children.unshift(this.formBean);
-    
+    // this.isVisible = true;
+    this.tableData.unshift(this.selRow);
+
   }
   //修改
   _editRow(row) {
-    this.formBean = row;
+    for (let i in row) {
+      this.formBean[i] = row[i];
+    }
   }
-  //删除
-  _delRow(row) {
-    this.service.post('/api/busiz/cat/Cooperation/del', {
-      ids: [row.cat_id]
-    }).then(success => {
+
+  // 保存
+  save(){
+    if (!this.formBean.cat_name) {
+      this.service.message.warning('请填写标签名称');
+      return false;
+    }
+    this.isConfirmLoading = true;
+    this.service.post('/api/busiz/dict/cat/save', this.formBean).then(success => {
+      this.isConfirmLoading = false;
       if (success.code == 0) {
-        this._reload();
+        this._reload(true);
+        this.formBean = {}
       }
       else {
         this.service.message.error(success.message);
@@ -181,4 +110,50 @@ export class CwToolClassComponent implements OnInit {
     })
   }
 
+  // 取消
+  cancel(){
+    this._reload(true);
+  }
+
+
+  //提交
+  handleOk(event?: any) {
+    
+  }
+
+  //删除
+  _delete(data){
+    console.log(data);
+    this.service.post('/api/busiz/dict/cat/del', {
+      cat_id: data.cat_id
+      }).then(success => {
+        if (success.code == 0) {
+          this._reload(true);
+        }
+        else {
+          this.service.message.error(success.message);
+        }
+      })
+  }
+
+  // 批量删除
+  // _delRows() {
+  //   if (this.tableData.filter(value => value.checked).length < 1) {
+  //     this.service.message.warning('你没有选择需要删除的数据内容!');
+  //   }
+  //   else {
+  //     let ids = [];
+  //     this.tableData.filter(value => value.checked).forEach(item => { ids.push(item.tag_id) });
+  //     this.service.post('/api/busiz/works/tag/del', {
+  //       ids: ids
+  //     }).then(success => {
+  //       if (success.code == 0) {
+  //         this._reload(true);
+  //       }
+  //       else {
+  //         this.service.message.error(success.message);
+  //       }
+  //     })
+  //   }
+  // }
 }

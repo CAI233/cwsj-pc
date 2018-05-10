@@ -23,6 +23,7 @@ import { Http, HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { AppService } from './app.service';
 import { HttpService } from './http.service';
 
+import { ViserModule } from 'viser-ng';
 
 export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions) {
   let service = new HttpService(xhrBackend, requestOptions);
@@ -44,7 +45,8 @@ export function interceptorFactory(xhrBackend: XHRBackend, requestOptions: Reque
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgZorroAntdModule.forRoot()
+    NgZorroAntdModule.forRoot(),
+    ViserModule
   ],
   providers: [
     HttpService, AppService,

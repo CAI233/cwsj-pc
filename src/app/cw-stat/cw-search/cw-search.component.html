@@ -13,14 +13,54 @@
     </nz-breadcrumb>
   </nz-header>
   <nz-content class="main-page-content">
-
-      <div>
-          <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
-            <v-tooltip></v-tooltip>
-            <v-axis></v-axis>
-            <v-line position="year*value"></v-line>
-            <v-point position="year*value" shape="circle"></v-point>
-          </v-chart>
-        </div>
+          <!--表单-->
+          <form nz-form>
+            <!--行-->
+            <div nz-row nz-form-item style="margin-top:15px;">
+              <div class="row-actions">
+                <span>热词搜索排行</span>
+              </div>
+              <div class="row-questions">
+                  <button nz-button nzType="primary" (click)="daochu()" >
+                    <span>导出</span>
+                  </button>
+              </div>
+            </div>
+          </form>
+          <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+            [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
+            (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
+            <thead nz-thead>
+              <tr>
+                <th nz-th nzCheckbox>
+                  <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                  </label>
+                </th>
+                <th nz-th>
+                  <span>相关热词</span>
+                  <!-- <nz-table-sort [(nzValue)]="sortMap.search_text" (nzValueChange)="sort('search_text', $event)"></nz-table-sort> -->
+                </th>
+                <th nz-th>
+                  <span>热词排行</span>
+                </th>
+                <th nz-th>
+                  <span>搜索次数</span>
+                  <!-- <nz-table-sort [(nzValue)]="sortMap.search_count" (nzValueChange)="sort('search_count', $event)"></nz-table-sort> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody nz-tbody>
+              <tr nz-tbody-tr *ngFor="let data of nzTable.data;index as i">
+                <td nz-td nzCheckbox>
+                  <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
+                </td>
+                <td nz-td>{{data.search_text}}</td>
+                <td nz-td>{{i+1}}</td>
+                <td nz-td>{{data.search_count}}</td>
+                
+              </tr>
+            </tbody>
+          </nz-table>
+    
   </nz-content>
 </nz-layout>

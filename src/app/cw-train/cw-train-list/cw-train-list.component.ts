@@ -139,21 +139,25 @@ export class CwTrainListComponent implements OnInit {
     this.isVisibleMiddle = true;
     this.selectedIndex = 1;
 
+    
     this.resourceArray = [];
     this.myForm1 = this.service.fb.group({});
-    this.service.post('/api/busiz/video/detail', { video_id: this.formBean.video_id }).then(success => {
-      if (success.data.videoResRelList && success.data.videoResRelList.length > 0) {
-        this.resourceArray = success.data.videoResRelList
-        this.resourceArray.forEach((element, index) => {
-          element.order_id = index
-          element.res_name = `resources${index}`;
-          element.res_id = element.res_id
-          this.myForm1.addControl(element.res_name, new FormControl(null, this.service.validators.required));
-        })
-      } else {
-        this.addField1()
-      }
-    })
+    if(bean){
+      this.service.post('/api/busiz/video/detail', { video_id: this.formBean.video_id }).then(success => {
+        if (success.data.videoResRelList && success.data.videoResRelList.length > 0) {
+          this.resourceArray = success.data.videoResRelList
+          this.resourceArray.forEach((element, index) => {
+            element.order_id = index
+            element.res_name = `resources${index}`;
+            element.res_id = element.res_id
+            this.myForm1.addControl(element.res_name, new FormControl(null, this.service.validators.required));
+          })
+        } else {
+          this.addField1()
+        }
+      })
+    }
+    
   };
   //关闭
   handleCancelMiddle($event) {

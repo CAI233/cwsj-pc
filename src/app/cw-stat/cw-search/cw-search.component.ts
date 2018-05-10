@@ -1,27 +1,7 @@
-// import 'zone.js';
-// import 'reflect-metadata';
 import { Component, OnInit } from '@angular/core';
-// import { ViserModule } from 'viser-ng';
 
-const data = [
-  { year: '1991', value: 3 },
-  { year: '1992', value: 4 },
-  { year: '1993', value: 3.5 },
-  { year: '1994', value: 5 },
-  { year: '1995', value: 4.9 },
-  { year: '1996', value: 6 },
-  { year: '1997', value: 7 },
-  { year: '1998', value: 9 },
-  { year: '1999', value: 13 },
-];
-const scale = [{
-  dataKey: 'value',
-  min: 0,
-},{
-  dataKey: 'year',
-  min: 0,
-  max: 1,
-}];
+import { AppService } from '../../app.service';
+
 
 @Component({
   selector: 'app-cw-search',
@@ -30,22 +10,73 @@ const scale = [{
 })
 export class CwSearchComponent implements OnInit {
 
-  forceFit: boolean= true;
-  height: number = 400;
-  data = data;
-  scale = scale
-  constructor() { }
-
-
-  
-
-  ngAfterViewInit(){
- 
+  _allChecked : boolean = false;
+  _indeterminate : boolean = false;
+  param : any = {
+    pageNum:1,
+    pageSize:10,
   }
+  sortMap = {
+    search_text: null,
+    search_count: null
+  };
+  _loading : boolean = false;
+  data : any = [];
+  constructor(public service: AppService) { }
 
+//加载列表
+  load(reset?){
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    this._loading = true;
+    this.service.post('/api/busiz/statistical/search',this.param).then(success => {
+      this._loading = false;
+      if(success.code==0){
+        this.data = success.data.rows;
+        this.param.total = success.data.total;
+      }else{
+        this.data = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  // 导出
+  daochu(){
+
+    let doc = document.createElement('a');
+      doc.href = this.service.ctxPath+'/api/busiz/statistical/search/info/export';
+      doc.style.display = 'none';
+      doc.target = "_self";
+      doc.click();
+      document.body.appendChild(doc);
+  }
 
   ngOnInit() {
+
+    this.load();
   }
 
+
+    // 全选
+    _checkAll(value) {
+      if (value) {
+        this.data.forEach(data => {
+          if (!data.disabled) {
+            data.checked = true;
+          }
+        });
+      } else {
+        this.data.forEach(data => data.checked = false);
+      }
+      this._refreshStatus();
+    }
+    _refreshStatus() {
+      const allChecked = this.data.every(value => value.disabled || value.checked);
+      const allUnChecked = this.data.every(value => value.disabled || !value.checked);
+      this._allChecked = allChecked;
+      this._indeterminate = (!allChecked) && (!allUnChecked);
+    }
 }
 
