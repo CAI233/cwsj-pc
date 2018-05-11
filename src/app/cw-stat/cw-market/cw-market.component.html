@@ -78,8 +78,8 @@
           <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
             <v-tooltip></v-tooltip>
             <v-axis></v-axis>
-            <v-line position="year*value"></v-line>
-            <v-point position="year*value" shape="circle"></v-point>
+            <v-line position="data*value"></v-line>
+            <v-point position="data*value" shape="circle"></v-point>
           </v-chart>
         </div>
   </nz-content>

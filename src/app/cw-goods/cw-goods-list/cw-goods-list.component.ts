@@ -197,12 +197,12 @@ export class CwGoodsListComponent implements OnInit {
       }
 
       this.selRow.res_id = id;
-
+      
       this.nowRecourseArr = [this.nowRecourse];
       // console.log(this.nowRecourse)
 
       // 在查看详情时不需要带出资源
-      if(this.showData.res_id){
+      if(this.selRow.res_id){
         // 获取当前电子书的资源列表
         if(this.selRow.goods_type==3){
           // 获取电子书资源
@@ -457,7 +457,7 @@ export class CwGoodsListComponent implements OnInit {
     }
     // 得到当前商品的资源
     this.selRow.goods_type = this.showData.goods_type;
-    this.selRow.res_id = this.showData.res_id;
+    
     this.selectedIndex = 1;
 
     this.get_recourse();
@@ -500,9 +500,23 @@ export class CwGoodsListComponent implements OnInit {
       this.selRow.real_price = ((parseInt(this.selRow.price))*(parseInt(this.selRow.discount))*0.1).toFixed(2)
     },50)
   }
-  isTrue : boolean = true;
-  _goTo(){
-    
+  //提交
+  _submitForm(){
+    if(this.selRow.tag_ids){
+      // goods_tag_ids
+      if(typeof(this.selRow.tag_ids)!='object'){
+        this.selRow.goods_tag_ids = this.selRow.tag_ids.split(",");
+      }else{
+        this.selRow.goods_tag_ids = this.selRow.tag_ids
+      }
+    }
+    if(this.selRow.deadline){
+      this.selRow.deadline = this.timeOut(this.selRow.deadline);
+    }
+    if(!this.selRow.res_id){
+      this.service.message.warning('请选择资源!');
+      return false;
+    }
     if(!this.selRow.goods_name){
       this.service.message.warning('请填写商品名称!');
       return false;
@@ -521,32 +535,6 @@ export class CwGoodsListComponent implements OnInit {
     }
     if(!this.selRow.price){
       this.service.message.warning('请填写价格!');
-      return false;
-    }
-    // if(!this.selRow.deadline){
-    //   this.service.message.warning('请填写售价截止时间!');
-    //   return false;
-    // }
-    this.isTrue = false;
-    this.selectedIndex = 3;
-  }
-
-
-  //提交
-  _submitForm(){
-    if(this.selRow.tag_ids){
-      // goods_tag_ids
-      if(typeof(this.selRow.tag_ids)!='object'){
-        this.selRow.goods_tag_ids = this.selRow.tag_ids.split(",");
-      }else{
-        this.selRow.goods_tag_ids = this.selRow.tag_ids
-      }
-    }
-    if(this.selRow.deadline){
-      this.selRow.deadline = this.timeOut(this.selRow.deadline);
-    }
-    if(!this.selRow.res_id){
-      this.service.message.warning('请选择资源!');
       return false;
     }
 
