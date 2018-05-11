@@ -168,10 +168,10 @@ export class CwWinComponent implements OnInit {
       this.service.message.warning('请填写序号!');
       return false;
     }
-    if (!this.windowData.max_count) {
-      this.service.message.warning('请填写数量!');
-      return false;
-    }
+    // if (!this.windowData.max_count) {
+    //   this.service.message.warning('请填写数量!');
+    //   return false;
+    // }
     if (!this.windowData.remark) {
       this.service.message.warning('请填写简介!');
       return false;

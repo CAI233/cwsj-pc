@@ -6,63 +6,43 @@ import { AppService } from '../../app.service';
 import { ViserModule } from 'viser-ng';
 // import { DataSet } from '@antv/data-set';
 
-const data = [
-  { year: '1991', value: 3 },
-  { year: '1992', value: 4 },
-  { year: '1993', value: 3.5 },
-  { year: '1994', value: 5 },
-  { year: '1995', value: 4.9 },
-  { year: '1996', value: 6 },
-  { year: '1997', value: 7 },
-  { year: '1998', value: 9 },
-  { year: '1999', value: 13 },
-];
+// const data = [
+//   { year: '1991', value: 3 },
+//   { year: '1992', value: 4 },
+//   { year: '1993', value: 3.5 },
+//   { year: '1994', value: 5 },
+//   { year: '1995', value: 4.9 },
+//   { year: '1996', value: 6 },
+//   { year: '1997', value: 7 },
+//   { year: '1998', value: 9 },
+//   { year: '1999', value: 13 },
+// ];
 
-const scale = [{
-  dataKey: 'value',
-  min: 0,
-},{
-  dataKey: 'year',
-  min: 0,
-  max: 1,
-}];
+// const scale = [{
+//   dataKey: 'value',
+//   min: 0,
+// },{
+//   dataKey: 'year',
+//   min: 0,
+//   max: 1,
+// }];
 
 @Component({
   selector: 'app-cw-market',
   templateUrl: './cw-market.component.html',
   styleUrls: ['./cw-market.component.css']
 })
+
 export class CwMarketComponent implements OnInit {
   forceFit: boolean= true;
   height: number = 400;
-  scale =  [{
-    dataKey: 'money',
-    min: 0,
-  },{
-    dataKey: 'data',
-    min: 0,
-    // max: 1,
-  }];
-  nowdata : any = []
+
+  nowdata : any = [];
   allData : any = [];
   param : any = {
     type:null
   }
 
-  // const dv = new DataSet.View().source(sourceData);
-  // dv.transform({
-  //   type: 'fold',
-  //   fields: ['Tokyo', 'London'],
-  //   key: 'city',
-  //   value: 'temperature',
-  // });
-  // const data = dv.rows;
-  
-  // const scale = [{
-  //   dataKey: 'month',
-  //   min: 0,
-  //   max: 1,
-  // }];
 
   _loading : boolean = false;
   constructor(public service: AppService) { }
@@ -287,6 +267,8 @@ export class CwMarketComponent implements OnInit {
           "the_days": null,
           "yesterday": null
         }]
+
+        this.ngAfterViewInit();
       }else{
         this.nowdata = [];
         this.service.message.error(success.message);
@@ -324,6 +306,32 @@ export class CwMarketComponent implements OnInit {
     this.get_load();
   }
 
+  data : any = [];
+  scale : any = [];
+   ngAfterViewInit(){
+
+    this.data = [
+      { year: '1991', value: 3 },
+      { year: '1992', value: 4 },
+      { year: '1993', value: 3.5 },
+      { year: '1994', value: 5 },
+      { year: '1995', value: 4.9 },
+      { year: '1996', value: 6 },
+      { year: '1997', value: 7 },
+      { year: '1998', value: 9 },
+      { year: '1999', value: 13 },
+    ];
+
+    this.scale = [{
+      dataKey: 'value',
+      min: 0,
+    },{
+      dataKey: 'year',
+      min: 0,
+      max: 1,
+    }];
+
+   }
 
   
 

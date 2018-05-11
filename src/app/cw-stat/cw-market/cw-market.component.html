@@ -45,36 +45,42 @@
       <form nz-form>
           <!--行-->
           <div nz-row nz-form-item style="margin-bottom:0;background: #fff;padding-bottom:10px;">
-            <div nz-col [nzSpan]="6" class="left">
+            <div nz-col [nzSpan]="4" class="left">
               <span style="font-size: 16px;">销售统计</span>
             </div>
-            <div nz-col [nzSpan]="'6'" class="left">
+            <div nz-col [nzSpan]="'4'" class="left">
               <div>
                 <p>&#65509;{{allData.the_days}}</p>
                 <p>今日收益</p>
               </div>
             </div>
-            <div nz-col [nzSpan]="'6'" class="left">
+            <div nz-col [nzSpan]="'4'" class="left">
               <div>
                 <p>&#65509;{{allData.yesterday}}</p>
                 <p>昨日收益</p>
               </div>
             </div>
-            <div nz-col [nzSpan]="'6'" class="left">
+            <div nz-col [nzSpan]="'4'" class="left">
               <div>
                 <p>&#65509;{{allData.first_days}}</p>
                 <p>30天收益</p>
               </div>
             </div>
+            <div nz-col [nzSpan]="'4'" class="left">
+              <div>
+                <p>&#65509;{{allData.cumulative}}</p>
+                <p>累计收益</p>
+              </div>
+            </div>
           </div>
       </form>
       <div>
-        <v-chart [forceFit]="forceFit" [height]="height" [data]="nowdata" [scale]="scale">
-          <v-tooltip></v-tooltip>
-          <v-axis></v-axis>
-          <v-line position="data*money"></v-line>
-          <v-point position="data*money" shape="circle"></v-point>
-        </v-chart>
-      </div>
+          <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+            <v-tooltip></v-tooltip>
+            <v-axis></v-axis>
+            <v-line position="year*value"></v-line>
+            <v-point position="year*value" shape="circle"></v-point>
+          </v-chart>
+        </div>
   </nz-content>
 </nz-layout>
