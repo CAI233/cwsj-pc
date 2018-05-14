@@ -21,6 +21,14 @@ export class RoleComponent implements OnInit {
     pageSize: 10,
     pageNum: 1
   };
+
+  orgParam : any = {
+    pageSize: 10,
+    pageNum: 1
+  }
+  orgData : any = [];
+
+
   paramCol: any = {
     dept_id: null,
     state: null,
@@ -45,6 +53,9 @@ export class RoleComponent implements OnInit {
   };
   ngOnInit() {
     this.reload();
+
+    // 获取机构列表
+    // this.get_org();
     this.myForm = this.service.fb.group({
       role_name: [null, [this.service.validators.required]],
       remark: [false]
@@ -135,7 +146,6 @@ export class RoleComponent implements OnInit {
   reload(reset?) {
     if (reset == true) {
       this.param.pageNum = 1;
-      this.param.searchText = this.paramCol.searchText;
     }
     this._loading = true;
     this.service.post('/api/system/role/lists', this.param).then(success => {
@@ -151,6 +161,27 @@ export class RoleComponent implements OnInit {
       }
     })
   }
+
+  // 重置
+  resetForm(){
+    this.param.searchText = null;
+    this.reload(true);
+  }
+
+  // 获取机构列表
+  // get_org(){
+  //   this.service.post('/api/system/organization/getList', this.orgParam).then(success => {
+  //     if(success.code==0){
+  //       this.orgData = success.data.rows;
+  //     }
+  //   })
+  // }
+
+  // 切换机构
+  orgload(){
+    this.reload(true);
+  }
+
 
   //全选
   _checkAll(value) {

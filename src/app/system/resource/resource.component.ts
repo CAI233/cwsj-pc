@@ -29,6 +29,7 @@ export class ResourceComponent implements OnInit {
     this.load();
   }
   load() {
+    console.log(this.orgId)
     this._loading = true;
     this.service.post('/api/system/resource/list', {
       org_id: this.paramCol.org_id

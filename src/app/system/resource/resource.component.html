@@ -11,16 +11,16 @@
     </nz-header>
     <nz-content class="main-page-content">
         <!--本系统不需要此功能-->
-        <div class="tableListSearch" style="display:none">
+        <div class="tableListSearch" style="display:block;">
             <form nz-form *ngIf="orgId==1">
                 <!--行-->
                 <div nz-row nz-form-item>
                     <!--列-->
                     <div nz-col [nzSpan]="6">
-                        <div nz-form-label nz-col [nzSpan]="5">
+                        <div nz-form-label nz-col style="float:left;">
                             <label>切换机构</label>
                         </div>
-                        <div nz-form-control nz-col [nzSpan]="17">
+                        <div nz-form-control nz-col [nzSpan]="16">
                             <nz-select name="selectOrg" [(ngModel)]="paramCol.org_id" [nzPlaceHolder]="'请选择'" (ngModelChange)="load()">
                                 <nz-option *ngFor="let option of orgList" [nzLabel]="option.org_name" [nzValue]="option.org_id"></nz-option>
                             </nz-select>
