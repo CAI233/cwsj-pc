@@ -8,17 +8,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CwToolListComponent implements OnInit {
   myForm: FormGroup;
-  @ViewChild("upload_ids") upload_ids;
-  param = {
+  // @ViewChild("upload_ids") upload_ids;
+  param : any= {
     searchText: null,
     pageNum: 1,
     pageSize: 10,
-    searchTime: null,
-    res_class_id: null,
-    res_tag_id: null,
-    res_type: null,
-    total: 0,
-    pages: 0
   }
   paramCol = {
     searchText: null,
@@ -31,8 +25,6 @@ export class CwToolListComponent implements OnInit {
   _loading: boolean = false;
   _upload: boolean = false;
   tableData: any = [];
-  resClassList: any = []; //分类
-  resTypeList: any = []; //标签
 
   _allChecked = false; //全选
   _indeterminate = false; //半选
@@ -41,6 +33,8 @@ export class CwToolListComponent implements OnInit {
     res_name: null,
     res_cat_name: null
   };
+
+  upload_cat_ids : any = null;
   constructor(public service: AppService) { }
 
   ngOnInit() {
@@ -51,54 +45,45 @@ export class CwToolListComponent implements OnInit {
       upload_label_id:false,
       upload_id:false,
       startpage:false,
-      endpage:false
+      endpage:false,
+      page:false
     })
-
-    this._getResClass();
-    this._searchChange();
     this._reload();
+
+    // 获取资源分类
+    this.get_calss();
   }
-  //获取分类
-  _getResClass() {
-    this.service.post('/api/busiz/cat/list',{enabled:1}).then(success => {
-      this.service._toisLeaf(success.data);
-      this.resClassList = success.data;
-    })
-  }
-  //获取资源类型
-  _searchChange(event?) {
-    this.service.post('/api/busiz/res/type/getlist', {}).then(success => {
-      this.resTypeList = success.data;
-    })
-  }
+
   //查询
-  _reload(event?) {
-    if (event) {
-      for (let i in this.paramCol) {
-        this.param[i] = this.paramCol[i];
-      }
-      if (this.paramCol['res_class_ids']) {
-        this.param['res_cat_id'] = this.paramCol['res_class_ids'][this.paramCol['res_class_ids'].length - 1]
-      }
-      else {
-        this.param['res_cat_id'] = null;
-      }
-      if (this.paramCol.searchTime) {
-        this.param['upload_start'] = this.service.dateFormat(this.paramCol.searchTime[0], 'yyyy-MM-dd');
-        this.param['upload_end'] = this.service.dateFormat(this.paramCol.searchTime[1], 'yyyy-MM-dd');
-      }
-      else {
-        this.param['upload_start'] = null;
-        this.param['upload_end'] = null;
-      }
-      this.param['searchTime'] = null;
-      this.param['res_class_ids'] = null;
+  _reload(reset?) {
+    if (reset == true) {
       this.param.pageNum = 1;
     }
-    this.service.post('/api/busiz/res/getlist', this.param).then(success => {
-      this.tableData = success.data.rows;
-      this.param.total = success.data.total;
-      this.param.pages = success.data.pages;
+    this._loading = true;
+    this.service.post('/api/busiz/dict/upload/list', this.param).then(success => {
+      this._loading = false;
+      if(success.code==0){
+        this.tableData = success.data.rows;
+        this.param.total = success.data.total;
+        this.param.pages = success.data.pages;
+      }else{
+        this.tableData = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
+      
+    })
+  }
+
+  class_data : any = [];//资源分类
+  // 
+  get_calss(){
+    this.service.post('/api/busiz/dict/cat/list',{pageNum:1,pageSize:1000}).then(success => {
+      if(success.code==0){
+        this.class_data = success.data.rows;
+      }else{
+        this.service.message.error(success.message);
+      }
     })
   }
   //全选
@@ -130,11 +115,17 @@ export class CwToolListComponent implements OnInit {
     this.paramCol.res_type = null;
     this._reload(true);
   }
-  //获取目录
-  _getParentFile(row) {
-    let arr = row.res_url.split('/');
-    arr.pop();
-    return arr.pop();
+  // 删除
+  del(data){
+    this.service.post('/api/busiz/dict/upload/del', { upload_id: data.upload_id}).then(success => {
+      if (success.code == 0) {
+        this._reload(true);
+        this.service.message.success(success.message);
+      }
+      else {
+        this.service.message.error(success.message);
+      }
+    })
   }
   //删除
   _delRow(row) {
@@ -147,37 +138,6 @@ export class CwToolListComponent implements OnInit {
       }
     })
   }
-  //修改
-  _editRow(row) {
-    for (let i in row) {
-      this.formBean[i] = row[i];
-    }
-    this.formBean['res_class_ids'] = [];
-    if (row.cat_ids && row.cat_names) {
-      let ids = row.cat_ids.split(',');
-      let names = row.cat_names.split(',');
-      for (let i = 0; i < ids.length; i++) {
-        this.formBean['res_class_ids'].push({
-          cat_id: ids[i],
-          cat_name: names[i]
-        });
-      }
-    }
-  }
-  // _beforeUpload(file, fileList){
-  //   console.log(file);
-  //   if(file.name.indexOf("")!=-1){
-  //     let span =  document.createElement('span');
-  //     span.innerHTML = '<i class="anticon anticon-close" style="color: #fff;padding: 3px;background: red;border-radius: 50%;vertical-align: inherit;margin-right: 5px;"></i>文件上传名字里不能包含空格';
-  //     span.style.cssText = 'position:absolute;top:45px;z-index:999;left:50%;padding:10px 15px;width:250px;background:#fff;box-shadow:1px 1px 1px 0.5px #b1b1b1;border-radius:5px;'
-  //     document.body.appendChild(span);
-  //     setTimeout(function(){
-  //       span.style.display = "none";
-  //       span.remove();
-  //     },1500)
-  //     return false;
-  //   }
-  // }
 
   upload_param : any = {}
   fileList : any = [];
@@ -192,99 +152,78 @@ export class CwToolListComponent implements OnInit {
     this.fileList = [];
     this.uploadList = true;
   }
+  _beforeUpload(file, fileList){
+    console.log(file);
+    // if(file.name.indexOf(".pdf")!=-1){
+    //   let span =  document.createElement('span');
+    //   span.innerHTML = '<i class="anticon anticon-close" style="color: #fff;padding: 3px;background: red;border-radius: 50%;vertical-align: inherit;margin-right: 5px;"></i>文件上传名字里不能包含空格';
+    //   span.style.cssText = 'position:absolute;top:45px;z-index:999;left:50%;padding:10px 15px;width:250px;background:#fff;box-shadow:1px 1px 1px 0.5px #b1b1b1;border-radius:5px;'
+    //   document.body.appendChild(span);
+    //   setTimeout(function(){
+    //     span.style.display = "none";
+    //     span.remove();
+    //   },1500)
+    //   return false;
+    // }
+  }
+
+
   //文件上传
   fileUpload(info): void {
     if (info.file.response && info.file.response.code == 0) {
-      this.upload_param.id = info.file.response.data.id;
+      this.upload_param.file_name = info.file.response.data.file_name;
+      this.upload_param.upload_url = info.file.response.data.upload_url;
     }
   }
 
     //关闭弹窗
     uploadCancel($event) {
       this.uploadList = false;
-      this.upload_ids._lastValue = [];
+      // this.upload_ids._lastValue = [];
       this.myForm.reset();
     }
     uploadOk($event){
-
-    }
-
-
-  //文件上传
-  // _uploadChange(res) {
-  //   console.log(res.file.status)
-  //   if (res.file.status == 'uploading') {
-  //     if (!this._loadingFile) {
-  //       this._loadingFile = this.service.message.loading('文件正在上传...', { nzDuration: 0 }).messageId;
-  //       this._uploadDisabled = true;
-  //     }
-  //   }
-  //   else {
-  //     this.service.message.remove(this._loadingFile);
-  //     this._uploadDisabled = false;
-  //     if (res.file.status == 'done') {
-  //       setTimeout(sc => {
-  //         this.service.message.success('文件上传成功!');
-  //         this._reload(true);
-  //       }, 2000)
-  //     }
-  //     else {
-  //       this.service.message.error('文件上传失败!');
-  //     }
-  //   }
-  // }
-  //保存
-  _saveRow() {
-    if (!this.formBean.res_name) {
-      this.service.message.warning('请填写文件名称!');
-      return false;
-    }
-    if (!this.formBean.res_cat_id) {
-      this.service.message.warning('请选择资源分类!');
-      return false;
-    }
-    console.log(this.formBean)
-    this.service.post('/api/busiz/res/update', this.formBean).then(success => {
-      if (success.code == 0) {
-        this.formBean = {
-          res_id: null,
-          res_name: null,
-          res_cat_name: null
-        };
-        this._reload();
+      if (!this.upload_param.upload_name) {
+        this.service.message.warning('请填写资源名称!');
+        return false;
       }
-      else {
-        this.service.message.error(success.message);
+      if (!this.upload_param.cat_arr || !this.upload_param.cat_arr.cat_id) {
+        this.service.message.warning('请选择资源分类!');
+        return false;
       }
-    })
-  }
-  //选项改变
-  _selectChange(options) {
-    let ids = [];
-    let names = [];
-    options.forEach(element => {
-      ids.push(element.cat_id);
-      names.push(element.cat_name);
-    });
-    if (names.length > 0) {
-      this.formBean['res_cat_name'] = names[names.length - 1];
-      this.formBean['res_cat_id'] = ids[ids.length - 1];
-      this.formBean['cat_ids'] = ids.toString();
-      this.formBean['cat_names'] = names.toString();
+      this.upload_param.cat_id = this.upload_param.cat_arr.cat_id;
+      this.upload_param.cat_name = this.upload_param.cat_arr.cat_name;
+      if (!this.upload_param.start_page ) {
+        this.service.message.warning('请填写正文起始页码!');
+        return false;
+      }
+      if (!this.upload_param.end_page ) {
+        this.service.message.warning('请填写正文结束页码!');
+        return false;
+      }
+      if (!this.upload_param.end_page ) {
+        this.service.message.warning('请填写开始内容页码!');
+        return false;
+      }
+      if (!this.upload_param.file_name || !this.upload_param.upload_url ) {
+        this.service.message.warning('请选择上传文件!');
+        return false;
+      }
+      
+      this.service.post('/api/busiz/dict/upload/save', this.upload_param).then(success => {
+        if(success.code==0){
+          this.uploadList = false;
+          this._reload();
+          this.myForm.reset();
+          this.service.message.success(success.message);
+        }else{
+          this.service.message.error(success.message);
+        }
+        
+      })
+
     }
-    else {
-      this.formBean['res_cat_name'] = null;
-      this.formBean['res_cat_id'] = null;
-      this.formBean['cat_ids'] = null;
-      this.formBean['cat_names'] = null;
-    }
-  }
-  //取消
-  _cancelRow(row) {
-    for (let i in this.formBean) {
-      this.formBean[i] = null;
-    }
-  }
+
   isVisibleAudio: boolean = false;
   isVisibleVideo: boolean = false;
   isVisiblePdf: boolean = false;
@@ -295,19 +234,16 @@ export class CwToolListComponent implements OnInit {
   //预览
   _fwRow(row) {
     console.log(row)
-    if (row.res_type == '音频') {
-      this.isVisibleAudio = true;
-      this.audioModel = row;
+    if(!row.anaylsis_url){
+      this.service.message.warning("请稍后，还在解析中···");
+      this._reload();
+      return false;
     }
-    else if (row.res_type == '视频') {
-      this.isVisibleVideo = true;
-      this.videoModel = row;
-    }
-    else {
+
       this.isVisiblePdf = true;
       this.pdfModel = row;
       this.pdfMinNum = 1;
-    }
+    
   }
   //关闭音频
   _handleCancelAudio(event?) {
@@ -326,7 +262,7 @@ export class CwToolListComponent implements OnInit {
   }
   //上一页
   pdfMinNum2() {
-    if (this.pdfMinNum < this.pdfModel.res_size) {
+    if (this.pdfMinNum < this.pdfModel.file_num) {
       this.pdfMinNum += 1;
     }
   }
