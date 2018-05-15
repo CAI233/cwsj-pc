@@ -204,6 +204,7 @@
                 <div class="userHead">
                   <div class="uimg">
                     <img *ngIf="formBean.video_cover" src="{{ service.ctxPath + formBean.video_cover }}" />
+                    <span *ngIf="!formBean.video_cover" style="display:inline-block;margin-top:40px;">450×600</span>
                   </div>
                   <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'" nzAction="{{service.ctxPath + '/api/system/file/upload'}}"
                     [nzData]="{type:'admin',token:service.token}">

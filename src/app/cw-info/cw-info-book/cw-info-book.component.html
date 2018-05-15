@@ -67,6 +67,7 @@
                                     <div nz-col [nzSpan]="12" style="text-align:center;">
                                         <div style="border:1px #ddd dashed;height:96px;width:72px;margin: 0 auto 10px;background: #f5f8fa;">
                                             <img *ngIf="bookData.book_cover" src="{{ service.ctxPath + bookData.book_cover }}" style="float:left;height:100%;width:100%;"/>
+                                            <span *ngIf="!bookData.book_cover" style="display:inline-block;margin-top:40px;">450×600</span>
                                         </div>
                                         <nz-upload [nzShowUploadList]="false" (nzChange)="fileUpload($event)" [nzAccept]="'image/gif,image/jpeg,image/png,image/jpg,image/bmp'"
                                             nzAction="{{service.ctxPath + '/api/system/file/upload'}}" [nzData]="{type:'admin',token:service.token}">

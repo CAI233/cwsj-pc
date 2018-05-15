@@ -1,3 +1,72 @@
+<nz-layout class="main-page-layout">
+        <nz-header class="main-page-header">
+          <nz-breadcrumb>
+            <nz-breadcrumb-item>
+              <a href="#/home">首页</a>
+            </nz-breadcrumb-item>
+          </nz-breadcrumb>
+        </nz-header>
+        <nz-content class="main-page-content">
+                <form nz-form>
+                    <div nz-row nz-form-item style="margin-bottom:10px;">
+                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
+                            <div style="margin-bottom:10px;">
+                                <span>读者类型</span>
+                            </div>
+                            <div style="border:1px solid #ccc;margin-bottom:15px;">
+                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
+                                    <v-axis></v-axis>
+                                    <v-coord type="theta"></v-coord>
+                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip" 
+                                    ></v-pie>
+                                    <v-legend dataKey="item" position="left"></v-legend>
+                                </v-chart>
+                            </div>
+                            <div class="v_foot">
+                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
+                            <div style="margin-bottom:10px;">
+                                <span>读者目的</span>
+                            </div>
+                            <div style="border:1px solid #ccc;margin-bottom:15px;">
+                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
+                                    <v-axis></v-axis>
+                                    <v-coord type="theta"></v-coord>
+                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip"
+                                    ></v-pie>
+                                    <v-legend dataKey="item" position="left"></v-legend>
+                                </v-chart>
+                            </div>
+                            <div class="v_foot">
+                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
+                            <div style="margin-bottom:10px;">
+                                <span>读者分布</span>
+                            </div>
+                            <div style="border:1px solid #ccc;margin-bottom:15px;">
+                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
+                                    <v-axis></v-axis>
+                                    <v-coord type="theta"></v-coord>
+                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip"
+                                    ></v-pie>
+                                    <v-legend dataKey="item" position="left"></v-legend>
+                                </v-chart>
+                            </div>
+                            <div class="v_foot">
+                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+        </nz-content>
+      </nz-layout>
 <!-- <nz-layout class="main-page-layout">
   <nz-content>
       <div id="editor">
