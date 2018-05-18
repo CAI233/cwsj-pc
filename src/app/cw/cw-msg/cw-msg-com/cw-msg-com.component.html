@@ -1,0 +1,229 @@
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+      <nz-breadcrumb>
+          <nz-breadcrumb-item>
+              <a href="#/home">首页</a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+              评论管理
+          </nz-breadcrumb-item>
+      </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content">
+        <nz-tabset [(nzSelectedIndex)]="goToindex">
+            <nz-tab>
+                <ng-template #nzTabHeading>商品列表</ng-template>
+                <form nz-form>
+                        <div nz-row nz-form-item style="margin-bottom:10px;">
+                        <div nz-col [nzSpan]="6">
+                            <div nz-form-label nz-col style="float:left;">
+                                <label>商品名称</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'请输入商品名称'" [nzSize]="'default'"></nz-input>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="6">
+                            <div nz-form-label nz-col style="float:left;">
+                                <label>商品类型</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="14">
+                              <nz-select style="width:100%;" name="goods_type" [nzFilter]="false" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.goods_type" nzShowSearch>
+                                  <nz-option *ngFor="let item of goodsType" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                              </nz-select>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="6" style="padding:2px 0;">
+                            <div class="row-questions" style="float:left;">
+                                <button nz-button nzType="primary" (click)="reload(true)">
+                                    <i class="anticon anticon-search"></i>
+                                    <span>查询</span>
+                                </button>
+                                <button nz-button nzType="" (click)="resetForm()">
+                                    <span>重置</span>
+                                </button>
+                            </div>
+                            <a style="margin-left:15px;font-size:12px;float:left;margin-top:5px;" (click)="isCollapse=!isCollapse">
+                            更多
+                            <i class="anticon" [class.anticon-down]="isCollapse" [class.anticon-up]="!isCollapse"></i>
+                            </a>
+                        </div>
+
+                        
+                      </div> 
+                      <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:10px;">
+                            <div nz-col [nzSpan]="6">
+                                <div nz-form-label nz-col style="float:left;">
+                                    <label>商品标签</label>
+                                </div>
+                                <div nz-form-control nz-col [nzSpan]="14">
+                                    <nz-select style="width:100%;" name="tag_id" [nzFilter]="false" (nzSearchChange)="get_tag($event)" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.tag_id" nzShowSearch>
+                                        <nz-option *ngFor="let item of tagData" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div nz-col [nzSpan]="6">
+                                <div nz-form-label nz-col style="float:left;">
+                                    <label>商品分类</label>
+                                </div>
+                                <div nz-form-control nz-col [nzSpan]="14">
+                                    <nz-cascader style="width:100%" name="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="classData"
+                                        [(ngModel)]="param.cat_ids" (nzSelectionChange)="search_change($event)">
+                                    </nz-cascader>
+                                </div>
+                            </div>
+                      </div>
+                    </form>
+                    <nz-table #nzTable  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+                    [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
+                    (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
+                      <thead nz-thead>
+                      <tr>
+                        <th nz-th nzCheckbox>
+                          <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                          </label>
+                        </th>
+                        <th nz-th >
+                            <span>商品信息</span>
+                        </th>
+                        <th nz-th >
+                            <span>售价（元）</span>
+                        </th>
+                        <th nz-th >
+                            <span>评论数量</span>
+                        </th>
+                        <th nz-th >
+                            <span>操作</span>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody nz-tbody>
+                        <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                          <td nz-td nzCheckbox>
+                            <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+                            </label>
+                          </td>
+                          <td nz-td nz-row>
+                              <!-- <span>{{data.project_name}}</span> -->
+                              <div nz-col style="float:left;border:1px #ddd dashed;width:72px;height:96px;margin-bottom:15px;background: #f5f8fa;">
+                                  <img src="{{service.ctxPath + data.goods_cover_small}}" alt="" style="float:left;width:100%;height:100%;">
+                              </div>
+                              <div nz-col [nzSpan]="16" style="padding:10px;">
+                                  <p>商品名称:<span [innerHtml]="data.goods_name"></span></p>
+                                  <p>商品类型:<span [innerHtml]="['实体书','音视频','电子书'][data.goods_type-1]"></span></p>
+                              </div>
+                          </td>
+                          
+                          <td nz-td>
+                              <span>{{data.price}}</span>
+                          </td>
+                          <td nz-td>
+                            <span>{{data.comments}}</span>
+                              <!-- <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" (click)="_enabled(data)"></nz-switch> -->
+                          </td>
+                         
+                          <td nz-td>
+                              <span >
+                                  <a (click)="see(data)">查看评论</a>
+                                  <!-- <span nz-table-divider></span> -->
+                              </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                  </nz-table>
+            </nz-tab>
+            <nz-tab *ngIf="goToindex==1">
+                <ng-template #nzTabHeading>评论列表<i class="anticon anticon-cross" (click)="closeTab()"></i></ng-template>
+                <form nz-form>
+                    <div nz-row nz-form-item>
+                        <div nz-col [nzSpan]="6">
+                            <div nz-form-label nz-col style="float:left;">
+                                <label>评论用户</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="comment_param.searchText" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
+                            </div>
+                        </div>
+                        <div nz-col [nzSpan]="10">
+                            <div nz-form-label nz-col style="float:left;">
+                                <label>评论时间</label>
+                            </div>
+                            <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-rangepicker name="searchTime" [(ngModel)]="comment_param.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
+                            </div>
+                        </div>
+                        <div class="row-questions" nz-col [nzSpan]="8" style="float:right;text-align:right;">
+                            <nz-popconfirm [nzTitle]="'删除后数据无法找回,确认删除吗？'" (nzOnConfirm)="delRows()" [nzPlacement]="'bottom'">
+                                <button nz-popconfirm nz-button nzType="danger" type="button" >
+                                    <i class="anticon anticon-delete"></i>
+                                    <span>删除</span>
+                                </button>
+                            </nz-popconfirm>
+                            <button nz-button nzType="primary" (click)="comment_reload(true)">
+                                <i class="anticon anticon-search"></i>
+                                <span>查询</span>
+                            </button>
+                            <button nz-button nzType="" (click)="comment_resetForm()">
+                                <span>重置</span>
+                            </button>
+                        </div>
+                    </div> 
+                </form>
+                <nz-table #nzTable  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="commentData" [nzLoading]="_loading" [nzPageSize]="comment_param.pageSize"
+                [nzPageIndex]="comment_param.pageNum" [nzTotal]="comment_param.total" (nzPageIndexChangeClick)="comment_param.pageNum=$event;get_commentslist($event)"
+                (nzPageSizeChange)="comment_param.pageNum=1;comment_param.pageSize=$event;get_commentslist($event)">
+                    <thead nz-thead>
+                    <tr>
+                    <th nz-th nzCheckbox>
+                        <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="comment_checkAll($event)">
+                        </label>
+                    </th>
+                    <th nz-th [nzWidth]="'20%'">
+                        <span>评论用户</span>
+                    </th>
+                    <th nz-th [nzWidth]="'30%'">
+                        <span>评论内容</span>
+                    </th>
+                    <th nz-th [nzWidth]="'15%'">
+                        <span>评论时间</span>
+                    </th>
+                    <th nz-th [nzWidth]="'10%'">
+                        <span>点赞量</span>
+                    </th>
+                    <th nz-th >
+                        <span>操作</span>
+                    </th>
+                    </tr>
+                    </thead>
+                    <tbody nz-tbody>
+                    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+                        <td nz-td nzCheckbox>
+                        <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="comment__refreshStatus($event)">
+                        </label>
+                        </td>
+                        <td nz-td >
+                            <span>{{data.member_name}}</span>
+                        </td>
+                        <td nz-td>
+                            <span>{{data.comments_content}}</span>
+                        </td>
+                        <td nz-td>
+                            <span>{{data.create_time}}</span>
+                        </td>
+                        <td nz-td>
+                            <span>{{data.liked}}</span>
+                        </td>
+                        <td nz-td>
+                            <span >
+                                <nz-popconfirm [nzTitle]="'确定删除吗?'" (nzOnConfirm)="del(data)">
+                                    <a nz-popconfirm>删除</a>
+                                </nz-popconfirm>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </nz-tab>
+        </nz-tabset>
+  </nz-content>
+</nz-layout> 

@@ -1,0 +1,92 @@
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a href="#/home">首页</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        邮件模板
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content" style="padding-top: 20px;">
+    <form nz-form>
+      <div nz-row nz-form-item>
+        <div class="row-actions">
+          <button nz-button nzType="primary" (click)="add()">
+              <i class="anticon anticon-plus"></i>
+              <span>新增</span>
+          </button>
+        </div>
+      </div>
+    </form>
+    <nz-table #nzTable nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="data" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+    [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;load($event)"
+    (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;load($event)">
+        <thead nz-thead>
+        <tr>
+          <th nz-th nzCheckbox>
+            <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+            </label>
+          </th>
+          <th nz-th [nzWidth]="'15%'"><span>模板编号</span></th>
+          <th nz-th [nzWidth]="'50%'"><span>模板内容</span></th>
+          <th nz-th [nzWidth]="'15%'"><span>更新时间</span></th>
+          <th nz-th><span>操作</span></th>
+        </tr>
+        </thead>
+        <tbody nz-tbody>
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+          <td nz-td nzCheckbox>
+            <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+            </label>
+          </td>
+          <td nz-td>
+              <span [innerHtml]="data.mail_template_id"></span>
+          </td>
+          <td nz-td>
+              <span [innerHtml]="data.content"></span>
+          </td>
+          <td nz-td>
+              <span >{{data.update_time}}</span>
+          </td>
+          <td nz-td>
+            <span *ngIf="this.service.validataAction('cw_email_module_edit')">
+              <a (click)="edit(data)">修改</a>
+              <!-- <span nz-table-divider></span> -->
+            </span>
+            <!-- <span *ngIf="this.service.validataAction('cw_email_module_del')">
+                <nz-popconfirm [nzTitle]="'确定取消吗?'" (nzOnConfirm)="del(data)">
+                  <a nz-popconfirm>删除</a>
+                </nz-popconfirm>
+            </span> -->
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+  </nz-content>
+</nz-layout>
+<nz-modal [nzMaskClosable]="false" [nzWidth]="800" [nzWrapClassName]="'vertical-center-modal'" [nzContent]="modalContent"
+  [nzVisible]="isVisibleMiddle" (nzOnCancel)="handleCancelMiddle($event)" (nzOnOk)="handleOkMiddle($event)">
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="myForm" (ngSubmit)="_submitForm()">
+      <div nz-form-item nz-row class="notErrMsg">
+        <div nz-form-label>
+          <label nz-form-item-required>模板编号</label>
+        </div>
+        <div nz-form-control>
+          <nz-input formControlName="num"  [nzType]="'text'" [(ngModel)]="param.mail_template_id" [nzPlaceHolder]="'请填写模板编号'"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row class="notErrMsg">
+        <div nz-form-label>
+          <label nz-form-item-required>模板内容</label>
+        </div>
+        <div nz-form-control>
+          <div id="editor"></div>
+        </div>
+      </div>
+      <button style="display:none;">save</button>
+    </form>
+  </ng-template>
+</nz-modal>

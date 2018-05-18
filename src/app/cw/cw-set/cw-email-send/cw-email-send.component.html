@@ -1,0 +1,63 @@
+<nz-layout class="main-page-layout">
+  <nz-header class="main-page-header">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a href="#/home">首页</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        邮件发送
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </nz-header>
+  <nz-content class="main-page-content" style="padding-top: 20px;">
+    <!-- <div class="cont">
+      <div nz-row >
+        <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+            <label ><em style="color:red;">*</em>邮件配置:</label>
+        </div>
+        <div nz-col [nzSpan]="14">
+          
+            <nz-select style="width:100%;" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="con_id" (ngModelChange)="selected(con_id)">
+                <nz-option *ngFor="let item of email_con" [nzLabel]="item.account" [nzValue]="item.mail_setting_id"></nz-option>
+            </nz-select>
+        </div>
+      </div>
+      <div nz-row >
+        <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+            <label ><em style="color:red;">*</em>发送邮件服务器:</label>
+        </div>
+        <div nz-col [nzSpan]="14" style="padding:5px;">
+            <p *ngIf="selRow.smtp_url">{{selRow.smtp_url}}</p>
+        </div>
+      </div>
+      <div nz-row >
+        <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+            <label ><em style="color:red;">*</em>服务器端口号:</label>
+        </div>
+        <div nz-col [nzSpan]="14" style="padding:5px;">
+            <p *ngIf="selRow.port">{{selRow.port}}</p>
+        </div>
+      </div>
+      <div nz-row >
+        <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+            <label ><em style="color:red;">*</em>发送邮件账户:</label>
+        </div>
+        <div nz-col [nzSpan]="14" style="padding:5px;">
+            <p *ngIf="selRow.account">{{selRow.account}}</p>
+        </div>
+      </div>
+      <div nz-row >
+        <div nz-col style="float:left;padding:5px;margin-right:10px;text-align:right;" [nzSpan]="6">
+            <label ><em style="color:red;">*</em>发送邮件地址:</label>
+        </div>
+        <div nz-col [nzSpan]="14">
+            <nz-input [nzType]="'email'" [(ngModel)]="email.email_addr" [nzPlaceHolder]="'请输入'" [nzSize]="'default'"></nz-input>
+        </div>
+      </div>
+      <div nz-row style="text-align:center;" *ngIf="this.service.validataAction('cw_email_send_new')">
+          <button nz-button [nzType]="'primary'" (click)="save($event)"><span>保存</span></button>
+      </div>
+    </div> -->
+    
+  </nz-content>
+</nz-layout>
