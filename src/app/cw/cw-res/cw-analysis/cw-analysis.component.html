@@ -24,16 +24,9 @@
         </div>
       </div>
     </div>
-    <nz-table #nzTable
-              nzShowSizeChanger
-              [nzShowTotal]="true"
-              [nzAjaxData]="tableData"
-              [nzLoading]="_loading"
-              (nzPageIndexChangeClick)="param.pageNum=$event;_reload($event)"
-              (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;_reload($event)"
-              [nzPageSize]="param.pageSize"
-              [nzPageIndex]="param.pageNum"
-              [nzTotal]="param.total">
+    <nz-table #nzTable  nzShowSizeChanger [nzShowTotal]="true" [nzAjaxData]="tableData" [nzLoading]="_loading" [nzPageSize]="param.pageSize"
+      [nzPageIndex]="param.pageNum" [nzTotal]="param.total" (nzPageIndexChangeClick)="param.pageNum=$event;_reload($event)"
+      (nzPageSizeChange)="param.pageNum=1;param.pageSize=$event;_reload($event)">
       <thead nz-thead>
       <tr>
         <th nz-th>

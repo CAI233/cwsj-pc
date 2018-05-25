@@ -69,17 +69,25 @@ export class CwAnalysisComponent implements OnInit {
     this._submitForm();
   }
   //刷新列表
-  _reload(event?: any){
-    if(event){
+  _reload(event?){
+    if(event == true){
       this.param.searchText = this.paramCol.searchText;
       this.param.pageNum = 1;
     }
     this._loading = true;
     this.service.post('/api/busiz/res/upload/getlist',this.param).then(success => {
       this._loading = false;
-      this.tableData = success.data.rows;
-      this.param.total = success.data.total;
-      this.param.pages = success.data.pages;
+      if(success.code==0){
+        this.tableData = success.data.rows;
+        this.param.total = success.data.total;
+      }else{
+        this.tableData = [];
+        this.param.total = 0;
+        this.service.message.error(success.message);
+      }
+      // this.tableData = success.data.rows;
+      // this.param.total = success.data.total;
+      // this.param.pages = success.data.pages;
     })
   }
   //修改任务

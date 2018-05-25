@@ -42,6 +42,29 @@
             <p>30天收益</p>
           </div>
       </div> -->
+     
+      <div nz-row nz-form-item style="margin-bottom:10px;">
+          <div nz-col [nzSpan]="4">
+              <nz-datepicker [(ngModel)]="param.date" style="width:100%;" [nzPlaceHolder]="'请选择月份'" [nzFormat]="'YYYY/MM'" [nzMode]="'month'"></nz-datepicker>
+          </div>
+          <div nz-col [nzSpan]="4" style="padding:2px 0;margin-left:15px;">
+            <div class="row-questions" style="float:left;">
+                <button nz-button nzType="primary" (click)="reload(true)">
+                    <i class="anticon anticon-search"></i>
+                    <span>查询</span>
+                </button>
+                <button nz-button nzType="" (click)="resetForm()">
+                    <span>重置</span>
+                </button>
+            </div>
+          </div>
+          <div class="row-questions" style="float:right;">
+              <button nz-button nzType="primary" (click)="daochu()" >
+                <span>导出</span>
+              </button>
+          </div> 
+      </div>
+
       <form nz-form>
           <!--行-->
           <div nz-row nz-form-item style="margin-bottom:0;background: #fff;padding-bottom:10px;">

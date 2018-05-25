@@ -37,7 +37,8 @@ export class CwMarketComponent implements OnInit {
   // nowdata : any = [];
   allData : any = [];
   param : any = {
-    type:null
+    type:null,
+    date:null
   }
   data : any = [];
   scale : any = [];
@@ -60,23 +61,9 @@ export class CwMarketComponent implements OnInit {
             money:element.money || 0 
           })
         });
-        // console.log(nowArr)
 
         this.data = nowArr;
-        // console.log(this.nowData )
-
-        // this.data = [
-        //   { data: '1991-12-1', money: 3 },
-        //   { data: '1992-12-1', money: 4 },
-        //   { data: '1993-12-1', money: 3.5 },
-        //   { data: '1994-12-1', money: 5 },
-        //   { data: '1995-12-1', money: 4.9 },
-        //   { data: '1996-12-1', money: 6 },
-        //   { data: '1997-12-1', money: 7 },
-        //   { data: '1998-12-1', money: 9 },
-        //   { data: '1999-12-1', money: 13 },
-        // ];
-
+       
         this.scale = [{
           dataKey: 'money',
           min: 0,
@@ -112,8 +99,34 @@ export class CwMarketComponent implements OnInit {
     }
     this.get_load();
     this.load();
-    
   }
+
+  reload(rest?){
+    console.log(this.timeOut(this.param.date))
+    if(this.param.date){
+      this.param.date = this.timeOut(this.param.date);
+      this.load();
+    }
+  }
+  resetForm(){
+    this.param.date = null;
+    this.load();
+  }
+
+    // 导出
+    daochu(){
+      let idss:any = [];
+      
+      this.data.filter(value => value.checked).forEach(item => { idss.push(item.id)});
+      idss = idss.join(',');
+
+      let doc = document.createElement('a');
+        doc.href = this.service.ctxPath+'/api/busiz/statistical/sales/info/export?type='+this.param.type;
+        doc.style.display = 'none';
+        doc.target = "_self";
+        doc.click();
+        document.body.appendChild(doc);
+    }
 
   ngOnInit() {
     // 初始
@@ -122,5 +135,17 @@ export class CwMarketComponent implements OnInit {
     this.load();
     // 加载销售统计数据
     this.get_load();
+  }
+
+  timeOut(d) {
+    let m = new Date(d);
+    let M, D, H, mm, ss;
+    M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
+    // D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
+    // H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+    // mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+    // ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+    // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
+    return m.getFullYear() + '-' + M ;
   }
 }

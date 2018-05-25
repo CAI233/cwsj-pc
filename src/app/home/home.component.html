@@ -4,67 +4,107 @@
             <nz-breadcrumb-item>
               <a href="#/home">首页</a>
             </nz-breadcrumb-item>
+            <!-- <nz-breadcrumb-item>
+              大数据统计
+            </nz-breadcrumb-item>
+            <nz-breadcrumb-item>
+              销售统计
+            </nz-breadcrumb-item> -->
           </nz-breadcrumb>
         </nz-header>
         <nz-content class="main-page-content">
-                <form nz-form>
-                    <div nz-row nz-form-item style="margin-bottom:10px;">
-                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
-                            <div style="margin-bottom:10px;">
-                                <span>读者类型</span>
-                            </div>
-                            <div style="border:1px solid #ccc;margin-bottom:15px;">
-                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
-                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
-                                    <v-axis></v-axis>
-                                    <v-coord type="theta"></v-coord>
-                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip" 
-                                    ></v-pie>
-                                    <v-legend dataKey="item" position="left"></v-legend>
-                                </v-chart>
-                            </div>
-                            <div class="v_foot">
-                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
-                            </div>
-                        </div>
-                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
-                            <div style="margin-bottom:10px;">
-                                <span>读者目的</span>
-                            </div>
-                            <div style="border:1px solid #ccc;margin-bottom:15px;">
-                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
-                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
-                                    <v-axis></v-axis>
-                                    <v-coord type="theta"></v-coord>
-                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip"
-                                    ></v-pie>
-                                    <v-legend dataKey="item" position="left"></v-legend>
-                                </v-chart>
-                            </div>
-                            <div class="v_foot">
-                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
-                            </div>
-                        </div>
-                        <div nz-col [nzSpan]="8" style="padding:0 10px;">
-                            <div style="margin-bottom:10px;">
-                                <span>读者分布</span>
-                            </div>
-                            <div style="border:1px solid #ccc;margin-bottom:15px;">
-                                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
-                                    <v-tooltip [showTitle]='true' [itemTpl]="itemTpl"></v-tooltip>
-                                    <v-axis></v-axis>
-                                    <v-coord type="theta"></v-coord>
-                                    <v-pie position="percent" color="item" [style]="pieStyle" [label]="labelConfig" [tooltip]="tooltip"
-                                    ></v-pie>
-                                    <v-legend dataKey="item" position="left"></v-legend>
-                                </v-chart>
-                            </div>
-                            <div class="v_foot">
-                                <span>图表分析：<span>通过上面读者类型的统计分析，您的读者中关注语文和儿童文学的最多，建议多创建相应类型的作品</span></span>
-                            </div>
-                        </div>
+            <nz-tabset (nzSelectedIndexChange)="_change($event)">
+                <nz-tab >
+                  <ng-template #nzTabHeading>
+                    商品
+                  </ng-template>
+                </nz-tab>
+                <nz-tab >
+                  <ng-template #nzTabHeading>
+                    作品
+                  </ng-template>
+                </nz-tab>
+            </nz-tabset>
+            <!-- <div nz-row>
+              <ng-template *ngIf="param.type==1">
+                <span nz-col [nz-span]="'6'">销售统计</span>
+              </ng-template>
+                <div nz-col [nz-span]="'6'">
+                  <p>{{allData.the_days}}</p>
+                  <p>今日收益</p>
+                </div>
+                <div nz-col [nz-span]="'6'">
+                  <p>{{allData.yesterday}}</p>
+                  <p>昨日收益</p>
+                </div>
+                <div nz-col [nz-span]="'6'">
+                  <p>{{allData.allData}}</p>
+                  <p>30天收益</p>
+                </div>
+            </div> -->
+           
+            <div nz-row nz-form-item style="margin-bottom:10px;">
+                <div nz-col [nzSpan]="4">
+                    <nz-datepicker [(ngModel)]="param.date" style="width:100%;" [nzPlaceHolder]="'请选择月份'" [nzFormat]="'YYYY/MM'" [nzMode]="'month'"></nz-datepicker>
+                </div>
+                <div nz-col [nzSpan]="4" style="padding:2px 0;margin-left:15px;">
+                  <div class="row-questions" style="float:left;">
+                      <button nz-button nzType="primary" (click)="reload(true)">
+                          <i class="anticon anticon-search"></i>
+                          <span>查询</span>
+                      </button>
+                      <button nz-button nzType="" (click)="resetForm()">
+                          <span>重置</span>
+                      </button>
+                  </div>
+                </div>
+                <div class="row-questions" style="float:right;">
+                    <button nz-button nzType="primary" (click)="daochu()" >
+                      <span>导出</span>
+                    </button>
+                </div> 
+            </div>
+      
+            <form nz-form>
+                <!--行-->
+                <div nz-row nz-form-item style="margin-bottom:0;background: #fff;padding-bottom:10px;">
+                  <div nz-col [nzSpan]="4" class="left">
+                    <span style="font-size: 16px;">销售统计</span>
+                  </div>
+                  <div nz-col [nzSpan]="'4'" class="left">
+                    <div>
+                      <p>&#65509;{{allData.the_days}}</p>
+                      <p>今日收益</p>
                     </div>
-                </form>
+                  </div>
+                  <div nz-col [nzSpan]="'4'" class="left">
+                    <div>
+                      <p>&#65509;{{allData.yesterday}}</p>
+                      <p>昨日收益</p>
+                    </div>
+                  </div>
+                  <div nz-col [nzSpan]="'4'" class="left">
+                    <div>
+                      <p>&#65509;{{allData.first_days}}</p>
+                      <p>30天收益</p>
+                    </div>
+                  </div>
+                  <div nz-col [nzSpan]="'4'" class="left">
+                    <div>
+                      <p>&#65509;{{allData.cumulative}}</p>
+                      <p>累计收益</p>
+                    </div>
+                  </div>
+                </div>
+            </form>
+            <div>
+                <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
+                  <v-tooltip></v-tooltip>
+                  <v-axis></v-axis>
+                  <v-line position="data*money"></v-line>
+                  <v-point position="data*money" shape="circle"></v-point>
+                </v-chart>
+              </div>
         </nz-content>
       </nz-layout>
 <!-- <nz-layout class="main-page-layout">

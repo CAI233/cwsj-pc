@@ -23,10 +23,10 @@
             <div nz-row nz-form-item>
               <!--列-->
               <div nz-col [nzSpan]="8">
-                <div nz-form-label nz-col [nzSpan]="6">
+                <div nz-form-label nz-col style="float:left;">
                   <label>视频名称</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="16">
+                <div nz-form-control nz-col [nzSpan]="14">
                   <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="paramCol.searchText" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
                 </div>
               </div>
@@ -46,30 +46,30 @@
             </div>
             <div nz-row nz-form-item *ngIf="!isCollapse">
               <div nz-col [nzSpan]="8">
-                <div nz-form-label nz-col [nzSpan]="6">
+                <div nz-form-label nz-col style="float:left;">
                   <label>审核状态</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="16">
+                <div nz-form-control nz-col [nzSpan]="14">
                   <nz-select #searchAuditName name="audit_status" [(ngModel)]="paramCol.audit_status" [nzPlaceHolder]="'请选择'" nzAllowClear>
                     <nz-option *ngFor="let option of auditList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
                   </nz-select>
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
-                <div nz-form-label nz-col [nzSpan]="7">
+                <div nz-form-label nz-col style="float:left;">
                   <label>视频分类</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="15">
+                <div nz-form-control nz-col [nzSpan]="14">
                   <nz-cascader #searchCatName [nzPlaceHolder]="'视频分类'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" (nzLoad)="loadCat($event)"
                     name="cat" nzChangeOnSelect="true" [(ngModel)]="paramCol.video_cat_id">
                   </nz-cascader>
                 </div>
               </div>
               <div nz-col [nzSpan]="6">
-                <div nz-form-label nz-col [nzSpan]="6">
+                <div nz-form-label nz-col style="float:left;">
                   <label>标签</label>
                 </div>
-                <div nz-form-control nz-col [nzSpan]="16">
+                <div nz-form-control nz-col [nzSpan]="14">
                   <nz-select #searchTagName name="tag_id" [nzPlaceHolder]="'请选择'" [(ngModel)]="paramCol.tag_id" [nzNotFoundContent]="'无法找到'">
                     <nz-option *ngFor="let option of tagList" [nzLabel]="option.tag_name" [nzValue]="option.tag_id" [nzDisabled]="option.disabled">
                     </nz-option>

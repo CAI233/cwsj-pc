@@ -56,6 +56,7 @@ export class CwCodeListComponent implements OnInit {
   closeTab(){
     this.nzSelectedIndex = 0;
     this.formBeanObject = null;
+    this._reload();
   }
   //标签搜索
   searchChange(key?) {

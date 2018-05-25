@@ -113,7 +113,7 @@
                 <span>{{data.create_time}}</span>
             </td>
             <td nz-td>
-                <nz-switch [(ngModel)]="data.project_id" (click)="_enabled(data)"></nz-switch>
+                <nz-switch [nzSize]="'small'" [(ngModel)]="data.project_id" (click)="_enabled(data)"></nz-switch>
             </td>
             <td nz-td>
               <span *ngIf="this.service.validataAction('cw_prj_list_edit')">

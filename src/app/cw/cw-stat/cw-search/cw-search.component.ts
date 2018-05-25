@@ -44,9 +44,12 @@ export class CwSearchComponent implements OnInit {
   }
   // 导出
   daochu(){
-
+    let idss:any = [];
+      
+    this.data.filter(value => value.checked).forEach(item => { idss.push(item.id)});
+    idss = idss.join(',');
     let doc = document.createElement('a');
-      doc.href = this.service.ctxPath+'/api/busiz/statistical/search/info/export';
+      doc.href = this.service.ctxPath+'/api/busiz/statistical/search/info/export?ids='+idss;
       doc.style.display = 'none';
       doc.target = "_self";
       doc.click();

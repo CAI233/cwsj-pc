@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../app.service';
-import { DataSet } from '@antv/data-set';
+// import { DataSet } from '@antv/data-set';
 
 
 
@@ -11,84 +11,122 @@ import { DataSet } from '@antv/data-set';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  forceFit: boolean= true;
+  height: number = 400;
 
-
+  // nowdata : any = [];
+  allData : any = [];
+  param : any = {
+    type:null,
+    date:null
+  }
   data : any = [];
   scale : any = [];
-  tooltip : any = [];
-  itemTpl:any = '';//鼠标滑过提示
-  legendTpl : any = '';//图表下方展示信息
-  dv : any = null;
 
-  forceFit: boolean = true;
-  height: number = 400;
-  pieStyle = {
-    stroke: "#fff",
-    lineWidth: 2
-  };
-  labelConfig = ['percent', {
-    offset: -40,
-    textStyle: {
-      rotate: 0,
-      textAlign: 'center',
-      shadowBlur: 2,
-      shadowColor: 'rgba(0, 0, 0, .45)'
-    }
-  }];
+  _loading : boolean = false;
   constructor(public service: AppService) { }
+  //加载列表
+  load(reset?){
+    if (reset == true) {
+      this.param.pageNum = 1;
+    }
+    this._loading = true;
+    this.service.post('/api/busiz/statistical/first/days',this.param).then(success => {
+      this._loading = false;
+      if(success.code==0){
+        let nowArr = [];
+        success.data.forEach(element => {
+          nowArr.push({
+            data:element.date,
+            money:element.money || 0 
+          })
+        });
 
-  ngOnInit() {
-   
-    let ds = new DataSet();
-   
-    let sourceData = [
-      { item: '语文', count: 40 },
-      { item: '数学', count: 21 },
-      { item: '儿童文学', count: 17 }
-    ];
-    this.scale = [{
-      dataKey: 'percent',
-      min: 0,
-      formatter: '.0%',
-    }];
-    // let color = ['name', ['#BAE7FF', '#7FC9FE', '#71E3E3', '#ABF5F5', '#8EE0A1', '#BAF5C4']];
-    this.itemTpl = '<li><span ></span>{title}: {value}</li>';
-    this.tooltip = [
-      'item*percent',(item, percent) => {
-        percent = (percent * 100).toFixed(2) + '%';
-        return {
-          title: item,
-          value: percent,
-        }
-      }]
+        this.data = nowArr;
+       
+        this.scale = [{
+          dataKey: 'money',
+          min: 0,
+          alias:'金额'
+        },{
+          dataKey: 'month',
+          min: 0,
+          max: 1,
+          
+        }];
+        
+      }else{
+        // this.nowdata = [];
+        this.service.message.error(success.message);
+      }
+    })
+  }
+  get_load(){
+    this.service.post('/api/busiz/statistical/sales',this.param).then(success => {
+      if(success.code==0){
+        this.allData = success.data
+      }else{
+        this.service.message.error(success.message);
+      }
+    })
+  }
 
-      
-    this.legendTpl = ``;
-
-
-    // let dv = ds.createView().source(sourceData);
-    
-    this.dv = ds.createView().source(sourceData);
-    
-    this.dv.transform({
-      tooltip:false,
-      showTitle: false,
-      type: 'percent',
-      field: 'count',
-      dimension: 'item',
-      as: 'percent'
-    });
-
-  
-    console.log(this.dv)
+  _change(rest?){
+    if(rest==0){
+      this.param.type = 1;
+    }else{
+      this.param.type = 2;
+    }
+    this.get_load();
     this.load();
   }
 
-// 加载数据
-  load(){
+  reload(rest?){
+    console.log(this.timeOut(this.param.date))
+    if(this.param.date){
+      this.param.date = this.timeOut(this.param.date);
+      this.load();
+    }
+  }
+  resetForm(){
+    this.param.date = null;
+    this.load();
+  }
 
+    // 导出
+    daochu(){
+      let idss:any = [];
+      
+      this.data.filter(value => value.checked).forEach(item => { idss.push(item.id)});
+      idss = idss.join(',');
 
-    this.data  = this.dv.rows;
+      let doc = document.createElement('a');
+        doc.href = this.service.ctxPath+'/api/busiz/statistical/sales/info/export?type='+this.param.type;
+        doc.style.display = 'none';
+        doc.target = "_self";
+        doc.click();
+        document.body.appendChild(doc);
+    }
+
+  ngOnInit() {
+    // 初始
+    this.param.type =1;
+    // 加载30天销售数据
+    this.load();
+    // 加载销售统计数据
+    this.get_load();
+  }
+
+  timeOut(d) {
+    let m = new Date(d);
+    let M, D, H, mm, ss;
+    M = (m.getMonth() + 1) < 10 ? '0' + (m.getMonth() + 1) : (m.getMonth() + 1);
+    // D = m.getDate() < 10 ? '0' + m.getDate() : m.getDate();
+    // H = m.getHours() <10 ? '0'+m.getHours() : m.getHours();
+    // mm = m.getMinutes() <10 ? '0'+m.getMinutes() : m.getMinutes();
+    // ss = m.getSeconds() <10 ? '0'+m.getSeconds() : m.getSeconds();
+    // return m.getFullYear() + '-' + M + '-' + D + ' ' + H + ':' + mm + ':' + ss; 
+    return m.getFullYear() + '-' + M ;
   }
 
   // ngAfterViewInit(){

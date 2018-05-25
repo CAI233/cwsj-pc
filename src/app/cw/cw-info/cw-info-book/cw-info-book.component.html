@@ -319,18 +319,18 @@
         <form nz-form style="margin-bottom:15px;" *ngIf="selectedIndex!=2">
             <div nz-row nz-form-item style="margin-bottom:10px;">
                 <div nz-col [nzSpan]="6">
-                    <div nz-form-label nz-col [nzSpan]="6">
+                    <div nz-form-label nz-col style="float:left;">
                         <label>图书名称</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'请输入查询条件'" [nzSize]="'default'"></nz-input>
                     </div>
                 </div>
                 <div nz-col [nzSpan]="6">
-                    <div nz-form-label nz-col [nzSpan]="6">
+                    <div nz-form-label nz-col style="float:left;">
                         <label>发布状态</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-select  name="order_status" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.status" nzShowSearch>
                         <nz-option *ngFor="let item of pullList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
                     </nz-select>
@@ -354,20 +354,20 @@
             </div>
             <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:10px;margin-top:10px;">
                 <div nz-col [nzSpan]="6" >
-                    <div nz-form-label nz-col [nzSpan]="6">
-                        <label>标签</label>
+                    <div nz-form-label nz-col style="float:left;">
+                        <label>标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 签</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-select style="width:100%;" name="order_status" [nzFilter]="false" (nzSearchChange)="get_tagList($event)" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.tag_id" nzShowSearch>
                             <nz-option *ngFor="let item of bookTag" [nzLabel]="item.tag_name" [nzValue]="item.tag_id"></nz-option>
                         </nz-select>
                     </div>
                 </div>
                 <div nz-col [nzSpan]="6" >
-                    <div nz-form-label nz-col [nzSpan]="6">
-                        <label>分类</label>
+                    <div nz-form-label nz-col style="float:left;">
+                        <label>分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 类</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-cascader style="width:100%" name="cat_id" nzChangeOnSelect [nzPlaceHolder]="'请选择'" [nzValueProperty]="'cat_id'" [nzLabelProperty]="'cat_name'" [nzOptions]="bookClass"
                             [(ngModel)]="cat_ids" (nzSelectionChange)="search_change($event)" [nzAllowClear]="false">
                         </nz-cascader>

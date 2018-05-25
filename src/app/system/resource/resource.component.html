@@ -38,31 +38,32 @@
         <nz-table #nzTable [nzDataSource]="tableData" [nzIsPagination]="false" [nzLoading]="_loading">
             <thead nz-thead>
                 <tr>
-                    <th nz-th [nzWidth]="'20%'">
+                    <th nz-th >
                         <span>资源名称</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    <th nz-th>
                         <span>标识</span>
                     </th>
-                    <th nz-th [nzWidth]="'15%'">
+                    <th nz-th >
                         <span>地址</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    <th nz-th >
                         <span>图标</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    
+                    <th nz-th >
                         <span>父级</span>
                     </th>
-                    <th nz-th [nzWidth]="'10%'">
+                    <th nz-th >
                         <span>类型</span>
                     </th>
-                    <th nz-th [nzWidth]="'5%'">
+                    <th nz-th>
                         <span>排序</span>
                     </th>
-                    <!-- <th nz-th [nzWidth]="'5%'" *ngIf="orgId==1 && paramCol.org_id==1">
-                            <span>推送</span>
-                        </th> -->
-                    <th nz-th [nzWidth]="'20%'">
+                    <th nz-th>
+                        <span>是否推送</span>    
+                    </th>
+                    <th nz-th >
                         <span>操作</span>
                     </th>
                 </tr>
@@ -127,6 +128,12 @@
                                 <span *ngIf="editRow.res_id == item.res_id">
                                     <nz-input [nzType]="'text'" name="order_weight" [(ngModel)]="editRow.order_weight"></nz-input>
                                 </span>
+                            </td>
+                            <td nz-td>
+                                <span *ngIf="item.res_id != 0">
+                                    <nz-switch [ngModel]="item.is_forbid != 1" [nzSize]="'small'" (click)="_is_forbid(item)"></nz-switch>
+                                </span>
+                                
                             </td>
                             <td nz-td>
                                 <span *ngIf="item.res_id == 0">

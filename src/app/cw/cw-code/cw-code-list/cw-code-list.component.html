@@ -198,7 +198,13 @@
                         <a (click)="_workOrder(data, idx)"><i class="anticon anticon-arrow-up" style="font-size:20px"></i></a>
                       </td>
                       <td nz-td>
-                        <a (click)="_workDelete(data)"><i class="anticon anticon-delete" style="font-size:20px"></i></a>
+                          <nz-popconfirm [nzTitle]="'确定要删除这条二维码吗？'" (nzOnConfirm)="_workDelete(data)" [nzPlacement]="'left'">
+                              <!-- <button nz-popconfirm nz-button nzType="danger">
+                                <span>删除</span>
+                              </button> -->
+                              <a nz-popconfirm><i class="anticon anticon-delete" style="font-size:20px"></i></a>
+                          </nz-popconfirm>
+                        
                       </td>
                     </tr>
                   </tbody>

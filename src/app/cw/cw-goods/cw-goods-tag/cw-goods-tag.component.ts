@@ -120,11 +120,18 @@ export class CwGoodsTagComponent implements OnInit {
 
   //品牌新增操作
   add(){
+    console.log(this.data)
+    if(this.data.length>0 && this.data[0].brand_id==null){
+      return false;
+    }
     this.selRow = {};
     this.data.unshift(this.nowList);
   }
   //商品新增操作 
   goods_add(){
+    if(this.goods_data.length>0 && this.goods_data[0].tag_id==null){
+      return false;
+    }
     this.goods_selRow = {};
     this.goods_data.unshift(this.nowGlist)
   }

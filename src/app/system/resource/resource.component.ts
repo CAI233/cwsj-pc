@@ -182,6 +182,16 @@ export class ResourceComponent implements OnInit {
       }
     })
   }
+  // 一键更新
+  oneKeyPush(){
+    console.log(this.paramCol.org_id)
+    this.service.post('/api/system/resource/allot_sysResource', {
+      org_id:this.paramCol.org_id
+    }).then(success => {
+      this.load();
+    })
+  }
+
   //是否推送
   _is_forbid(data) {
     this.service.post('/api/system/resource/update/forbid', {

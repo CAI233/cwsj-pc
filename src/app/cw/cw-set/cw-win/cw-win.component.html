@@ -14,7 +14,7 @@
               <nz-tab>
                   <ng-template #nzTabHeading>橱窗列表</ng-template>
                     <div nz-row nz-form-item>
-                        <div class="row-actions" style="float:right;">
+                        <div class="row-actions" style="float:left;">
                             <button nz-button nzType="primary" type="button" (click)="_add()">
                             <i class="anticon anticon-plus" style="font-size:12px;color:#fff;"></i>
                             <span>新增</span>
@@ -30,17 +30,17 @@
                             <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
                             </label>
                           </th>
-                          <th nz-th [nzWidth]="'20%'">
+                          <th nz-th >
                               <span>橱窗位名称</span>
                           </th>
-                          <th nz-th [nzWidth]="'10%'">
+                          <th nz-th >
                               <span>排序</span>
                           </th>
-                          <th nz-th [nzWidth]="'10%'">
+                          <th nz-th >
                               <span>启用状态</span>
                           </th>
-                          <th nz-th [nzWidth]="'20%'">
-                              <span>创建时间</span>
+                          <th nz-th >
+                              <span>更新时间</span>
                           </th>
                           <th nz-th >
                               <span>操作</span>
@@ -63,7 +63,7 @@
                                 <nz-switch [nzSize]="'small'" [ngModel]="data.enabled == 1" *ngIf="this.service.validataAction('cw_win_enable')" (click)="_enabled(data)"></nz-switch>
                             </td>
                             <td nz-td>
-                                <span>{{data.create_time}}</span>
+                                <span>{{data.update_time}}</span>
                             </td>
                             <td nz-td>
                                 <span >
@@ -105,16 +105,16 @@
                   (nzPageSizeChange)="goods_param.pageNum=1;goods_param.pageSize=$event;get_goodslist($event)">
                       <thead nz-thead>
                       <tr>
-                      <th nz-th [nzWidth]="'10%'">
+                      <th nz-th >
                           <span>商品封面</span>
                       </th>
-                      <th nz-th [nzWidth]="'10%'">
+                      <th nz-th >
                         <span>商品名称</span>
                        </th>
-                       <th nz-th [nzWidth]="'10%'">
+                       <th nz-th >
                             <span>商品类型</span>
                         </th>
-                        <th nz-th [nzWidth]="'10%'">
+                        <th nz-th >
                             <span>商品售价</span>
                         </th>
                         <th nz-th >
@@ -125,8 +125,8 @@
                       <tbody nz-tbody>
                       <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                             <td nz-td nz-row>
-                                <div nz-col [nzSpan]="16" style="float:left;border:1px #ddd dashed;height:60px;margin-bottom:15px;background: #f5f8fa;">
-                                    <img src="{{service.ctxPath + data.goods_cover_small}}" alt="" style="float:left;width:100%;height:100%;">
+                                <div nz-col  style="float:left;border:1px #ddd dashed;height:96px;width:72px;margin-bottom:15px;background: #f5f8fa;">
+                                    <img src="{{service.ctxPath + data.goods_cover_small}}" alt="" style="float:left;width:72px;height:96px;">
                                 </div>
                             </td>
                             <td nz-td>
@@ -254,16 +254,16 @@
         (nzPageSizeChange)="goodsparam.pageNum=1;goodsparam.pageSize=$event;get_goods($event)">
             <thead nz-thead>
             <tr>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th >
                 <span>商品封面</span>
             </th>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th >
             <span>商品名称</span>
             </th>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th >
                 <span>商品类型</span>
             </th>
-            <th nz-th [nzWidth]="'10%'">
+            <th nz-th >
                 <span>商品售价</span>
             </th>
             <th nz-th >
@@ -275,7 +275,7 @@
             <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                   <td nz-td nz-row>
                       <!-- <span>{{data.project_name}}</span> -->
-                      <div nz-col [nzSpan]="22" style="float:left;border:1px #ddd dashed;height:75px;background: #f5f8fa;">
+                      <div nz-col style="float:left;border:1px #ddd dashed;width:72px;height:96px;background: #f5f8fa;">
                           <img src="{{service.ctxPath + data.goods_cover_small}}" alt="" style="float:left;width:100%;height:100%;">
                       </div>
                   </td>

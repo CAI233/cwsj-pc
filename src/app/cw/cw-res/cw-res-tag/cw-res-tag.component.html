@@ -47,10 +47,10 @@
             <th nz-th nzCheckbox>
                 <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)"></label>
             </th>
-            <th nz-th [nzWidth]="'10%'">
+            <!-- <th nz-th [nzWidth]="'10%'">
               <span>编号</span>
-            </th>
-            <th nz-th [nzWidth]="'30%'">
+            </th> -->
+            <th nz-th [nzWidth]="'40%'">
               <span>名称</span>
             </th>
             <th nz-th [nzWidth]="'20%'">
@@ -69,9 +69,9 @@
             <td nz-td nzCheckbox>
                 <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)"></label>
             </td>
-            <td nz-td>
+            <!-- <td nz-td>
               <span>{{data.tag_id}}</span>
-            </td>
+            </td> -->
             <td nz-td>
               <span>{{data.tag_name}}</span>
             </td>
