@@ -184,10 +184,10 @@
                         <form nz-form [formGroup]="myForm" class="ditForm">
                             <div nz-form-item nz-row style="margin-bottom:0;">
                                 <div nz-col [nzSpan]="12">
-                                    <div nz-form-label >
+                                    <div nz-form-label style="float:left;">
                                         <label>添加商品</label>
                                     </div>
-                                    <div nz-form-control>
+                                    <div nz-form-control style="float:left;padding-top:10px;padding-left:15px;">
                                         <div style="width:72px;height:96px;border:1px solid #ccc;display:inline-block;position:relative;" (click)="_onCheck()">
                                             <div style="position:relative;" *ngIf="nowRecourseArr.length == 0">
                                                 <span style="display:inline-block;width:60px;height:4px;background:#ccc;position:absolute;top:45px;left:6px;"></span>
@@ -200,7 +200,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div nz-col [nzSpan]="12">
+                                <div nz-col [nzSpan]="12" *ngIf="nowRecourseArr.length>0">
                                     <div nz-form-item nz-row style="margin-bottom:0;">
                                         <div nz-form-label style="float:left;">
                                             <label>资源名称</label>

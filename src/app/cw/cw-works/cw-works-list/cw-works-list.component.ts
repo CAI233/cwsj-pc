@@ -393,6 +393,7 @@ export class CwWorksListComponent implements OnInit {
 
   //上架下架
   statusWorks(data) {
+    console.log(data.audit_status)
     if (this.service.validataAction('cw_works_list_put')) {
       if (data.audit_status == 3) {
         data.status = data.status == 1 ? 2 : 1;
@@ -415,7 +416,7 @@ export class CwWorksListComponent implements OnInit {
     }
     else {
       let idss = [];
-      let status = []
+      let status = [];
       this.tableData.filter(value => value.checked).forEach(item => { idss.push(item.works_id) ;status.push(item.audit_status)});
       if(status.indexOf(3)!=-1 || status.indexOf(4)!=-1){
         this.service.message.warning('只能选择草稿状态的数据!');

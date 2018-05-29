@@ -13,19 +13,19 @@
         <form nz-form>
             <div nz-row nz-form-item style="margin-bottom:10px;">
                 <div nz-col [nzSpan]="8">
-                    <div nz-form-label nz-col [nzSpan]="8">
+                    <div nz-form-label nz-col style="float:left;">
                         <label>订单号/收货人/手机号</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'请输入查询条件'" [nzSize]="'default'"></nz-input>
                     </div>
                 </div>
                 <div nz-col [nzSpan]="8">
-                    <div nz-form-label nz-col [nzSpan]="8">
+                    <div nz-form-label nz-col style="float:left;">
                         <label>订单状态</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
-                        <nz-select style="width: 200px;" name="order_status" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.order_status" nzShowSearch>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-select style="width:100%;" name="order_status" nzAllowClear [nzPlaceHolder]="'请选择'" [(ngModel)]="param.order_status" nzShowSearch>
                         <nz-option *ngFor="let item of orderList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
                     </nz-select>
                     </div>
@@ -46,10 +46,10 @@
           </div> 
           <div nz-row nz-form-item *ngIf="!isCollapse" style="margin-bottom:10px;">
                 <div nz-col [nzSpan]="8">
-                    <div nz-form-label nz-col [nzSpan]="8">
+                    <div nz-form-label nz-col style="width:130px;float:left;">
                         <label>时间筛选</label>
                     </div>
-                    <div nz-form-control nz-col [nzSpan]="16">
+                    <div nz-form-control nz-col [nzSpan]="14">
                         <nz-rangepicker name="searchTime" [(ngModel)]="param.searchTime" [nzPlaceholder]="['起始日期', '截止日期']"></nz-rangepicker>
                     </div>
                 </div>

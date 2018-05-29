@@ -15,26 +15,26 @@
       <form nz-form>
         <div nz-row nz-form-item>
           <!--列-->
-          <div nz-col [nzSpan]="8">
-            <div nz-form-label nz-col [nzSpan]="6">
+          <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col style="float:left;">
               <label>广告分类</label>
             </div>
-            <div nz-form-control nz-col [nzSpan]="16">
+            <div nz-form-control nz-col [nzSpan]="14">
               <nz-select name="proSelect" [(ngModel)]="param.adv_cat_id" [nzPlaceHolder]="'请选择'"  nzAllowClear>
                   <nz-option *ngFor="let option of advClassList"  [nzLabel]="option.adv_cat_name" [nzValue]="option.adv_cat_id" [nzDisabled]="option.disabled">
                     </nz-option>
               </nz-select>
             </div>
           </div>
-          <div nz-col [nzSpan]="8">
-            <div nz-form-label nz-col [nzSpan]="6">
+          <div nz-col [nzSpan]="6">
+            <div nz-form-label nz-col style="float:left;">
               <label>广告名称</label>
             </div>
-            <div nz-form-control nz-col [nzSpan]="16">
+            <div nz-form-control nz-col [nzSpan]="14">
               <nz-input [nzType]="'text'" name="searchText" [(ngModel)]="param.searchText" [nzPlaceHolder]="'模糊查询'" [nzSize]="'default'"></nz-input>
             </div>
           </div>
-          <div nz-col [nzSpan]="8" style="padding:2px 0;">
+          <div nz-col [nzSpan]="6" style="padding:2px 0;">
             <button nz-button nzType="primary" (click)="reload(true)" [nzLoading]="_loading">
               <i class="anticon anticon-search"></i>
               <span>查询</span>

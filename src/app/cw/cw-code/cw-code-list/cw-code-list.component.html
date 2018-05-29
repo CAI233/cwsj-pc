@@ -74,7 +74,7 @@
         </form>
       </div>
       <div class="table-list">
-        <div nz-col [nzSpan]="6" class="cat-item" *ngFor="let data of tableData">
+        <div nz-col [nzSpan]="6" class="cat-item" *ngFor="let data of tableData" style="min-width:400px;">
           <nz-card [nzBordered]="false">
             <ng-template #body style="padding:10px">
               <div class="code-img">
@@ -82,25 +82,17 @@
               </div>
               <div class="book-info">
                 <h1>{{data.code_name}}</h1>
+                
                 <p *ngIf="data.tag_names">
                   <ng-container *ngFor="let item of data.tag_names.split(',')">
                     <nz-tag [nzColor]="'blue'">{{item}}</nz-tag>
                   </ng-container>
                 </p>
-                <div>
-                  <button nz-button nzType="button" (click)="_settingBean(data)">
-                    <span>配置</span>
-                  </button>
-                  <button nz-button nzType="button" (click)="_showIsVisible(data)">
-                    <span>修改</span>
-                  </button>
-                  <nz-popconfirm [nzTitle]="'确定要删除这条二维码吗？'" (nzOnConfirm)="_delDataRow(data)" [nzPlacement]="'left'">
-                    <button nz-popconfirm nz-button nzType="danger">
-                      <span>删除</span>
-                    </button>
-                  </nz-popconfirm>
-
-                </div>
+                <p *ngIf="data.book_name" style="margin:10px 0;">
+                  <ng-container >
+                    关联图书：<span style="background:#fff;">{{data.book_name}}</span>
+                  </ng-container>
+                </p>
               </div>
               <div class="weixin-list">
                 <p *ngIf="!data.works || data.works.length == 0" class="undata">还未配置任何关联作品</p>
@@ -112,6 +104,19 @@
                     </div>
                   </div>
                 </ng-container>
+              </div>
+              <div style="float:left;width:100%;margin-top:10px;border-top:1px solid #eee;padding-top:10px;">
+                <button nz-button nzType="button" (click)="_settingBean(data)">
+                  <span>配置</span>
+                </button>
+                <button nz-button nzType="button" (click)="_showIsVisible(data)">
+                  <span>修改</span>
+                </button>
+                <nz-popconfirm [nzTitle]="'确定要删除这条二维码吗？'" (nzOnConfirm)="_delDataRow(data)" [nzPlacement]="'left'">
+                  <button nz-popconfirm nz-button nzType="danger">
+                    <span>删除</span>
+                  </button>
+                </nz-popconfirm>
               </div>
               <span class="check" (click)="data.check=!data.check;select(data)" [ngClass]="{'active': data.check == true}">
                 <i class="anticon anticon-check"></i>
@@ -130,7 +135,7 @@
         <div class="code-setting">
           <div class="gutter-row-code">
             <div class="code-cover">
-                <img src="http://cjszyun.cn/uploads/20180401150351/1a4fa340500949acaf6c07294be839dc.png">
+                <img src="{{service.ctxPath + formBeanObject.code_path}}">
             </div>
             <div class="code-info">
               <h1>{{formBeanObject.code_name}}</h1>
@@ -254,7 +259,12 @@
           <label>二维码标签</label>
         </div>
         <div nz-form-control nz-col [nzSm]="20" [nzXs]="24">
-          <nz-select nzAllowClear [nzPlaceHolder]="'搜索/选择标签'" (nzSearchChange)="searchChange($event)" [nzMode]="'multiple'" [nzNotFoundContent]="'无法找到'"
+          <!-- <nz-select nzAllowClear [nzPlaceHolder]="'搜索/选择标签'" (nzSearchChange)="searchChange($event)" [nzMode]="'multiple'" [nzNotFoundContent]="'无法找到'"
+            formControlName="tag_ids" [(ngModel)]="formBean.tag_ids" nzShowSearch>
+            <nz-option *ngFor="let option of tagOptions" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
+            </nz-option>
+          </nz-select> -->
+          <nz-select nzAllowClear [nzPlaceHolder]="'搜索/选择标签'" [nzMode]="'multiple'" [nzNotFoundContent]="'无法找到'"
             formControlName="tag_ids" [(ngModel)]="formBean.tag_ids" nzShowSearch>
             <nz-option *ngFor="let option of tagOptions" [nzLabel]="option.tag_name" [nzValue]="option.tag_id">
             </nz-option>

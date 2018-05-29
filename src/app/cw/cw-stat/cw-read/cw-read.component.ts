@@ -34,7 +34,6 @@ export class CwReadComponent implements OnInit {
       type:1
     }
     this.param.searchText = null;
-    this.param.type = null;
     this.load();
   }
 

@@ -14,7 +14,7 @@
         <form nz-form [formGroup]="myForm" class="ditForm" style="width:600px;padding:15px;margin: 20px auto;">
           <div nz-form-item class="cont">
             <div nz-form-label style="width:100%;">
-                <label style="font-size:14px;float:left;">基本信息</label>
+                
                 <div style="float:right;">
                     <button nz-button [nzType]="'primary'" (click)="showModalMiddle('other')">修改个人资料</button>
                     <button nz-button (click)="showModalMiddle('pwd')">修改密码</button>
@@ -22,14 +22,20 @@
             </div>
           </div>
           <div nz-form-item nz-row style="margin-bottom:0;">
-
-                <div nz-col [nzSpan]="12">
-                    <div class="userHead">
-                        <div class="uimg">
-                            <img *ngIf="formBean.icon" src="{{ service.ctxPath + formBean.icon }}" />
+              <div nz-col [nzSpan]="12">
+                  <div nz-form-item nz-row>
+                    <div nz-form-label style="float:left;">
+                        <label >基本信息</label>
+                    </div>
+                    <div nz-form-control style="float:left;width:calc(100% - 6)">
+                        <div class="userHead">
+                            <div class="uimg">
+                                <img *ngIf="formBean.icon" src="{{ service.ctxPath + formBean.icon }}" />
+                            </div>
                         </div>
                     </div>
-                </div>
+                  </div>
+              </div>
                 <div nz-col [nzSpan]="12">
                     <div nz-form-item nz-row>
                         <div nz-form-label>

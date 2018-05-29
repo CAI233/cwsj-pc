@@ -373,8 +373,9 @@ export class CwGoodsListComponent implements OnInit {
   }
 
   // 查看所属分类的资源列表
-  _onCheck(){
+  _onCheck(data){
     this.isCheck = true;
+    
     this.get_recourse();
 
     // 加载分类和标签
@@ -457,6 +458,8 @@ export class CwGoodsListComponent implements OnInit {
     }
     // 得到当前商品的资源
     this.selRow.goods_type = this.showData.goods_type;
+
+    this.selRow.res_id = this.showData.res_id;
     
     this.selectedIndex = 1;
 

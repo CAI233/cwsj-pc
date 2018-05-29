@@ -5,7 +5,7 @@
         <img src="assets/img/logo.png">
         <label>整合资源、深度挖掘、提供一站式服务解决方案</label>
       </div>
-      <ul class="link-right">
+      <!-- <ul class="link-right">
         <li>
           <a href="">文档中心</a>
         </li>
@@ -18,7 +18,7 @@
         <li>
           <a href="" nz-button [nzType]="'primary'">注册</a>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
   <div class="page-content">
@@ -68,7 +68,8 @@
               <form nz-form [formGroup]="myForm" class="login-form" (ngSubmit)="_submitForm()">
                 <div nz-form-item>
                   <div class="input-lg" nz-form-control nzHasFeedback>
-                    <nz-input formControlName="userName" [(ngModel)]="userName" [nzPlaceHolder]="'请输入帐号/手机/邮箱'" [nzSize]="'large'">
+                    <nz-input formControlName="userName" [(ngModel)]="userName" [nzPlaceHolder]="'请输入帐号'" [nzSize]="'large'">
+                    <!-- <nz-input formControlName="userName" [(ngModel)]="userName" [nzPlaceHolder]="'请输入帐号/手机/邮箱'" [nzSize]="'large'"> -->
                       <ng-template #prefix>
                         <i class="anticon anticon-user"></i>
                       </ng-template>
@@ -110,7 +111,7 @@
                 </div>
               </div>
             </div>
-            <div class="type3">
+            <!-- <div class="type3">
               <div class="row">
                 <hr>
               </div>
@@ -123,7 +124,7 @@
                 </span>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="form-footer">
           本系统由 “ 长江数字科技 ” 提供技术支持 [v2018.01.01]

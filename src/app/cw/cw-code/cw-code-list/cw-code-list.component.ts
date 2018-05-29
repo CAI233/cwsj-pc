@@ -62,7 +62,7 @@ export class CwCodeListComponent implements OnInit {
   searchChange(key?) {
     this.service.post('/api/busiz/tag/list', {
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 1000,
       searchText: key
     }).then(success => {
       this.tagOptions = success.data.rows;
@@ -79,6 +79,14 @@ export class CwCodeListComponent implements OnInit {
       this.bookOptions = success.data.rows;
     })
   }
+  showClear =function(data){
+
+    console.log(data)
+    return true;
+  }
+
+
+
   formBean: any = {};
   myForm: any;
   _showIsVisible(data?) {
@@ -104,6 +112,11 @@ export class CwCodeListComponent implements OnInit {
       this.isVisible = false;
       if (typeof (this.formBean['tag_ids']) == "string")
         this.formBean['tag_ids'] = this.formBean['tag_ids'].split(',');
+      if (typeof (this.formBean['books']) == "object"){
+        this.formBean['book_id'] = this.formBean['books'].book_id;
+        this.formBean['book_name'] = this.formBean['books'].book_name;
+      }
+        
       console.log(this.formBean)
       this.formBean['publish'] = '崇文书局';
       this.service.post('/api/busiz/code/save', this.formBean).then(success => {
