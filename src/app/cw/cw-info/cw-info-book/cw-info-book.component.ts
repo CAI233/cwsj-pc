@@ -508,8 +508,7 @@ _enabled(data){
         cat_name:arr_name[i]
       })
     }
-    console.log(this.bookData);
-    
+ 
   }
   //删除操作
   del(data){

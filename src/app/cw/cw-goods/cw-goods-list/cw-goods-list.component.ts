@@ -1,6 +1,7 @@
 import { Component, OnInit ,ViewChild} from '@angular/core';
 import { AppService } from '../../../app.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-cw-goods-list',
   templateUrl: './cw-goods-list.component.html',
